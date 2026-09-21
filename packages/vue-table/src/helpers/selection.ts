@@ -7,6 +7,7 @@ export interface SelectionColumnOptions<TData> {
   isRowSelectable?: (row: Row<TData>) => boolean;
   headerAriaLabel?: string;
   rowAriaLabel?: (row: Row<TData>) => string;
+  size?: number;
 }
 
 export function createSelectionColumn<TData>(
@@ -17,6 +18,7 @@ export function createSelectionColumn<TData>(
     isRowSelectable,
     headerAriaLabel = 'Select all rows',
     rowAriaLabel = (row) => `Select row ${row.index + 1}`,
+    size = 40,
   } = options;
 
   return {
@@ -24,28 +26,42 @@ export function createSelectionColumn<TData>(
     header: ({ table }: { table: Table<TData> }) => {
       const isAllSelected = table.getIsAllPageRowsSelected();
       const isSomeSelected = table.getIsSomePageRowsSelected();
+      const checkedVal = isAllSelected ? true : isSomeSelected ? 'indeterminate' : false;
+
+      const handleToggle = (val: boolean | 'indeterminate') => {
+        table.toggleAllPageRowsSelected(!!val);
+      };
 
       return h(Checkbox, {
-        checked: isAllSelected ? true : isSomeSelected ? 'indeterminate' : false,
-        'onUpdate:checked': (value: boolean) => table.toggleAllPageRowsSelected(!!value),
+        checked: checkedVal,
+        modelValue: checkedVal,
+        'onUpdate:checked': handleToggle,
+        'onUpdate:modelValue': handleToggle,
         'aria-label': headerAriaLabel,
-        class: 'translate-y-[2px]',
+        class: 'translate-y-[2px] mx-auto block',
       });
     },
     cell: ({ row }: { row: Row<TData> }) => {
       const selectable = isRowSelectable ? isRowSelectable(row) : true;
+      const isChecked = row.getIsSelected();
+
+      const handleRowToggle = (val: boolean | 'indeterminate') => {
+        row.toggleSelected(!!val);
+      };
 
       return h(Checkbox, {
-        checked: row.getIsSelected(),
+        checked: isChecked,
+        modelValue: isChecked,
         disabled: !selectable,
-        'onUpdate:checked': (value: boolean) => row.toggleSelected(!!value),
+        'onUpdate:checked': handleRowToggle,
+        'onUpdate:modelValue': handleRowToggle,
         'aria-label': rowAriaLabel(row),
-        class: 'translate-y-[2px]',
+        class: 'translate-y-[2px] mx-auto block',
         onClick: (e: MouseEvent) => e.stopPropagation(),
       });
     },
     enableSorting: false,
     enableHiding: false,
-    size: 40,
+    size,
   };
 }

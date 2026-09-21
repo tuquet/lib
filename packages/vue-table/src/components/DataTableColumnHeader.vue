@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@tuquet/vue-ui';
 import { ArrowDown, ArrowUp, ArrowUpDown, EyeOff } from 'lucide-vue-next';
+import { useTableLocale } from '../locale/index.js';
 import type { HTMLAttributes } from 'vue';
 
 export interface DataTableColumnHeaderProps<TData, TValue> {
@@ -18,6 +19,7 @@ export interface DataTableColumnHeaderProps<TData, TValue> {
 }
 
 const props = defineProps<DataTableColumnHeaderProps<TData, TValue>>();
+const locale = useTableLocale();
 </script>
 
 <template>
@@ -47,23 +49,23 @@ const props = defineProps<DataTableColumnHeaderProps<TData, TValue>>();
       <DropdownMenuContent align="start">
         <DropdownMenuItem @click="column.toggleSorting(false)">
           <ArrowUp class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-          Asc
+          {{ locale.messages.headerMenu.sortAsc }}
         </DropdownMenuItem>
         <DropdownMenuItem @click="column.toggleSorting(true)">
           <ArrowDown class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-          Desc
+          {{ locale.messages.headerMenu.sortDesc }}
         </DropdownMenuItem>
         <DropdownMenuItem
           v-if="column.getIsSorted()"
           @click="column.clearSorting()"
         >
           <ArrowUpDown class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-          Clear
+          {{ locale.messages.headerMenu.clearSort }}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem @click="column.toggleVisibility(false)">
           <EyeOff class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-          Hide
+          {{ locale.messages.headerMenu.hideColumn }}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

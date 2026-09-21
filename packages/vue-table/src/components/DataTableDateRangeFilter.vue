@@ -15,6 +15,8 @@ import {
 } from '@tuquet/vue-ui';
 import { Calendar as CalendarIcon, X } from 'lucide-vue-next';
 import { computed, ref, shallowRef, watch } from 'vue';
+import { useMediaQuery } from '@vueuse/core';
+import { useTableLocale } from '../locale/index.js';
 
 export interface DateRangeValue {
   start?: string;
@@ -35,9 +37,9 @@ export interface DataTableDateRangeFilterProps {
 }
 
 const props = withDefaults(defineProps<DataTableDateRangeFilterProps>(), {
-  title: 'Ngày',
+  title: undefined,
   modelValue: undefined,
-  placeholder: 'Chọn khoảng ngày',
+  placeholder: undefined,
   numberOfMonths: 2,
 });
 
@@ -46,68 +48,80 @@ const emit = defineEmits<{
   change: [value: DateRangeValue | undefined];
 }>();
 
+const locale = useTableLocale();
+const dateMsgs = computed(() => locale.value.messages.dateRange);
+
+const effectiveTitle = computed(() => props.title ?? dateMsgs.value?.title ?? 'Date');
+const effectivePlaceholder = computed(() => props.placeholder ?? dateMsgs.value?.placeholder ?? 'Select date range');
+
+const isMobile = useMediaQuery('(max-width: 640px)');
+const effectiveNumberOfMonths = computed(() => (isMobile.value ? 1 : props.numberOfMonths));
+
 const isOpen = ref(false);
 
-const defaultPresets: DateRangePreset[] = [
-  {
-    label: 'Hôm nay',
-    getRange: () => {
-      const t = today(getLocalTimeZone());
-      const s = t.toString();
-      return { start: s, end: s };
+const defaultPresets = computed<DateRangePreset[]>(() => {
+  const m = dateMsgs.value;
+  return [
+    {
+      label: m?.today ?? 'Today',
+      getRange: () => {
+        const t = today(getLocalTimeZone());
+        const s = t.toString();
+        return { start: s, end: s };
+      },
     },
-  },
-  {
-    label: 'Hôm qua',
-    getRange: () => {
-      const t = today(getLocalTimeZone()).subtract({ days: 1 });
-      const s = t.toString();
-      return { start: s, end: s };
+    {
+      label: m?.yesterday ?? 'Yesterday',
+      getRange: () => {
+        const t = today(getLocalTimeZone()).subtract({ days: 1 });
+        const s = t.toString();
+        return { start: s, end: s };
+      },
     },
-  },
-  {
-    label: '7 ngày qua',
-    getRange: () => {
-      const t = today(getLocalTimeZone());
-      return {
-        start: t.subtract({ days: 6 }).toString(),
-        end: t.toString(),
-      };
+    {
+      label: m?.last7Days ?? 'Last 7 days',
+      getRange: () => {
+        const t = today(getLocalTimeZone());
+        return {
+          start: t.subtract({ days: 6 }).toString(),
+          end: t.toString(),
+        };
+      },
     },
-  },
-  {
-    label: '30 ngày qua',
-    getRange: () => {
-      const t = today(getLocalTimeZone());
-      return {
-        start: t.subtract({ days: 29 }).toString(),
-        end: t.toString(),
-      };
+    {
+      label: m?.last30Days ?? 'Last 30 days',
+      getRange: () => {
+        const t = today(getLocalTimeZone());
+        return {
+          start: t.subtract({ days: 29 }).toString(),
+          end: t.toString(),
+        };
+      },
     },
-  },
-  {
-    label: 'Tháng này',
-    getRange: () => {
-      const t = today(getLocalTimeZone());
-      return {
-        start: startOfMonth(t).toString(),
-        end: endOfMonth(t).toString(),
-      };
+    {
+      label: m?.thisMonth ?? 'This month',
+      getRange: () => {
+        const t = today(getLocalTimeZone());
+        return {
+          start: startOfMonth(t).toString(),
+          end: endOfMonth(t).toString(),
+        };
+      },
     },
-  },
-  {
-    label: 'Tháng trước',
-    getRange: () => {
-      const lm = today(getLocalTimeZone()).subtract({ months: 1 });
-      return {
-        start: startOfMonth(lm).toString(),
-        end: endOfMonth(lm).toString(),
-      };
+    {
+      label: m?.lastMonth ?? 'Last month',
+      getRange: () => {
+        const lm = today(getLocalTimeZone()).subtract({ months: 1 });
+        return {
+          start: startOfMonth(lm).toString(),
+          end: endOfMonth(lm).toString(),
+        };
+      },
     },
-  },
-];
+  ];
+});
 
-const activePresets = computed(() => props.presets ?? defaultPresets);
+const activePresets = computed(() => props.presets ?? defaultPresets.value);
 
 // Internal calendar value binding
 const calendarValue = shallowRef<DateRange>({
@@ -222,13 +236,14 @@ function isPresetActive(preset: DateRangePreset): boolean {
         :class="{ 'border-primary/50 bg-accent/40 font-medium': hasValue }"
       >
         <CalendarIcon class="h-3.5 w-3.5 text-muted-foreground" />
-        <span class="text-muted-foreground">{{ title }}:</span>
+        <span class="text-muted-foreground">{{ effectiveTitle }}:</span>
         <span v-if="displayText" class="text-foreground font-medium">{{ displayText }}</span>
-        <span v-else class="text-muted-foreground">{{ placeholder }}</span>
+        <span v-else class="text-muted-foreground">{{ effectivePlaceholder }}</span>
 
         <button
           v-if="hasValue"
           type="button"
+          :aria-label="dateMsgs?.clear ?? 'Clear'"
           class="ml-1 rounded-full p-0.5 hover:bg-muted text-muted-foreground hover:text-foreground"
           @click.stop="handleClear"
         >
@@ -241,7 +256,7 @@ function isPresetActive(preset: DateRangePreset): boolean {
         <!-- Presets Column -->
         <div class="p-2 flex flex-col gap-0.5 min-w-[130px]">
           <div class="text-[11px] font-semibold text-muted-foreground px-2 py-1 uppercase tracking-wider">
-            Phím tắt
+            {{ dateMsgs?.presetsTitle ?? 'Shortcuts' }}
           </div>
           <Button
             v-for="preset in activePresets"
@@ -260,7 +275,7 @@ function isPresetActive(preset: DateRangePreset): boolean {
         <div class="p-2">
           <RangeCalendar
             v-model="calendarValue"
-            :number-of-months="numberOfMonths"
+            :number-of-months="effectiveNumberOfMonths"
             initial-focus
           />
           <div class="flex items-center justify-between border-t pt-2 mt-2 px-1">
@@ -270,7 +285,7 @@ function isPresetActive(preset: DateRangePreset): boolean {
               class="text-xs h-7 px-2"
               @click="handleClear"
             >
-              Bỏ chọn
+              {{ dateMsgs?.clear ?? 'Clear' }}
             </Button>
             <Button
               size="sm"
@@ -278,7 +293,7 @@ function isPresetActive(preset: DateRangePreset): boolean {
               :disabled="!calendarValue.start"
               @click="handleApply"
             >
-              Áp dụng
+              {{ dateMsgs?.apply ?? 'Apply' }}
             </Button>
           </div>
         </div>

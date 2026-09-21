@@ -87,19 +87,20 @@ const remote = useRemoteTable<User>({
 
 ## 📚 Components Included
 
-| Component                        | Description                                                                                                                |
-| :------------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
-| **`<DataTable>`**                | Container component orchestrating toolbar, header, body with loading skeletons, empty state, error retry, and pagination.  |
-| **`<DataTableToolbar>`**         | Search input, dynamic faceted filter triggers, reset button, and custom action slots (`#actions`).                         |
-| **`<DataTableFloatingBar>`**     | Floating bulk action bar animated at bottom with selection count badge, `#actions` slot, and `Clear` (Esc) trigger.        |
-| **`<DataTableRowActions>`**      | Dropdown action menu (3 dots) with custom actions, icons, separators, and destructive variants.                            |
-| **`<DataTablePagination>`**      | Page navigation (first, prev, next, last), rows per page selector (10/20/50/100), selection summary.                       |
-| **`<DataTableColumnHeader>`**    | Sortable column header button with Asc / Desc / Clear icons and hide column menu.                                          |
-| **`<DataTableFacetedFilter>`**   | Multi-select category popover with command search, item checkboxes, and count badges.                                      |
-| **`<DataTableSelectFilter>`**    | Single-select filter dropdown menu with Radio group, clear button, and custom option icons.                                |
-| **`<DataTableDateRangeFilter>`** | Date range picker popover with quick presets (Today, Yesterday, Last 7d, Last 30d, etc.) and dual-month `<RangeCalendar>`. |
-| **`<DataTableViewOptions>`**     | Dropdown menu to toggle column visibility.                                                                                 |
-| **`<CopyableCell>`**             | Inline cell rendering with click-to-copy button and checkmark confirmation.                                                |
+| Component                        | Description                                                                                                                                      |
+| :------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`<DataTable>`**                | Container component orchestrating toolbar, header, body with loading skeletons, empty state, error retry, and pagination.                        |
+| **`<DataTableToolbar>`**         | Search input, dynamic faceted filter triggers, reset button, and custom action slots (`#actions`).                                               |
+| **`<DataTableFloatingBar>`**     | Floating bulk action bar animated at bottom with selection count badge, `#actions` slot, and `Clear` (Esc) trigger.                              |
+| **`<DataTableRowActions>`**      | Dropdown action menu (3 dots) with custom actions, icons, separators, and destructive variants.                                                  |
+| **`<DataTablePagination>`**      | Page navigation (first, prev, next, last), rows per page selector (10/20/50/100), selection summary.                                             |
+| **`<DataTableColumnHeader>`**    | Sortable column header button with Asc / Desc / Clear icons and hide column menu.                                                                |
+| **`<DataTableFacetedFilter>`**   | Multi-select category popover with command search, item checkboxes, and count badges.                                                            |
+| **`<DataTableSelectFilter>`**    | Single-select filter dropdown menu with Radio group, clear button, and custom option icons.                                                      |
+| **`<DataTableDateRangeFilter>`** | Date range picker popover with quick presets (Today, Yesterday, Last 7d, Last 30d, etc.) and dual-month `<RangeCalendar>`.                       |
+| **`<DataTableFilterBuilder>`**   | Advanced database-grade filter builder (Airtable/Notion/Supabase style) with operator switching, AND/OR conjunctions, inline chips, and presets. |
+| **`<DataTableViewOptions>`**     | Dropdown menu to toggle column visibility.                                                                                                       |
+| **`<CopyableCell>`**             | Inline cell rendering with click-to-copy button and checkmark confirmation.                                                                      |
 
 ## 🔘 Row Selection & Bulk Actions
 
@@ -346,13 +347,85 @@ const remote = useRemoteTable({
 
 Sticky pinned columns automatically receive boundary elevation shadows and blurred background isolation during horizontal scrolling.
 
-## 📏 Table Density Modes
+## 🧠 Flexible Enterprise Database Filter System (Airtable / Notion style)
 
-Support compact and spacious views with the `density` prop:
+Build arbitrary compound queries with dynamic column selection, data-type aware operators, and logical conjunctions (`AND` / `OR`):
 
 ```vue
-<DataTable :remote="remote" density="compact" />
-<!-- 'compact' | 'normal' | 'comfortable' -->
+<script setup lang="ts">
+import { ref } from 'vue';
+import {
+  DataTable,
+  DataTableFilterBuilder,
+  useRemoteTable,
+  useDynamicFilters,
+  type ColumnFilterDefinition,
+  type DynamicFilterRule,
+} from '@tuquet/vue-table';
+
+const columnDefs: ColumnFilterDefinition[] = [
+  { id: 'customer', label: 'Khách hàng', dataType: 'text' },
+  { id: 'total', label: 'Tổng tiền ($)', dataType: 'number' },
+  {
+    id: 'status',
+    label: 'Trạng thái',
+    dataType: 'select',
+    options: [
+      { label: 'Hoàn thành', value: 'completed' },
+      { label: 'Chờ xử lý', value: 'pending' },
+      { label: 'Đã hủy', value: 'cancelled' },
+    ],
+  },
+  { id: 'createdAt', label: 'Ngày tạo', dataType: 'date' },
+];
+
+const dynamicRules = ref<DynamicFilterRule[]>([]);
+const conjunction = ref<'and' | 'or'>('and');
+
+// Connect to remote or in-memory evaluation
+</script>
+
+<template>
+  <DataTable
+    :remote="remote"
+    :show-filter-builder="true"
+    :column-filter-defs="columnDefs"
+    :dynamic-rules="dynamicRules"
+    :conjunction="conjunction"
+    @update:dynamic-rules="
+      (r) => {
+        dynamicRules = r;
+        remote.refetch();
+      }
+    "
+    @update:conjunction="
+      (c) => {
+        conjunction = c;
+        remote.refetch();
+      }
+    "
+  />
+</template>
+```
+
+### Supported Operators by Data Type
+
+| Data Type     | Supported Operators                                                                                                        |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------- |
+| **`text`**    | `contains` (Chứa), `notContains` (Không chứa), `eq` (=), `ne` (!=), `startsWith`, `endsWith`, `isEmpty`, `isNotEmpty`      |
+| **`number`**  | `eq` (=), `ne` (!=), `gt` (>), `gte` (>=), `lt` (<), `lte` (<=), `between` (Trong khoảng min-max), `isEmpty`, `isNotEmpty` |
+| **`select`**  | `is` (Là), `isNot` (Không phải), `in` (Thuộc danh sách), `notIn` (Không thuộc), `isEmpty`, `isNotEmpty`                    |
+| **`date`**    | `is` (Là ngày), `isNot` (Khác ngày), `before` (Trước), `after` (Sau), `between` (Khoảng ngày), `isEmpty`, `isNotEmpty`     |
+| **`boolean`** | `isTrue` (Đúng / Bật), `isFalse` (Sai / Tắt)                                                                               |
+
+### In-Memory Evaluation Engine
+
+Evaluate dynamic filter rules client-side with zero dependencies:
+
+```ts
+import { filterDataset, evaluateFilterRule } from '@tuquet/vue-table';
+
+const filteredOrders = filterDataset(allOrders, dynamicRules.value, 'and');
 ```
 
 ## 📄 License

@@ -13,8 +13,10 @@ export interface UseTableFiltersReturn {
   activeFilterCount: ComputedRef<number>;
   filterDefs: FilterDef[];
   setFilter: (id: string, value: unknown) => void;
+  removeFilter: (id: string) => void;
   setSearchQuery: (query: string) => void;
   resetFilters: () => void;
+  clearFilters: () => void;
 }
 
 export function useTableFilters(options: UseTableFiltersOptions = {}): UseTableFiltersReturn {
@@ -46,11 +48,22 @@ export function useTableFilters(options: UseTableFiltersOptions = {}): UseTableF
     };
   };
 
+  const removeFilter = (id: string) => {
+    const next = { ...filters.value };
+    delete next[id];
+    filters.value = next;
+  };
+
   const setSearchQuery = (query: string) => {
     searchQuery.value = query;
   };
 
   const resetFilters = () => {
+    searchQuery.value = initialSearch;
+    filters.value = { ...initialFilters };
+  };
+
+  const clearFilters = () => {
     searchQuery.value = '';
     filters.value = {};
   };
@@ -61,7 +74,9 @@ export function useTableFilters(options: UseTableFiltersOptions = {}): UseTableF
     activeFilterCount,
     filterDefs,
     setFilter,
+    removeFilter,
     setSearchQuery,
     resetFilters,
+    clearFilters,
   };
 }

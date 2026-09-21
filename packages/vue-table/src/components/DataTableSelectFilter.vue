@@ -10,6 +10,7 @@ import {
 } from '@tuquet/vue-ui';
 import { ChevronDown, X } from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
+import { useTableLocale } from '../locale/index.js';
 
 export interface SelectFilterOption {
   label: string;
@@ -26,7 +27,13 @@ export interface DataTableSelectFilterProps {
 
 const props = withDefaults(defineProps<DataTableSelectFilterProps>(), {
   value: undefined,
-  allLabel: 'All',
+  allLabel: undefined,
+});
+
+const locale = useTableLocale();
+const resolvedAllLabel = computed(() => {
+  if (props.allLabel) return props.allLabel;
+  return locale.value.code.startsWith('vi') ? 'Tất cả' : 'All';
 });
 
 const emit = defineEmits<{
@@ -58,11 +65,12 @@ function handleClear(e?: Event) {
         :class="{ 'border-primary/50 bg-accent/40 font-medium': !!selectedOption }"
       >
         <span class="text-muted-foreground">{{ title }}:</span>
-        <span class="font-normal">{{ selectedOption ? selectedOption.label : allLabel }}</span>
+        <span class="font-normal">{{ selectedOption ? selectedOption.label : resolvedAllLabel }}</span>
         <span
           v-if="selectedOption"
           role="button"
           tabindex="0"
+          :aria-label="`Clear ${title} filter`"
           class="inline-flex items-center justify-center h-4 w-4 ml-0.5 -mr-1 rounded-sm hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
           @click="handleClear"
           @keydown.enter="handleClear"
@@ -79,7 +87,7 @@ function handleClear(e?: Event) {
         @update:model-value="(val) => handleSelect(!val ? undefined : String(val))"
       >
         <DropdownMenuRadioItem value="">
-          <span>{{ allLabel }}</span>
+          <span>{{ resolvedAllLabel }}</span>
         </DropdownMenuRadioItem>
         <DropdownMenuSeparator />
         <DropdownMenuRadioItem

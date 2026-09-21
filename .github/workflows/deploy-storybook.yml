@@ -1,0 +1,69 @@
+name: Storybook CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+      - 'apps/storybook/**'
+      - 'tooling/**'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+      - 'vercel.json'
+      - '.github/workflows/deploy-storybook.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+      - 'apps/storybook/**'
+      - 'tooling/**'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-and-build:
+    name: Verify & Build Storybook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck Storybook
+        run: pnpm --filter @tuquet/storybook typecheck
+
+      - name: Build Packages & Storybook
+        run: pnpm build:storybook
+
+      - name: Verify Storybook Acceptance Suite
+        run: node tooling/scripts/verify-storybook.mjs
+
+      - name: Deploy to Vercel (Production)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && env.VERCEL_TOKEN != ''
+        run: |
+          pnpm dlx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          pnpm dlx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+          pnpm dlx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

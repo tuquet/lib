@@ -1,8 +1,10 @@
 import {
   type ColumnDef,
+  type ExpandedState,
   type Row,
   type Table,
   getCoreRowModel,
+  getExpandedRowModel,
   useVueTable,
 } from '@tanstack/vue-table';
 import {
@@ -19,23 +21,39 @@ import {
 import { StandardRestAdapter } from '../adapters/standard-rest.js';
 import type {
   ColumnPinningState,
-  ColumnSort,
+  DynamicFilterRule,
   FetchParams,
   FetchResult,
+  FilterConjunction,
   FilterDef,
-  PaginationState,
+  FilterPreset,
   QueryAdapter,
-  SortingState,
   TableState,
 } from '../types/index.js';
+import { isRuleComplete } from '../helpers/filterEngine.js';
 import { useTableFilters } from './useTableFilters.js';
 import { useTableMutations, type RowPredicate, type RowUpdater } from './useTableMutations.js';
 import { useTablePagination } from './useTablePagination.js';
 import { useTableSelection } from './useTableSelection.js';
 import { useTableSorting } from './useTableSorting.js';
 import { useUrlSync } from './useUrlSync.js';
+import { useSavedViews, type UseSavedViewsReturn } from './useSavedViews.js';
+import type { TableSavedViewState } from '../types/savedViews.js';
+import type { TablePlugin, TableCellEditEvent, TablePluginContext } from '../plugins/types.js';
+import {
+  createColumnApi,
+  createFilterApi,
+  createSelectionApi,
+  createPaginationApi,
+  createExportApi,
+  createExpansionApi,
+  createViewsApi,
+  createTableApi,
+  type TableApi,
+} from '../api/index.js';
 
 export { type RowPredicate, type RowUpdater };
+export type { TablePlugin, TableCellEditEvent, TablePluginContext };
 
 export interface UseRemoteTableOptions<TData, TValue = unknown> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,8 +63,16 @@ export interface UseRemoteTableOptions<TData, TValue = unknown> {
   debounceMs?: number;
   adapter?: QueryAdapter;
   filters?: FilterDef[];
+  dynamicRules?: DynamicFilterRule[];
+  conjunction?: FilterConjunction;
   columnPinning?: ColumnPinningState;
   initialState?: Partial<TableState>;
+  getRowId?: (row: TData) => string;
+  plugins?: TablePlugin<TData>[];
+  enableColumnResizing?: boolean;
+  columnResizeMode?: 'onChange' | 'onEnd';
+  enableRowExpansion?: boolean;
+  savedViewsKey?: string;
 }
 
 export interface UseRemoteTableReturn<TData> {
@@ -62,6 +88,12 @@ export interface UseRemoteTableReturn<TData> {
   filters: Ref<Record<string, unknown>>;
   activeFilterCount: ComputedRef<number>;
   filterDefs: FilterDef[];
+  dynamicRules: Ref<DynamicFilterRule[]>;
+  conjunction: Ref<FilterConjunction>;
+  setDynamicRules: (rules: DynamicFilterRule[]) => void;
+  setDynamicConjunction: (conj: FilterConjunction) => void;
+  applyFilterPreset: (preset: FilterPreset) => void;
+  clearDynamicRules: () => void;
   setFilter: (id: string, value: unknown) => void;
   resetFilters: () => void;
   refetch: () => Promise<void>;
@@ -83,6 +115,24 @@ export interface UseRemoteTableReturn<TData> {
   // Column Ergonomics
   columnPinning: Ref<ColumnPinningState>;
   setColumnPinning: (pinning: ColumnPinningState) => void;
+
+  // Row Expansion
+  expanded: Ref<ExpandedState>;
+  toggleRowExpanded: (rowId: string | number) => void;
+  expandAll: () => void;
+  collapseAll: () => void;
+  isRowExpanded: (rowId: string | number) => boolean;
+
+  // Saved Views
+  savedViews: UseSavedViewsReturn;
+  getCurrentState: () => TableSavedViewState;
+
+  // Plugin Pipeline
+  plugins: TablePlugin<TData>[];
+  notifyCellEdit: (event: TableCellEditEvent<TData>) => Promise<boolean>;
+
+  // Unified Enterprise Table API Facade
+  api: TableApi<TData>;
 }
 
 export function useRemoteTable<TData, TValue = unknown>(
@@ -106,11 +156,12 @@ export function useRemoteTable<TData, TValue = unknown>(
   const error = ref<Error | null>(null);
 
   // 1. Pagination Composable
-  const { pagination, total, pageCount } = useTablePagination({
-    initialPageIndex: initialState.pagination?.pageIndex ?? 0,
-    initialPageSize: initialState.pagination?.pageSize ?? defaultPageSize,
-    initialTotal: 0,
-  });
+  const { pagination, pageIndex, pageSize, total, pageCount, setPageIndex, setPageSize } =
+    useTablePagination({
+      initialPageIndex: initialState.pagination?.pageIndex ?? 0,
+      initialPageSize: initialState.pagination?.pageSize ?? defaultPageSize,
+      initialTotal: 0,
+    });
 
   // 2. Sorting Composable
   const { sorting } = useTableSorting({
@@ -121,14 +172,53 @@ export function useRemoteTable<TData, TValue = unknown>(
   const {
     filters: columnFilters,
     searchQuery,
-    activeFilterCount,
+    activeFilterCount: baseActiveFilterCount,
     setFilter,
-    resetFilters,
+    resetFilters: resetColumnFilters,
   } = useTableFilters({
     initialFilters: initialState.filters ?? {},
     initialSearch: initialState.search ?? '',
     filterDefs,
   });
+
+  // Dynamic Database Filter Rules State
+  const dynamicRules = ref<DynamicFilterRule[]>(
+    initialState.dynamicRules
+      ? [...initialState.dynamicRules]
+      : options.dynamicRules
+        ? [...options.dynamicRules]
+        : []
+  );
+  const dynamicConjunction = ref<FilterConjunction>(
+    initialState.conjunction ?? options.conjunction ?? 'and'
+  );
+
+  const activeFilterCount = computed(() => {
+    const validDynamicCount = dynamicRules.value.filter(isRuleComplete).length;
+    return baseActiveFilterCount.value + validDynamicCount;
+  });
+
+  const resetFilters = () => {
+    resetColumnFilters();
+    dynamicRules.value = [];
+  };
+
+  const setDynamicRules = (rules: DynamicFilterRule[]) => {
+    dynamicRules.value = rules;
+  };
+
+  const setDynamicConjunction = (conj: FilterConjunction) => {
+    dynamicConjunction.value = conj;
+  };
+
+  const applyFilterPreset = (preset: FilterPreset) => {
+    dynamicRules.value = [...preset.rules];
+    dynamicConjunction.value = preset.conjunction;
+  };
+
+  const clearDynamicRules = () => {
+    dynamicRules.value = [];
+  };
 
   // 4. Selection Composable
   const { rowSelection, selectedRowIds } = useTableSelection<TData>({
@@ -141,10 +231,14 @@ export function useRemoteTable<TData, TValue = unknown>(
     initialState.columnPinning ?? options.columnPinning ?? { left: [], right: [] }
   );
 
-  // 6. Optimistic CRUD Mutations Composable
+  // 6. Row Expansion State
+  const expanded = ref<ExpandedState>({});
+
+  // 7. Optimistic CRUD Mutations Composable
   const { mutateRow, deleteRow, prependRow, appendRow, setData } = useTableMutations<TData>({
     data,
     total,
+    getRowId: options.getRowId,
   });
 
   // URL Synchronization
@@ -155,6 +249,8 @@ export function useRemoteTable<TData, TValue = unknown>(
       if (newState.pagination) pagination.value = newState.pagination;
       if (newState.sorting) sorting.value = newState.sorting;
       if (newState.filters) columnFilters.value = newState.filters;
+      if (newState.dynamicRules) dynamicRules.value = newState.dynamicRules;
+      if (newState.conjunction) dynamicConjunction.value = newState.conjunction;
       if (newState.search !== undefined) searchQuery.value = newState.search;
     },
   });
@@ -165,8 +261,29 @@ export function useRemoteTable<TData, TValue = unknown>(
     if (urlState.pagination) pagination.value = urlState.pagination;
     if (urlState.sorting) sorting.value = urlState.sorting;
     if (urlState.filters) columnFilters.value = urlState.filters;
+    if (urlState.dynamicRules) dynamicRules.value = urlState.dynamicRules;
+    if (urlState.conjunction) dynamicConjunction.value = urlState.conjunction;
     if (urlState.search !== undefined) searchQuery.value = urlState.search;
   }
+
+  const plugins = options.plugins
+    ? [...options.plugins].sort((a, b) => (a.order ?? 100) - (b.order ?? 100))
+    : [];
+
+  const pluginContext: TablePluginContext<TData> = {
+    data,
+    total,
+    pagination,
+    sorting,
+    filters: columnFilters,
+    searchQuery,
+    columnVisibility,
+    columnPinning,
+    refetch: async () => {
+      await executeFetch();
+    },
+    mutateRow,
+  };
 
   let activeController: AbortController | null = null;
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -186,6 +303,8 @@ export function useRemoteTable<TData, TValue = unknown>(
       pagination: pagination.value,
       sorting: sorting.value,
       filters: columnFilters.value,
+      dynamicRules: dynamicRules.value,
+      conjunction: dynamicConjunction.value,
       search: searchQuery.value,
       columnVisibility: columnVisibility.value,
       columnPinning: columnPinning.value,
@@ -198,13 +317,15 @@ export function useRemoteTable<TData, TValue = unknown>(
     const queryParams = adapter.serialize(currentState);
     const offset = pagination.value.pageIndex * pagination.value.pageSize;
 
-    const params: FetchParams = {
+    let params: FetchParams = {
       page: pagination.value.pageIndex + 1,
       limit: pagination.value.pageSize,
       offset,
       sort: currentState.sorting.map((s) => (s.desc ? `-${s.id}` : s.id)).join(','),
       search: currentState.search,
       filters: currentState.filters,
+      dynamicRules: currentState.dynamicRules,
+      conjunction: currentState.conjunction,
       signal,
       queryParams,
       toQueryString: () => {
@@ -218,14 +339,33 @@ export function useRemoteTable<TData, TValue = unknown>(
       },
     };
 
+    for (const plugin of plugins) {
+      if (plugin.onBeforeFetch) {
+        const modified = await plugin.onBeforeFetch(params, pluginContext);
+        if (modified) params = modified;
+      }
+    }
+
     try {
-      const result = await fetcher(params);
+      let result = await fetcher(params);
+      for (const plugin of plugins) {
+        if (plugin.onAfterFetch) {
+          const modified = await plugin.onAfterFetch(result, pluginContext);
+          if (modified) result = modified;
+        }
+      }
       if (!signal.aborted) {
         data.value = result.data;
         total.value = result.total;
       }
     } catch (err: unknown) {
-      if (err instanceof DOMException && err.name === 'AbortError') {
+      const isAbort =
+        (err instanceof DOMException && err.name === 'AbortError') ||
+        (typeof err === 'object' &&
+          err !== null &&
+          ((err as { name?: string }).name === 'AbortError' ||
+            (err as { name?: string }).name === 'CanceledError'));
+      if (isAbort) {
         return;
       }
       isError.value = true;
@@ -259,6 +399,7 @@ export function useRemoteTable<TData, TValue = unknown>(
       return data.value;
     },
     columns,
+    getRowId: options.getRowId,
     get pageCount() {
       return pageCount.value;
     },
@@ -277,6 +418,9 @@ export function useRemoteTable<TData, TValue = unknown>(
       },
       get rowSelection() {
         return rowSelection.value;
+      },
+      get expanded() {
+        return expanded.value;
       },
     },
     manualPagination: true,
@@ -307,8 +451,35 @@ export function useRemoteTable<TData, TValue = unknown>(
       rowSelection.value =
         typeof updaterOrValue === 'function' ? updaterOrValue(rowSelection.value) : updaterOrValue;
     },
+    onExpandedChange: (updaterOrValue) => {
+      expanded.value =
+        typeof updaterOrValue === 'function' ? updaterOrValue(expanded.value) : updaterOrValue;
+    },
+    enableColumnResizing: options.enableColumnResizing ?? true,
+    columnResizeMode: options.columnResizeMode ?? 'onChange',
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
   });
+
+  pluginContext.table = table;
+
+  for (const plugin of plugins) {
+    if (plugin.setup) {
+      plugin.setup(pluginContext);
+    }
+  }
+
+  const notifyCellEdit = async (event: TableCellEditEvent<TData>): Promise<boolean> => {
+    for (const plugin of plugins) {
+      if (plugin.onCellEdit) {
+        const allow = await plugin.onCellEdit(event, pluginContext);
+        if (allow === false) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
 
   // Watchers for Search and Filters (reset page to 0 on filter change)
   watch(searchQuery, () => {
@@ -325,6 +496,15 @@ export function useRemoteTable<TData, TValue = unknown>(
     { deep: true }
   );
 
+  watch(
+    [dynamicRules, dynamicConjunction],
+    () => {
+      pagination.value.pageIndex = 0;
+      scheduleFetch(false); // debounced
+    },
+    { deep: true }
+  );
+
   const refetch = async () => {
     await executeFetch();
   };
@@ -332,7 +512,7 @@ export function useRemoteTable<TData, TValue = unknown>(
   const invalidate = refetch;
 
   // Selection shortcuts derived from Table instance
-  const selectedRows = computed<Row<TData>[]>(() => table.getFilteredSelectedRowModel().rows);
+  const selectedRows = computed<Row<TData>[]>(() => table.getSelectedRowModel().rows);
   const selectedCount = computed(() => selectedRows.value.length);
   const clearSelection = () => table.resetRowSelection();
 
@@ -358,6 +538,131 @@ export function useRemoteTable<TData, TValue = unknown>(
         activeController.abort('Table composable disposed or unmounted');
         activeController = null;
       }
+      for (const plugin of plugins) {
+        if (plugin.onDestroy) {
+          plugin.onDestroy(pluginContext);
+        }
+      }
+    });
+  }
+
+  // Assemble Enterprise Table API Facades
+  const columnApi = createColumnApi(() => table);
+  const filterApi = createFilterApi({
+    searchQuery,
+    filters: columnFilters,
+    setFilter,
+    resetFilters,
+    activeFilterCount,
+    dynamicRules,
+    dynamicConjunction,
+  });
+  const selectionApi = createSelectionApi(() => table, rowSelection, clearSelection);
+  const paginationApi = createPaginationApi({
+    pageIndex,
+    pageSize,
+    total,
+    pageCount,
+    setPageIndex,
+    setPageSize,
+  });
+  const exportApi = createExportApi({
+    getData: () => data.value,
+    getColumns: () => columns as ColumnDef<TData, any>[],
+  });
+
+  // Row Expansion Helpers
+  const toggleRowExpanded = (rowId: string | number) => {
+    table.getRow(String(rowId))?.toggleExpanded();
+  };
+  const expandAll = () => table.toggleAllRowsExpanded(true);
+  const collapseAll = () => table.toggleAllRowsExpanded(false);
+  const isRowExpanded = (rowId: string | number) => {
+    return !!table.getRow(String(rowId))?.getIsExpanded();
+  };
+
+  // Saved Views Manager
+  const getCurrentState = (): TableSavedViewState => ({
+    columnVisibility: columnVisibility.value,
+    columnPinning: columnPinning.value,
+    columnSizing: table.getState().columnSizing,
+    sorting: sorting.value,
+    filters: columnFilters.value,
+    search: searchQuery.value,
+    pageSize: pagination.value.pageSize,
+  });
+
+  const savedViews = useSavedViews({
+    storageKey: options.savedViewsKey,
+    onApplyView: (view) => {
+      if (view.state.columnVisibility) {
+        columnVisibility.value = view.state.columnVisibility;
+      }
+      if (view.state.columnPinning) {
+        columnPinning.value = view.state.columnPinning;
+      }
+      if (view.state.columnSizing) {
+        table.setColumnSizing(view.state.columnSizing);
+      }
+      if (view.state.sorting) {
+        sorting.value = view.state.sorting;
+      }
+      if (view.state.pageSize) {
+        setPageSize(view.state.pageSize);
+      }
+      if (view.state.search !== undefined) {
+        searchQuery.value = view.state.search;
+      }
+      if (view.state.filters) {
+        columnFilters.value = view.state.filters;
+      }
+    },
+  });
+
+  const expansionApi = createExpansionApi(() => table, expanded);
+  const viewsApi = createViewsApi({
+    views: savedViews.views,
+    activeView: savedViews.activeView,
+    applyView: savedViews.applyView,
+    saveView: (name) => savedViews.saveView(name, getCurrentState()),
+    updateActiveView: () => {
+      const activeId = savedViews.activeViewId.value;
+      if (activeId) {
+        savedViews.updateView(activeId, getCurrentState());
+      }
+    },
+    deleteView: savedViews.deleteView,
+    resetToDefault: savedViews.resetToDefault,
+  });
+
+  const api = createTableApi({
+    column: columnApi,
+    filter: filterApi,
+    selection: selectionApi,
+    pagination: paginationApi,
+    export: exportApi,
+    expansion: expansionApi,
+    views: viewsApi,
+    getTable: () => table,
+    refresh: refetch,
+    mutateRow,
+    deleteRow,
+    notifyCellEdit,
+  });
+
+  if (getCurrentScope()) {
+    onScopeDispose(() => {
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+        debounceTimer = null;
+      }
+      if (activeController) {
+        activeController.abort('Table composable disposed');
+        activeController = null;
+      }
+      for (const plugin of plugins) {
+        plugin.onDestroy?.(pluginContext);
+      }
     });
   }
 
@@ -374,6 +679,12 @@ export function useRemoteTable<TData, TValue = unknown>(
     filters: columnFilters,
     activeFilterCount,
     filterDefs,
+    dynamicRules,
+    conjunction: dynamicConjunction,
+    setDynamicRules,
+    setDynamicConjunction,
+    applyFilterPreset,
+    clearDynamicRules,
     setFilter,
     resetFilters,
     refetch,
@@ -389,5 +700,15 @@ export function useRemoteTable<TData, TValue = unknown>(
     setData,
     columnPinning,
     setColumnPinning,
+    expanded,
+    toggleRowExpanded,
+    expandAll,
+    collapseAll,
+    isRowExpanded,
+    savedViews,
+    getCurrentState,
+    plugins,
+    notifyCellEdit,
+    api,
   };
 }

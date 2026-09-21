@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="TOption, TValue extends string | number = string | number">
 import {
-  Badge,
   Button,
   Command,
   CommandEmpty,
@@ -21,7 +20,8 @@ import {
   Trash2,
   X,
 } from 'lucide-vue-next';
-import { computed, ref, watch, type Ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useTableLocale } from '../locale/index.js';
 import {
   useRemoteInfiniteSelect,
   type RemoteSelectFetchParams,
@@ -59,9 +59,9 @@ const props = withDefaults(
     resolveValue: undefined,
     valueKey: 'id' as keyof TOption,
     labelKey: 'name' as keyof TOption,
-    placeholder: 'Chọn giá trị...',
-    searchPlaceholder: 'Tìm kiếm...',
-    emptyText: 'Không tìm thấy dữ liệu',
+    placeholder: undefined,
+    searchPlaceholder: undefined,
+    emptyText: undefined,
     onCreate: undefined,
     onDelete: undefined,
     canCreate: true,
@@ -72,6 +72,24 @@ const props = withDefaults(
     debounceMs: 250,
   }
 );
+
+const locale = useTableLocale();
+const isVi = computed(() => locale.value.code.startsWith('vi'));
+
+const effectivePlaceholder = computed(() => props.placeholder ?? (isVi.value ? 'Chọn giá trị...' : 'Select option...'));
+const effectiveSearchPlaceholder = computed(() => props.searchPlaceholder ?? locale.value.messages.toolbar.searchPlaceholder);
+const effectiveEmptyText = computed(() => props.emptyText ?? locale.value.messages.general.emptyMessage);
+
+const selectedCountLabel = (count: number) => isVi.value ? `${count} đã chọn` : `${count} selected`;
+const clearSelectionLabel = computed(() => isVi.value ? 'Xóa lựa chọn' : 'Clear selection');
+const loadingText = computed(() => isVi.value ? 'Đang tải danh sách...' : 'Loading options...');
+const loadingMoreText = computed(() => isVi.value ? 'Đang tải thêm...' : 'Loading more...');
+const createNewText = (term: string) => isVi.value ? `Tạo mới: "${term}"` : `Create new: "${term}"`;
+const deleteConfirmText = computed(() => isVi.value ? 'Xóa?' : 'Delete?');
+const yesText = computed(() => isVi.value ? 'Có' : 'Yes');
+const cancelText = computed(() => locale.value.messages.cell.cancel.replace(/\s*\(.*?\)/, ''));
+const deleteItemTitle = computed(() => isVi.value ? 'Xóa mục này' : 'Delete this item');
+const allLoadedText = (count: number) => isVi.value ? `Đã hiển thị toàn bộ ${count} mục` : `Showing all ${count} items`;
 
 const emit = defineEmits<{
   'update:modelValue': [value: TValue | TValue[] | undefined];
@@ -165,7 +183,7 @@ const selectedItemOrItems = computed(() => {
 
 const displayLabel = computed(() => {
   if (props.multiple && Array.isArray(selectedItemOrItems.value)) {
-    return `${selectedItemOrItems.value.length} đã chọn`;
+    return selectedCountLabel(selectedItemOrItems.value.length);
   }
   if (selectedItemOrItems.value && !Array.isArray(selectedItemOrItems.value)) {
     return getItemLabel(selectedItemOrItems.value as TOption);
@@ -289,7 +307,7 @@ function cancelDelete(e: Event) {
             {{ displayLabel }}
           </span>
           <span v-else class="truncate text-muted-foreground">
-            {{ placeholder }}
+            {{ effectivePlaceholder }}
           </span>
         </div>
 
@@ -298,7 +316,7 @@ function cancelDelete(e: Event) {
             v-if="modelValue !== undefined && modelValue !== null && (Array.isArray(modelValue) ? modelValue.length > 0 : true)"
             role="button"
             tabindex="0"
-            aria-label="Xóa lựa chọn"
+            :aria-label="clearSelectionLabel"
             class="rounded-sm p-0.5 hover:bg-muted text-muted-foreground hover:text-foreground focus:outline-none"
             @click.stop="handleClear"
             @keydown.enter.stop="handleClear"
@@ -314,7 +332,7 @@ function cancelDelete(e: Event) {
     <PopoverContent class="w-[var(--radix-popover-trigger-width,260px)] p-0" align="start">
       <Command>
         <CommandInput
-          :placeholder="searchPlaceholder"
+          :placeholder="effectiveSearchPlaceholder"
           class="h-9 text-xs"
           @update:model-value="(val) => setSearch(String(val))"
         />
@@ -326,12 +344,12 @@ function cancelDelete(e: Event) {
             class="flex items-center justify-center p-4 text-xs text-muted-foreground gap-2"
           >
             <Loader2 class="h-4 w-4 animate-spin text-primary" />
-            <span>Đang tải danh sách...</span>
+            <span>{{ loadingText }}</span>
           </div>
 
           <!-- Empty State -->
           <CommandEmpty v-else-if="items.length === 0 && !showCreateOption" class="py-4 text-xs text-muted-foreground">
-            {{ emptyText }}
+            {{ effectiveEmptyText }}
           </CommandEmpty>
 
           <!-- Create Option -->
@@ -342,7 +360,7 @@ function cancelDelete(e: Event) {
               @select="handleCreate"
             >
               <Plus class="h-3.5 w-3.5 text-primary" />
-              <span>Tạo mới: "{{ searchQuery.trim() }}"</span>
+              <span>{{ createNewText(searchQuery.trim()) }}</span>
               <Loader2 v-if="isCreating" class="h-3 w-3 animate-spin ml-auto" />
             </CommandItem>
           </CommandGroup>
@@ -380,14 +398,14 @@ function cancelDelete(e: Event) {
                   v-if="confirmingDeleteId === String(getItemValue(item))"
                   class="flex items-center gap-1 bg-destructive/10 text-destructive px-1.5 py-0.5 rounded text-[11px]"
                 >
-                  <span>Xóa?</span>
+                  <span>{{ deleteConfirmText }}</span>
                   <Button
                     variant="ghost"
                     size="sm"
                     class="h-5 px-1.5 text-[10px] text-destructive hover:bg-destructive hover:text-destructive-foreground"
                     @click.stop="() => confirmDeleteExecution(item)"
                   >
-                    Có
+                    {{ yesText }}
                   </Button>
                   <Button
                     variant="ghost"
@@ -395,7 +413,7 @@ function cancelDelete(e: Event) {
                     class="h-5 px-1.5 text-[10px] text-muted-foreground hover:bg-accent"
                     @click.stop="cancelDelete"
                   >
-                    Hủy
+                    {{ cancelText }}
                   </Button>
                 </div>
 
@@ -405,7 +423,8 @@ function cancelDelete(e: Event) {
                   variant="ghost"
                   size="sm"
                   class="h-6 w-6 p-0 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
-                  title="Xóa mục này"
+                  :title="deleteItemTitle"
+                  :aria-label="deleteItemTitle"
                   :disabled="deletingIds[String(getItemValue(item))]"
                   @click.stop="(e) => requestDelete(e, item)"
                 >
@@ -423,10 +442,10 @@ function cancelDelete(e: Event) {
           <div ref="sentinelEl" class="py-2 text-center text-xs text-muted-foreground">
             <div v-if="isLoadingMore" class="flex items-center justify-center gap-1.5 py-1">
               <Loader2 class="h-3.5 w-3.5 animate-spin text-primary" />
-              <span>Đang tải thêm...</span>
+              <span>{{ loadingMoreText }}</span>
             </div>
             <div v-else-if="!hasMore && items.length > 0" class="text-[11px] text-muted-foreground/60 py-1">
-              Đã hiển thị toàn bộ {{ total }} mục
+              {{ allLoadedText(total) }}
             </div>
           </div>
         </CommandList>

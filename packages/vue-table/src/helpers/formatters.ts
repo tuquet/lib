@@ -6,12 +6,14 @@ import DataTableRowActions, {
   type DataTableRowActionsProps,
   type RowActionItem,
 } from '../components/DataTableRowActions.vue';
+import EditableCell, { type SelectOption } from '../components/EditableCell.vue';
 
 // --- Date Column ---
 export interface DateColumnOptions<TData> {
   accessorKey: keyof TData & string;
   header: string;
   id?: string;
+  size?: number;
   locale?: string;
   relative?: boolean;
   dateFormatOptions?: Intl.DateTimeFormatOptions;
@@ -40,6 +42,7 @@ export function createDateColumn<TData>(options: DateColumnOptions<TData>): Colu
     accessorKey,
     header,
     id = accessorKey,
+    size,
     locale = 'en-US',
     relative = false,
     dateFormatOptions = {
@@ -57,6 +60,8 @@ export function createDateColumn<TData>(options: DateColumnOptions<TData>): Colu
     id,
     accessorKey,
     header,
+    size,
+
     cell: ({ getValue }) => {
       const raw = getValue();
       if (!raw) return nullValue;
@@ -181,6 +186,7 @@ export interface CopyableColumnOptions<TData> {
   accessorKey: keyof TData & string;
   header: string;
   id?: string;
+  size?: number;
   truncateLength?: number;
   enableSorting?: boolean;
 }
@@ -188,12 +194,20 @@ export interface CopyableColumnOptions<TData> {
 export function createCopyableColumn<TData>(
   options: CopyableColumnOptions<TData>
 ): ColumnDef<TData, any> {
-  const { accessorKey, header, id = accessorKey, truncateLength, enableSorting = true } = options;
+  const {
+    accessorKey,
+    header,
+    id = accessorKey,
+    size,
+    truncateLength,
+    enableSorting = true,
+  } = options;
 
   return {
     id,
     accessorKey,
     header,
+    size,
     cell: ({ getValue }) => {
       const val = getValue();
       if (val === undefined || val === null) return '-';
@@ -245,9 +259,10 @@ export function createAvatarColumn<TData>(
     accessorKey: nameKey,
     header,
     cell: ({ row }: { row: Row<TData> }) => {
-      const name = String(row.original[nameKey] ?? '');
-      const src = srcKey ? String(row.original[srcKey] ?? '') : '';
-      const description = descriptionKey ? String(row.original[descriptionKey] ?? '') : '';
+      const original = row?.original;
+      const name = String(original?.[nameKey] ?? '');
+      const src = srcKey && original ? String(original[srcKey] ?? '') : '';
+      const description = descriptionKey && original ? String(original[descriptionKey] ?? '') : '';
       const initials = getInitials(name);
 
       const avatarClasses =
@@ -305,5 +320,97 @@ export function createActionsColumn<TData>(
     enableSorting: false,
     enableHiding: false,
     size,
+  };
+}
+
+// --- Editable Column ---
+export interface EditableColumnOptions<TData, TValue = any> {
+  accessorKey: keyof TData & string;
+  header: string;
+  id?: string;
+  type?: 'text' | 'number' | 'select';
+  options?: SelectOption<TValue>[];
+  placeholder?: string;
+  prefix?: string;
+  suffix?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  size?: number;
+  disabled?: boolean | ((row: TData) => boolean);
+  validate?: (val: TValue) => string | null;
+  onSave?: (newValue: TValue, row: TData) => void | Promise<void>;
+  displayRender?: (value: TValue, row: TData) => any;
+  enableSorting?: boolean;
+}
+
+export function createEditableColumn<TData, TValue = any>(
+  options: EditableColumnOptions<TData, TValue>
+): ColumnDef<TData, any> {
+  const {
+    accessorKey,
+    header,
+    id = accessorKey,
+    type = 'text',
+    options: selectOptions = [],
+    placeholder,
+    prefix,
+    suffix,
+    min,
+    max,
+    step,
+    size,
+    disabled = false,
+    validate,
+    onSave,
+    displayRender,
+    enableSorting = true,
+  } = options;
+
+  return {
+    id,
+    accessorKey,
+    header,
+    size,
+    cell: ({ row }) => {
+      const original = row?.original;
+      const isDisabled =
+        typeof disabled === 'function' ? (original ? disabled(original) : false) : disabled;
+      const currentValue = row?.getValue
+        ? (row.getValue(id) as TValue)
+        : (original as any)?.[accessorKey];
+
+      return h(
+        EditableCell,
+        {
+          modelValue: currentValue as any,
+          type,
+          options: selectOptions as any,
+          placeholder,
+          prefix,
+          suffix,
+          min,
+          max,
+          step,
+          disabled: isDisabled,
+          validate: validate as any,
+          'onUpdate:modelValue': (newVal: any) => {
+            if (original) {
+              (original as any)[accessorKey] = newVal;
+              if (onSave) {
+                onSave(newVal, original);
+              }
+            }
+          },
+        },
+        displayRender
+          ? {
+              display: ({ value }: { value: any }) =>
+                original ? displayRender(value, original) : String(value ?? ''),
+            }
+          : undefined
+      );
+    },
+    enableSorting,
   };
 }

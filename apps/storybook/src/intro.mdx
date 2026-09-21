@@ -1,0 +1,68 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# Tuquet Vue Table Suite
+
+Chào mừng bạn đến với tài liệu và môi trường Storybook tương tác của **@tuquet/vue-table**.
+
+Môi trường này được thiết kế tinh gọn, chuẩn mực, tập trung hoàn toàn vào các tính năng cốt lõi của **Enterprise Data Grid** mà không sử dụng các giao diện bọc ngoài rườm rà.
+
+---
+
+## 🎯 Triết lý Thiết kế Storybook
+
+Thư viện tuân thủ triết lý Storybook CSF3 tiêu chuẩn:
+- **Tập trung vào Component thuần khiết (Pure Component):** Bảng hiển thị giao diện Shadcn/Tailwind chân thực nhất giống hệt môi trường ứng dụng thực tế của bạn.
+- **Tận dụng tối đa Storybook Panels:**
+  - 🎛️ **Tab Controls:** Tùy biến mọi tham số của bảng trực tiếp (đổi mật độ dòng Density, bật/tắt Virtual Scroll, chiều cao bảng, số dòng ảo hóa Overscan, số lượng bản ghi RAM từ 1.000 đến 25.000 dòng...).
+  - ⚡ **Tab Actions:** Theo dõi các sự kiện tương tác phát ra (`row-click`, `selection-change`, `export`, `mutation`...).
+  - 🧪 **Tab Interactions:** Xem và phát lại các kịch bản kiểm thử hành vi người dùng tự động (`play` function: gõ tìm kiếm debounce, chọn checkbox bulk actions, lọc faceted, inline edit).
+
+---
+
+## 🏛️ Các Phân hệ Story
+
+### 1. 📊 Enterprise Data Grid (`Table/DataTable`)
+- **Master Story: All-In-One Enterprise Table**:
+  - **10.000+ bản ghi mượt mà 60 FPS** với công nghệ ảo hóa `@tanstack/vue-virtual`.
+  - **Column Pinning:** Cố định cột Checkbox/STT bên trái và Cột Thao tác bên phải.
+  - **Faceted & Debounced Filter:** Tìm kiếm toàn văn debounce và lọc trạng thái theo nhóm.
+  - **Thanh thao tác hàng loạt (Bulk Floating Bar):** Tự động xuất hiện khi chọn nhiều dòng để Hoàn thành, Sao chép TSV hoặc Xóa.
+  - **Xuất dữ liệu chuẩn Enterprise:** Hỗ trợ xuất trực tiếp ra định dạng Excel (.xlsx), CSV (.csv), và TSV clipboard.
+  - **Tương thích Mobile Card View:** Hỗ trợ chuyển đổi sang layout thẻ trên màn hình nhỏ và mở form chỉnh sửa Drawer Bottom Sheet theo chuẩn OpenAPI schema.
+
+### 2. 🔍 Bộ Lọc Nâng Cao (`Table/Advanced Filter Builder`)
+- **Trực quan hóa cây điều kiện lọc lồng nhau:** Hỗ trợ liên kết logic AND/OR linh hoạt với đa dạng toán tử cho từng kiểu dữ liệu (Văn bản, Số, Ngày tháng, Danh mục).
+- **Lọc trực tiếp trên tập dữ liệu:** Tương thích trực tiếp với composable `useTableFilters` và engine lọc nội bộ của `@tuquet/vue-table`.
+
+---
+
+## 🚀 Hướng dẫn Bắt đầu Nhanh
+
+```bash
+# Cài đặt thư viện vào dự án Vue 3 của bạn
+pnpm add @tuquet/vue-table @tuquet/vue-ui
+```
+
+```vue
+<script setup lang="ts">
+import { DataTable, useRemoteTable, createSelectionColumn } from '@tuquet/vue-table';
+
+const remote = useRemoteTable({
+  columns: [
+    createSelectionColumn(),
+    { accessorKey: 'id', header: 'Mã' },
+    { accessorKey: 'name', header: 'Tên' },
+  ],
+  fetcher: async (params) => {
+    const res = await fetch(\`/api/items?page=\${params.pageIndex}\`);
+    return await res.json();
+  },
+});
+</script>
+
+<template>
+  <DataTable :remote="remote" :virtual="true" virtual-height="500px" />
+</template>
+```

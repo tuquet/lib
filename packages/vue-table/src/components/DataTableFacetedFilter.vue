@@ -15,8 +15,9 @@ import {
   Separator,
 } from '@tuquet/vue-ui';
 import { Check, PlusCircle } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import type { FacetedFilterOption } from '../types/index.js';
+import { useTableLocale } from '../locale/index.js';
 
 export interface DataTableFacetedFilterProps {
   title?: string;
@@ -28,6 +29,11 @@ const props = withDefaults(defineProps<DataTableFacetedFilterProps>(), {
   title: 'Filter',
   modelValue: () => [],
 });
+
+const locale = useTableLocale();
+const emptyMessage = computed(() => locale.value.messages.general.emptyMessage);
+const clearAllText = computed(() => locale.value.messages.filterBuilder.clearAll || 'Clear filters');
+const selectedText = computed(() => (locale.value.code.startsWith('vi') ? 'đã chọn' : 'selected'));
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: (string | number)[]): void;
@@ -70,7 +76,7 @@ const clearFilters = () => {
               variant="secondary"
               class="rounded-sm px-1 font-normal"
             >
-              {{ selectedValues.size }} selected
+              {{ selectedValues.size }} {{ selectedText }}
             </Badge>
             <template v-else>
               <Badge
@@ -90,7 +96,7 @@ const clearFilters = () => {
       <Command>
         <CommandInput :placeholder="title" />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{{ emptyMessage }}</CommandEmpty>
           <CommandGroup>
             <CommandItem
               v-for="option in options"
@@ -130,7 +136,7 @@ const clearFilters = () => {
                 class="justify-center text-center font-medium"
                 @select="clearFilters"
               >
-                Clear filters
+                {{ clearAllText }}
               </CommandItem>
             </CommandGroup>
           </template>

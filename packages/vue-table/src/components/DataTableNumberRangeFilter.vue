@@ -9,6 +9,7 @@ import {
 } from '@tuquet/vue-ui';
 import { Hash, X } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
+import { useTableLocale } from '../locale/index.js';
 
 export interface NumberRangeValue {
   min?: number | null;
@@ -27,12 +28,26 @@ export interface DataTableNumberRangeFilterProps {
 
 const props = withDefaults(defineProps<DataTableNumberRangeFilterProps>(), {
   modelValue: undefined,
-  placeholderMin: 'Min',
-  placeholderMax: 'Max',
+  placeholderMin: undefined,
+  placeholderMax: undefined,
   prefix: '',
   suffix: '',
   step: 1,
 });
+
+const locale = useTableLocale();
+const isVi = computed(() => locale.value.code.startsWith('vi'));
+const effectiveMinPlaceholder = computed(
+  () => props.placeholderMin ?? locale.value.messages.filterBuilder.betweenFrom ?? 'Min'
+);
+const effectiveMaxPlaceholder = computed(
+  () => props.placeholderMax ?? locale.value.messages.filterBuilder.betweenTo ?? 'Max'
+);
+const resetLabel = computed(() => locale.value.messages.toolbar.reset);
+const applyLabel = computed(() => locale.value.messages.dateRange?.apply ?? (isVi.value ? 'Áp dụng' : 'Apply'));
+const allLabel = computed(() => (isVi.value ? 'Tất cả' : 'All'));
+const clearAriaLabel = computed(() => (isVi.value ? 'Xóa bộ lọc' : 'Clear filter'));
+const filterByTitle = computed(() => (isVi.value ? `Lọc theo ${props.title}` : `Filter by ${props.title}`));
 
 const emit = defineEmits<{
   'update:modelValue': [value: NumberRangeValue | undefined];
@@ -106,13 +121,13 @@ function handleClear(e?: Event) {
         <Hash class="h-3.5 w-3.5 text-muted-foreground" />
         <span class="text-muted-foreground">{{ title }}:</span>
         <span v-if="displayLabel" class="font-medium text-foreground">{{ displayLabel }}</span>
-        <span v-else class="text-muted-foreground/60">Tất cả</span>
+        <span v-else class="text-muted-foreground/60">{{ allLabel }}</span>
 
         <span
           v-if="hasValue"
           role="button"
           tabindex="0"
-          aria-label="Xóa bộ lọc"
+          :aria-label="clearAriaLabel"
           class="ml-1 rounded-sm p-0.5 hover:bg-muted focus:outline-none"
           @click.stop="handleClear"
           @keydown.enter.stop="handleClear"
@@ -125,27 +140,27 @@ function handleClear(e?: Event) {
 
     <PopoverContent class="w-64 p-3" align="start">
       <div class="space-y-3">
-        <div class="text-xs font-semibold text-foreground">Lọc theo {{ title }}</div>
+        <div class="text-xs font-semibold text-foreground">{{ filterByTitle }}</div>
 
         <div class="grid grid-cols-2 gap-2">
           <div class="space-y-1">
-            <Label class="text-[11px] text-muted-foreground">{{ placeholderMin }}</Label>
+            <Label class="text-[11px] text-muted-foreground">{{ effectiveMinPlaceholder }}</Label>
             <Input
               v-model="minVal"
               type="number"
               :step="step"
-              :placeholder="placeholderMin"
+              :placeholder="effectiveMinPlaceholder"
               class="h-8 text-xs"
               @keydown.enter="handleApply"
             />
           </div>
           <div class="space-y-1">
-            <Label class="text-[11px] text-muted-foreground">{{ placeholderMax }}</Label>
+            <Label class="text-[11px] text-muted-foreground">{{ effectiveMaxPlaceholder }}</Label>
             <Input
               v-model="maxVal"
               type="number"
               :step="step"
-              :placeholder="placeholderMax"
+              :placeholder="effectiveMaxPlaceholder"
               class="h-8 text-xs"
               @keydown.enter="handleApply"
             />
@@ -159,7 +174,7 @@ function handleClear(e?: Event) {
             class="h-7 px-2 text-xs text-muted-foreground"
             @click="handleClear"
           >
-            Đặt lại
+            {{ resetLabel }}
           </Button>
           <Button
             variant="default"
@@ -167,7 +182,7 @@ function handleClear(e?: Event) {
             class="h-7 px-3 text-xs"
             @click="handleApply"
           >
-            Áp dụng
+            {{ applyLabel }}
           </Button>
         </div>
       </div>

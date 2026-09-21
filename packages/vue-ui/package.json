@@ -33,6 +33,7 @@
   "scripts": {
     "build": "vite build && cp dist/index.d.ts dist/index.d.cts",
     "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
     "check:exports": "publint"
   },
   "dependencies": {
@@ -50,6 +51,8 @@
     "vue": "^3.4.0 || ^3.5.0"
   },
   "devDependencies": {
+    "@storybook/test": "^8.6.0",
+    "@storybook/vue3": "^8.6.0",
     "@tuquet/tsconfig": "workspace:*",
     "@types/node": "^22.13.9",
     "@vitejs/plugin-vue": "^5.2.4",
@@ -62,6 +65,7 @@
     "typescript": "^5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.0.8",
     "vue": "^3.5.13",
     "vue-tsc": "^2.2.8"
   }

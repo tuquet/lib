@@ -45,6 +45,8 @@
     "vue": "^3.4.0 || ^3.5.0"
   },
   "devDependencies": {
+    "@storybook/test": "^8.6.0",
+    "@storybook/vue3": "^8.6.0",
     "@tuquet/tsconfig": "workspace:*",
     "@types/node": "^22.13.9",
     "@vitejs/plugin-vue": "^5.2.4",

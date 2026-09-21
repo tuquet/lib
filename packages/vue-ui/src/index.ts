@@ -51,3 +51,7 @@ export * from './components/ui/textarea/index.js';
 export * from './components/ui/toggle/index.js';
 export * from './components/ui/toggle-group/index.js';
 export * from './components/ui/tooltip/index.js';
+
+// Schema-Driven UI & Dynamic Form Core
+export * from './schema/index.js';
+export * from './components/dynamic-form/index.js';

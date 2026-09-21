@@ -113,8 +113,15 @@ describe('Layer 0: SOLID Core Composables', () => {
 
   describe('useTableFilters', () => {
     it('manages filters and computes activeFilterCount accurately', () => {
-      const { filters, searchQuery, activeFilterCount, setFilter, setSearchQuery, resetFilters } =
-        useTableFilters();
+      const {
+        filters,
+        searchQuery,
+        activeFilterCount,
+        setFilter,
+        removeFilter,
+        setSearchQuery,
+        resetFilters,
+      } = useTableFilters();
 
       expect(activeFilterCount.value).toBe(0);
 
@@ -132,6 +139,27 @@ describe('Layer 0: SOLID Core Composables', () => {
       // Empty string should not count
       setFilter('role', '');
       expect(activeFilterCount.value).toBe(2);
+
+      // Test removeFilter
+      setFilter('status', 'active');
+      expect(filters.value.status).toBe('active');
+      removeFilter('status');
+      expect(filters.value.status).toBeUndefined();
+
+      // Test clearFilters vs resetFilters
+      const withInit = useTableFilters({
+        initialFilters: { type: 'admin' },
+        initialSearch: 'alice',
+      });
+      expect(withInit.filters.value).toEqual({ type: 'admin' });
+      withInit.setFilter('type', 'user');
+      withInit.setSearchQuery('bob');
+      withInit.resetFilters();
+      expect(withInit.filters.value).toEqual({ type: 'admin' });
+      expect(withInit.searchQuery.value).toBe('alice');
+      withInit.clearFilters();
+      expect(withInit.filters.value).toEqual({});
+      expect(withInit.searchQuery.value).toBe('');
 
       resetFilters();
       expect(searchQuery.value).toBe('');
@@ -216,6 +244,32 @@ describe('Layer 0: SOLID Core Composables', () => {
       setData([{ id: '99', title: 'Reset', count: 99 }], 1);
       expect(data.value.length).toBe(1);
       expect(data.value[0]?.id).toBe('99');
+    });
+
+    it('supports custom getRowId function', () => {
+      interface CustomItem {
+        code: string;
+        desc: string;
+      }
+      const data = ref<CustomItem[]>([
+        { code: 'A1', desc: 'First' },
+        { code: 'B2', desc: 'Second' },
+      ]);
+      const total = ref(2);
+
+      const { mutateRow, deleteRow } = useTableMutations({
+        data,
+        total,
+        getRowId: (row) => row.code,
+      });
+
+      mutateRow('A1', { desc: 'Updated First' });
+      expect(data.value[0]?.desc).toBe('Updated First');
+
+      deleteRow('B2');
+      expect(data.value.length).toBe(1);
+      expect(data.value[0]?.code).toBe('A1');
+      expect(total.value).toBe(1);
     });
   });
 });

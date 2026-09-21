@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="TData">
-import type { Table } from '@tanstack/vue-table';
+import type { Column, Table } from '@tanstack/vue-table';
 import {
   Button,
   DropdownMenu,
@@ -11,21 +11,51 @@ import {
 } from '@tuquet/vue-ui';
 import { SlidersHorizontal } from 'lucide-vue-next';
 import { computed } from 'vue';
+import { useTableLocale } from '../locale/index.js';
 
 export interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
+  /**
+   * Button trigger label (defaults to locale.messages.toolbar.viewOptionsTrigger)
+   */
+  triggerText?: string;
+  /**
+   * Dropdown menu label title (defaults to locale.messages.toolbar.viewOptionsTitle)
+   */
+  menuTitle?: string;
 }
 
-const props = defineProps<DataTableViewOptionsProps<TData>>();
+const props = withDefaults(defineProps<DataTableViewOptionsProps<TData>>(), {
+  triggerText: '',
+  menuTitle: '',
+});
+
+const locale = useTableLocale();
+
+const resolvedTriggerText = computed(
+  () => props.triggerText || locale.value.messages.toolbar.viewOptionsTrigger
+);
+const resolvedMenuTitle = computed(
+  () => props.menuTitle || locale.value.messages.toolbar.viewOptionsTitle
+);
 
 const columns = computed(() =>
   props.table
     .getAllColumns()
-    .filter(
-      (column) =>
-        typeof column.accessorFn !== 'undefined' && column.getCanHide()
-    )
+    .filter((column) => column.getCanHide())
 );
+
+function getColumnTitle(column: Column<TData, unknown>): string {
+  const meta = column.columnDef?.meta as { title?: string; label?: string } | undefined;
+  if (meta?.title) return meta.title;
+  if (meta?.label) return meta.label;
+  const header = column.columnDef?.header;
+  if (typeof header === 'string' && header.trim()) {
+    return header;
+  }
+  const id = column.id || '';
+  return id.charAt(0).toUpperCase() + id.slice(1).replace(/([A-Z])/g, ' $1').trim();
+}
 </script>
 
 <template>
@@ -34,23 +64,26 @@ const columns = computed(() =>
       <Button
         variant="outline"
         size="sm"
-        class="ml-auto hidden h-8 lg:flex"
+        class="ml-auto flex h-8 items-center gap-1.5 px-3 text-xs font-medium shadow-2xs"
       >
-        <SlidersHorizontal class="mr-2 h-4 w-4" />
-        View
+        <SlidersHorizontal class="h-3.5 w-3.5 text-muted-foreground" />
+        <span>{{ resolvedTriggerText }}</span>
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" class="w-[150px]">
-      <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+    <DropdownMenuContent align="end" class="w-[180px]">
+      <DropdownMenuLabel class="text-xs font-semibold">{{ resolvedMenuTitle }}</DropdownMenuLabel>
       <DropdownMenuSeparator />
+
       <DropdownMenuCheckboxItem
         v-for="column in columns"
         :key="column.id"
-        class="capitalize"
+        :model-value="column.getIsVisible()"
         :checked="column.getIsVisible()"
-        @update:checked="(value: boolean) => column.toggleVisibility(!!value)"
+        class="text-xs"
+        @update:model-value="(val) => column.toggleVisibility(!!val)"
+        @update:checked="(val) => column.toggleVisibility(!!val)"
       >
-        {{ column.id }}
+        {{ getColumnTitle(column) }}
       </DropdownMenuCheckboxItem>
     </DropdownMenuContent>
   </DropdownMenu>

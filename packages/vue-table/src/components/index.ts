@@ -1,4 +1,11 @@
-export { default as DataTable, type DataTableProps } from './DataTable.vue';
+export { default as DataTable } from './DataTable.vue';
+export type {
+  DataTableProps,
+  DataTableVirtualProps,
+  DataTableMobileProps,
+  DataTableFilterBuilderConfig,
+} from '../types/index.js';
+
 export { default as DataTableToolbar, type DataTableToolbarProps } from './DataTableToolbar.vue';
 export {
   default as DataTablePagination,
@@ -49,3 +56,22 @@ export {
   type DataTableTextFilterProps,
 } from './DataTableTextFilter.vue';
 export { default as RemoteCombobox, type RemoteComboboxProps } from './RemoteCombobox.vue';
+export {
+  default as EditableCell,
+  type EditableCellProps,
+  type SelectOption,
+} from './EditableCell.vue';
+export {
+  default as DataTableFilterBuilder,
+  type DataTableFilterBuilderProps,
+} from './DataTableFilterBuilder.vue';
+export { default as DataTableCardView, type DataTableCardViewProps } from './DataTableCardView.vue';
+export {
+  default as DataTableColumnHeaderMenu,
+  type DataTableColumnHeaderMenuProps,
+} from './DataTableColumnHeaderMenu.vue';
+export {
+  default as DataTableSavedViews,
+  type DataTableSavedViewsProps,
+} from './DataTableSavedViews.vue';
+export { default as StockTickerCell, type StockTickerCellProps } from './StockTickerCell.vue';

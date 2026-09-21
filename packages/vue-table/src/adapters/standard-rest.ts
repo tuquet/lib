@@ -1,4 +1,5 @@
 import type { QueryAdapter, TableState } from '../types/index.js';
+import { isRuleComplete } from '../helpers/filterEngine.js';
 
 export interface StandardRestAdapterOptions {
   pageKey?: string;
@@ -70,6 +71,17 @@ export class StandardRestAdapter implements QueryAdapter {
       }
     }
 
+    // 5. Dynamic Rules
+    if (state.dynamicRules && state.dynamicRules.length > 0) {
+      const activeRules = state.dynamicRules.filter(isRuleComplete);
+      if (activeRules.length > 0) {
+        query.filters = JSON.stringify(activeRules);
+        if (state.conjunction) {
+          query.conjunction = state.conjunction;
+        }
+      }
+    }
+
     return query;
   }
 
@@ -113,11 +125,30 @@ export class StandardRestAdapter implements QueryAdapter {
       result.search = rawSearch;
     }
 
-    // 4. Filters
-    const knownKeys = new Set([this.pageKey, this.limitKey, this.sortKey, this.searchKey]);
+    // 4. Filters & Conjunction
+    const knownKeys = new Set([
+      this.pageKey,
+      this.limitKey,
+      this.sortKey,
+      this.searchKey,
+      'conjunction',
+    ]);
+    if (query.conjunction === 'and' || query.conjunction === 'or') {
+      result.conjunction = query.conjunction;
+    }
+
     const filters: Record<string, unknown> = {};
     for (const [key, val] of Object.entries(query)) {
       if (!knownKeys.has(key) && val !== undefined && val !== null) {
+        if (key === 'filters' && typeof val === 'string') {
+          try {
+            filters.filters = JSON.parse(val);
+            continue;
+          } catch {
+            filters.filters = val;
+            continue;
+          }
+        }
         if (key.endsWith('_start')) {
           const baseKey = key.slice(0, -6);
           const current =
@@ -143,6 +174,12 @@ export class StandardRestAdapter implements QueryAdapter {
         }
       }
     }
+
+    if (Array.isArray(filters.filters)) {
+      result.dynamicRules = filters.filters;
+      delete filters.filters;
+    }
+
     if (Object.keys(filters).length > 0) {
       result.filters = filters;
     }

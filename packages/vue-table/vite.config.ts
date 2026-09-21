@@ -10,6 +10,10 @@ export default defineConfig({
       tsconfigPath: './tsconfig.json',
       rollupTypes: false,
       insertTypesEntry: true,
+      copyDtsFiles: false,
+      compilerOptions: {
+        declarationMap: false,
+      },
     }),
   ],
   resolve: {
@@ -18,6 +22,9 @@ export default defineConfig({
     },
   },
   build: {
+    sourcemap: false,
+    cssMinify: 'esbuild',
+    minify: 'esbuild',
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'TuquetVueTable',

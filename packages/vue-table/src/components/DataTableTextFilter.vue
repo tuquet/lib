@@ -13,6 +13,7 @@ import {
 } from '@tuquet/vue-ui';
 import { Search, X } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
+import { useTableLocale } from '../locale/index.js';
 
 export type TextFilterOperator = 'contains' | 'startsWith' | 'exact';
 
@@ -31,12 +32,49 @@ export interface DataTableTextFilterProps {
 const props = withDefaults(defineProps<DataTableTextFilterProps>(), {
   modelValue: undefined,
   defaultOperator: 'contains',
-  placeholder: 'Nhập từ khóa...',
+  placeholder: undefined,
 });
 
 const emit = defineEmits<{
   'update:modelValue': [value: TextFilterValue | undefined];
 }>();
+
+const locale = useTableLocale();
+const isVi = computed(() => locale.value.code.startsWith('vi'));
+const effectivePlaceholder = computed(() => props.placeholder ?? (isVi.value ? 'Nhập từ khóa...' : 'Enter keyword...'));
+const operatorLabels = computed<Record<TextFilterOperator, string>>(() => {
+  if (isVi.value) {
+    return {
+      contains: 'chứa',
+      startsWith: 'bắt đầu',
+      exact: 'bằng',
+    };
+  }
+  return {
+    contains: 'contains',
+    startsWith: 'starts with',
+    exact: 'equals',
+  };
+});
+const selectOptions = computed(() => {
+  if (isVi.value) {
+    return [
+      { value: 'contains', label: 'Chứa' },
+      { value: 'startsWith', label: 'Bắt đầu bằng' },
+      { value: 'exact', label: 'Chính xác' },
+    ];
+  }
+  return [
+    { value: 'contains', label: 'Contains' },
+    { value: 'startsWith', label: 'Starts with' },
+    { value: 'exact', label: 'Exact match' },
+  ];
+});
+const resetLabel = computed(() => locale.value.messages.toolbar.reset);
+const applyLabel = computed(() => locale.value.messages.dateRange?.apply ?? (isVi.value ? 'Áp dụng' : 'Apply'));
+const allLabel = computed(() => (isVi.value ? 'Tất cả' : 'All'));
+const clearAriaLabel = computed(() => (isVi.value ? 'Xóa bộ lọc' : 'Clear filter'));
+const filterByTitle = computed(() => (isVi.value ? `Lọc theo ${props.title}` : `Filter by ${props.title}`));
 
 const isOpen = ref(false);
 const operator = ref<TextFilterOperator>(props.defaultOperator);
@@ -61,15 +99,9 @@ watch(
 
 const hasValue = computed(() => textValue.value.trim().length > 0);
 
-const operatorLabels: Record<TextFilterOperator, string> = {
-  contains: 'chứa',
-  startsWith: 'bắt đầu',
-  exact: 'bằng',
-};
-
 const displayLabel = computed(() => {
   if (!hasValue.value) return null;
-  const opLabel = operatorLabels[operator.value];
+  const opLabel = operatorLabels.value[operator.value];
   return `${opLabel} "${textValue.value.trim()}"`;
 });
 
@@ -106,13 +138,13 @@ function handleClear(e?: Event) {
         <Search class="h-3.5 w-3.5 text-muted-foreground" />
         <span class="text-muted-foreground">{{ title }}:</span>
         <span v-if="displayLabel" class="font-medium text-foreground">{{ displayLabel }}</span>
-        <span v-else class="text-muted-foreground/60">Tất cả</span>
+        <span v-else class="text-muted-foreground/60">{{ allLabel }}</span>
 
         <span
           v-if="hasValue"
           role="button"
           tabindex="0"
-          aria-label="Xóa bộ lọc"
+          :aria-label="clearAriaLabel"
           class="ml-1 rounded-sm p-0.5 hover:bg-muted focus:outline-none"
           @click.stop="handleClear"
           @keydown.enter.stop="handleClear"
@@ -125,7 +157,7 @@ function handleClear(e?: Event) {
 
     <PopoverContent class="w-64 p-3" align="start">
       <div class="space-y-3">
-        <div class="text-xs font-semibold text-foreground">Lọc theo {{ title }}</div>
+        <div class="text-xs font-semibold text-foreground">{{ filterByTitle }}</div>
 
         <div class="flex gap-2">
           <Select v-model="operator">
@@ -133,16 +165,21 @@ function handleClear(e?: Event) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="contains" class="text-xs">Chứa</SelectItem>
-              <SelectItem value="startsWith" class="text-xs">Bắt đầu bằng</SelectItem>
-              <SelectItem value="exact" class="text-xs">Chính xác</SelectItem>
+              <SelectItem
+                v-for="opt in selectOptions"
+                :key="opt.value"
+                :value="opt.value"
+                class="text-xs"
+              >
+                {{ opt.label }}
+              </SelectItem>
             </SelectContent>
           </Select>
 
           <Input
             v-model="textValue"
             type="text"
-            :placeholder="placeholder"
+            :placeholder="effectivePlaceholder"
             class="h-8 flex-1 text-xs"
             @keydown.enter="handleApply"
           />
@@ -155,7 +192,7 @@ function handleClear(e?: Event) {
             class="h-7 px-2 text-xs text-muted-foreground"
             @click="handleClear"
           >
-            Đặt lại
+            {{ resetLabel }}
           </Button>
           <Button
             variant="default"
@@ -163,7 +200,7 @@ function handleClear(e?: Event) {
             class="h-7 px-3 text-xs"
             @click="handleApply"
           >
-            Áp dụng
+            {{ applyLabel }}
           </Button>
         </div>
       </div>

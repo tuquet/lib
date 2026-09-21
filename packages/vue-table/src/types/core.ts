@@ -14,6 +14,7 @@ export type FilterOperator =
   | 'eq'
   | 'ne'
   | 'contains'
+  | 'notContains'
   | 'startsWith'
   | 'endsWith'
   | 'in'
@@ -22,7 +23,15 @@ export type FilterOperator =
   | 'gt'
   | 'gte'
   | 'lt'
-  | 'lte';
+  | 'lte'
+  | 'is'
+  | 'isNot'
+  | 'before'
+  | 'after'
+  | 'isEmpty'
+  | 'isNotEmpty'
+  | 'isTrue'
+  | 'isFalse';
 
 export interface ColumnFilterValue<T = unknown> {
   id: string;
@@ -43,6 +52,8 @@ export interface TableState {
   pagination: PaginationState;
   sorting: SortingState;
   filters: FiltersState;
+  dynamicRules?: import('./filter.js').DynamicFilterRule[];
+  conjunction?: import('./filter.js').FilterConjunction;
   search?: string;
   columnVisibility?: Record<string, boolean>;
   columnPinning?: ColumnPinningState;
@@ -55,6 +66,8 @@ export interface FetchParams {
   sort?: string;
   search?: string;
   filters: Record<string, unknown>;
+  dynamicRules?: import('./filter.js').DynamicFilterRule[];
+  conjunction?: import('./filter.js').FilterConjunction;
   signal: AbortSignal;
   queryParams: Record<string, unknown>;
   toQueryString: () => string;

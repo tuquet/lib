@@ -7,6 +7,7 @@ export type RowUpdater<TData> = Partial<TData> | ((item: TData, index: number) =
 export interface UseTableMutationsOptions<TData> {
   data: Ref<TData[]>;
   total: Ref<number>;
+  getRowId?: (row: TData) => string | number;
 }
 
 export interface UseTableMutationsReturn<TData> {
@@ -20,10 +21,14 @@ export interface UseTableMutationsReturn<TData> {
 export function matchRow<TData>(
   item: TData,
   index: number,
-  predicate: RowPredicate<TData>
+  predicate: RowPredicate<TData>,
+  getRowId?: (row: TData) => string | number
 ): boolean {
   if (typeof predicate === 'function') {
     return predicate(item, index);
+  }
+  if (getRowId) {
+    return getRowId(item) === predicate;
   }
   const candidate = item as Record<string, unknown>;
   return candidate?.id === predicate || candidate?._id === predicate;
@@ -32,11 +37,11 @@ export function matchRow<TData>(
 export function useTableMutations<TData>(
   options: UseTableMutationsOptions<TData>
 ): UseTableMutationsReturn<TData> {
-  const { data, total } = options;
+  const { data, total, getRowId } = options;
 
   const mutateRow = (predicateOrId: RowPredicate<TData>, updater: RowUpdater<TData>) => {
     data.value = data.value.map((item, idx) => {
-      if (!matchRow(item, idx, predicateOrId)) {
+      if (!matchRow(item, idx, predicateOrId, getRowId)) {
         return item;
       }
       if (typeof updater === 'function') {
@@ -51,12 +56,15 @@ export function useTableMutations<TData>(
     if (Array.isArray(predicateOrId)) {
       const idSet = new Set(predicateOrId);
       data.value = data.value.filter((item) => {
+        if (getRowId) {
+          return !idSet.has(getRowId(item));
+        }
         const candidate = item as Record<string, unknown>;
         const id = candidate?.id ?? candidate?._id;
         return !idSet.has(id as string | number);
       });
     } else {
-      data.value = data.value.filter((item, idx) => !matchRow(item, idx, predicateOrId));
+      data.value = data.value.filter((item, idx) => !matchRow(item, idx, predicateOrId, getRowId));
     }
     const deletedCount = initialLength - data.value.length;
     if (deletedCount > 0) {

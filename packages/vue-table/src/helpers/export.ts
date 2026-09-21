@@ -243,8 +243,14 @@ export async function generateExcelBlob<TData>(
         return { value: '' };
       }
       if (typeof val === 'number') {
+        if (!Number.isFinite(val)) {
+          return {
+            value: String(val),
+            type: String,
+          };
+        }
         const numStr = String(val);
-        colWidths[colIdx] = Math.max(colWidths[colIdx], numStr.length + 3);
+        colWidths[colIdx] = Math.max(colWidths[colIdx] ?? 12, numStr.length + 3);
         return {
           value: val,
           type: Number,
@@ -252,7 +258,13 @@ export async function generateExcelBlob<TData>(
         };
       }
       if (val instanceof Date) {
-        colWidths[colIdx] = Math.max(colWidths[colIdx], 12);
+        if (Number.isNaN(val.getTime())) {
+          return {
+            value: '',
+            type: String,
+          };
+        }
+        colWidths[colIdx] = Math.max(colWidths[colIdx] ?? 12, 12);
         return {
           value: val,
           type: Date,

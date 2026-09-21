@@ -15,6 +15,7 @@ import {
   ChevronsRight,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
+import { useTableLocale } from '../locale/index.js';
 
 export interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -29,30 +30,32 @@ const props = withDefaults(defineProps<DataTablePaginationProps<TData>>(), {
   showSelectedCount: true,
 });
 
+const locale = useTableLocale();
+
 const pageIndex = computed(() => props.table.getState().pagination.pageIndex);
 const pageSize = computed(() => props.table.getState().pagination.pageSize);
 const pageCount = computed(() => props.table.getPageCount());
 
 const selectedRowsCount = computed(
-  () => Object.keys(props.table.getState().rowSelection ?? {}).length
+  () => Object.values(props.table.getState().rowSelection ?? {}).filter(Boolean).length
 );
 </script>
 
 <template>
-  <div class="flex items-center justify-between px-2 py-4">
-    <div v-if="showSelectedCount" class="flex-1 text-sm text-muted-foreground">
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 py-4">
+    <div v-if="showSelectedCount" class="text-xs sm:text-sm text-muted-foreground w-full sm:w-auto text-center sm:text-left">
       <template v-if="selectedRowsCount > 0">
-        {{ selectedRowsCount }} row(s) selected.
+        {{ locale.messages.pagination.selectedCount(selectedRowsCount) }}
       </template>
       <template v-else-if="total > 0">
-        Total {{ total }} record(s).
+        {{ locale.messages.pagination.totalRecords(total) }}
       </template>
     </div>
-    <div v-else class="flex-1" />
+    <div v-else class="hidden sm:block flex-1" />
 
-    <div class="flex items-center space-x-6 lg:space-x-8">
+    <div class="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6 lg:gap-8 w-full sm:w-auto">
       <div class="flex items-center space-x-2">
-        <p class="text-sm font-medium">Rows per page</p>
+        <p class="text-xs sm:text-sm font-medium">{{ locale.messages.pagination.rowsPerPage }}</p>
         <Select
           :model-value="`${pageSize}`"
           @update:model-value="(val) => table.setPageSize(Number(val))"
@@ -72,8 +75,8 @@ const selectedRowsCount = computed(
         </Select>
       </div>
 
-      <div class="flex w-[100px] items-center justify-center text-sm font-medium">
-        Page {{ pageIndex + 1 }} of {{ pageCount }}
+      <div class="flex w-[110px] items-center justify-center text-sm font-medium">
+        {{ locale.messages.pagination.pageSummary(pageIndex + 1, pageCount) }}
       </div>
 
       <div class="flex items-center space-x-2">
@@ -83,7 +86,7 @@ const selectedRowsCount = computed(
           :disabled="!table.getCanPreviousPage()"
           @click="table.setPageIndex(0)"
         >
-          <span class="sr-only">Go to first page</span>
+          <span class="sr-only">{{ locale.messages.pagination.firstPage || 'Go to first page' }}</span>
           <ChevronsLeft class="h-4 w-4" />
         </Button>
         <Button
@@ -92,7 +95,7 @@ const selectedRowsCount = computed(
           :disabled="!table.getCanPreviousPage()"
           @click="table.previousPage()"
         >
-          <span class="sr-only">Go to previous page</span>
+          <span class="sr-only">{{ locale.messages.pagination.previousPage || 'Go to previous page' }}</span>
           <ChevronLeft class="h-4 w-4" />
         </Button>
         <Button
@@ -101,7 +104,7 @@ const selectedRowsCount = computed(
           :disabled="!table.getCanNextPage()"
           @click="table.nextPage()"
         >
-          <span class="sr-only">Go to next page</span>
+          <span class="sr-only">{{ locale.messages.pagination.nextPage || 'Go to next page' }}</span>
           <ChevronRight class="h-4 w-4" />
         </Button>
         <Button
@@ -110,7 +113,7 @@ const selectedRowsCount = computed(
           :disabled="!table.getCanNextPage()"
           @click="table.setPageIndex(pageCount - 1)"
         >
-          <span class="sr-only">Go to last page</span>
+          <span class="sr-only">{{ locale.messages.pagination.lastPage || 'Go to last page' }}</span>
           <ChevronsRight class="h-4 w-4" />
         </Button>
       </div>

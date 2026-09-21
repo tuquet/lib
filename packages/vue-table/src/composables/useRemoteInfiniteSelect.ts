@@ -1,12 +1,4 @@
-import {
-  computed,
-  getCurrentScope,
-  onScopeDispose,
-  ref,
-  watch,
-  type ComputedRef,
-  type Ref,
-} from 'vue';
+import { getCurrentScope, onScopeDispose, ref, type Ref } from 'vue';
 
 export interface RemoteSelectFetchParams {
   page: number;
