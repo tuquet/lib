@@ -1,5 +1,13 @@
 # @tuquet/vue-table
 
+## 0.2.1
+
+### Patch Changes
+
+- Patch release update to verify CI release pipeline.
+- Updated dependencies
+  - @tuquet/vue-ui@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

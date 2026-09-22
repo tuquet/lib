@@ -1,6 +1,6 @@
 {
   "name": "@tuquet/vue-table",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Remote-driven Data Table system for Vue 3 powered by TanStack Table and Shadcn-Vue (@tuquet/vue-ui)",
   "type": "module",
   "main": "./dist/index.cjs",
