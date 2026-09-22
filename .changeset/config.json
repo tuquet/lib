@@ -7,5 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@tuquet/tsconfig", "@tuquet/eslint-config", "node-demo"]
+  "ignore": ["@tuquet/tsconfig", "@tuquet/eslint-config"]
 }
