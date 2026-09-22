@@ -2,6 +2,8 @@
 
 Interactive Storybook application for visualizing, testing, and documenting advanced components in the **@tuquet/vue-table** and **@tuquet/vue-ui** libraries.
 
+🌐 **Production Deployment**: [https://storybook.flowup.io.vn](https://storybook.flowup.io.vn)
+
 ## 🎯 Purpose
 
 This Storybook application focuses specifically on **Advanced and Composite Components** across the Tuquet UI ecosystem:
