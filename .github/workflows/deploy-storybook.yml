@@ -46,10 +46,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build Packages
+        run: pnpm build:packages
+
       - name: Typecheck Storybook
         run: pnpm --filter @tuquet/storybook typecheck
 
-      - name: Build Packages & Storybook
+      - name: Build Storybook
         run: pnpm build:storybook
 
       - name: Verify Storybook Acceptance Suite
