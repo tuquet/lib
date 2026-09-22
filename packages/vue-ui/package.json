@@ -26,12 +26,38 @@
   "engines": {
     "node": ">=18.0.0"
   },
+  "license": "MIT",
+  "author": "Tuquet <dev@tuquet.io>",
+  "homepage": "https://github.com/tuquet/tuquet-lib/tree/main/packages/vue-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/tuquet-lib.git",
+    "directory": "packages/vue-ui"
+  },
+  "bugs": {
+    "url": "https://github.com/tuquet/tuquet-lib/issues"
+  },
+  "keywords": [
+    "tuquet",
+    "vue",
+    "vue3",
+    "ui",
+    "shadcn",
+    "shadcn-vue",
+    "reka-ui",
+    "radix-vue",
+    "components",
+    "tailwind"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "README.md"
   ],
   "scripts": {
-    "build": "vite build && cp dist/index.d.ts dist/index.d.cts",
+    "build": "vite build && node -e \"fs.copyFileSync('dist/index.d.ts', 'dist/index.d.cts')\"",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "check:exports": "publint"
