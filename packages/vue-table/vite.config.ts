@@ -32,7 +32,16 @@ export default defineConfig({
       fileName: (format) => (format === 'es' ? 'index.mjs' : 'index.cjs'),
     },
     rollupOptions: {
-      external: ['vue', '@tanstack/vue-table', '@tuquet/vue-ui', '@vueuse/core', 'lucide-vue-next'],
+      external: [
+        'vue',
+        '@tanstack/vue-table',
+        '@tanstack/vue-virtual',
+        '@tuquet/vue-ui',
+        '@vueuse/core',
+        '@internationalized/date',
+        'lucide-vue-next',
+        'write-excel-file',
+      ],
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith('.css')) return 'style.css';

@@ -242,7 +242,7 @@ defineExpose({
                 :checked="rows[virtualRow.index]?.getIsSelected()"
                 :aria-label="`Select row ${virtualRow.index + 1}`"
                 @click.stop
-                @update:checked="(val) => rows[virtualRow.index]?.toggleSelected(!!val)"
+                @update:checked="(val: any) => rows[virtualRow.index]?.toggleSelected(!!val)"
               />
               <span class="font-mono text-xs font-semibold text-primary">
                 #{{ virtualRow.index + 1 }}
@@ -318,7 +318,7 @@ defineExpose({
                 :checked="row.getIsSelected()"
                 :aria-label="`Select row ${idx + 1}`"
                 @click.stop
-                @update:checked="(val) => row.toggleSelected(!!val)"
+                @update:checked="(val: any) => row.toggleSelected(!!val)"
               />
               <span class="font-mono text-xs font-semibold text-primary">
                 #{{ idx + 1 }}

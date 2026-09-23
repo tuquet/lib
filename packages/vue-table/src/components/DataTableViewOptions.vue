@@ -80,8 +80,8 @@ function getColumnTitle(column: Column<TData, unknown>): string {
         :model-value="column.getIsVisible()"
         :checked="column.getIsVisible()"
         class="text-xs"
-        @update:model-value="(val) => column.toggleVisibility(!!val)"
-        @update:checked="(val) => column.toggleVisibility(!!val)"
+        @update:model-value="(val: any) => column.toggleVisibility(!!val)"
+        @update:checked="(val: any) => column.toggleVisibility(!!val)"
       >
         {{ getColumnTitle(column) }}
       </DropdownMenuCheckboxItem>
