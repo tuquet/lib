@@ -148,3 +148,36 @@ Before committing changes to any package, verify:
 - [ ] `pnpm check:exports` confirms publint reports `All good!`.
 - [ ] `pnpm check:docs` confirms documentation invariant passes (`All packages and apps have valid documentation in README.md!`).
 - [ ] Root `README.md` is synchronized with the new package/app entry.
+
+---
+
+## 7. 🎨 UI Component Authoring & Shadcn-Vue Sync (`@tuquet/vue-ui`)
+
+All enterprise UI primitives are hosted in `packages/vue-ui` and standardizes on **Reka UI** (`reka-ui`), the official headless foundation powering modern `shadcn-vue`.
+
+### 7.1. Invariants for `@tuquet/vue-ui`
+
+1. **Headless Engine Standard:** Standardize strictly on `reka-ui`. Never re-introduce `radix-vue`.
+2. **Strict Externalization (`vite.config.ts`):** All runtime dependencies (`vue`, `reka-ui`, `@internationalized/date`, `@vueuse/core`, `class-variance-authority`, `clsx`, `lucide-vue-next`, `tailwind-merge`, `vue-sonner`) MUST be listed in `rollupOptions.external`. This prevents duplicate context injections across consumers and reduces bundle size from ~680 kB to ~170 kB.
+3. **Protected Style Presets (`components.json`):** Component styling and design tokens are bound to `src/styles/globals.css`. Do not allow CLI tools to overwrite base CSS tokens without review.
+
+### 7.2. Standard Component Sync Commands (from Repository Root)
+
+```powershell
+# 1. Ensure Windows System CA is loaded if operating behind a corporate proxy/gateway
+$env:NODE_OPTIONS = "--use-system-ca"
+
+# 2. Recommended: Fast Sync using local workspace binary (no download, bypasses dlx build restrictions)
+pnpm --filter @tuquet/vue-ui exec shadcn-vue add <component-name> -y -o -c packages/vue-ui
+
+# 3. Alternative: Sync using pnpm dlx with explicit build script authorization
+pnpm dlx --allow-build=vue-demi shadcn-vue@latest add <component-name> -y -o -c packages/vue-ui
+```
+
+#### CLI Flags Breakdown:
+
+- `--allow-build=vue-demi`: Required by `pnpm dlx` (pnpm v9/v10/v12) to permit `vue-demi` postinstall scripts, avoiding `ERR_PNPM_IGNORED_BUILDS`.
+- `-c packages/vue-ui`: Sets working directory to `packages/vue-ui` where `components.json` resides.
+- `-y` (`--yes`): Bypasses initial interactive confirmation prompts.
+- `-o` (`--overwrite`): Automatically updates existing files without pausing on interactive overwrite prompts.
+- **Note on `-a` (`--all`):** Upstream `shadcn-vue.com` registry index occasionally lists newly registered components that return HTTP 404 on the CDN. If `-a` fails on missing upstream assets, target the specific component names directly.

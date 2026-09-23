@@ -1,7 +1,7 @@
 {
   "name": "@tuquet/vue-ui",
   "version": "0.2.1",
-  "description": "Enterprise UI component library based on Shadcn-Vue and Radix Vue",
+  "description": "Enterprise UI component library based on Shadcn-Vue and Reka UI",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -45,7 +45,6 @@
     "shadcn",
     "shadcn-vue",
     "reka-ui",
-    "radix-vue",
     "components",
     "tailwind"
   ],
@@ -64,13 +63,14 @@
   },
   "dependencies": {
     "@internationalized/date": "^3.12.4",
+    "@lucide/vue": "^1.47.0",
     "@vueuse/core": "^15.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^1.0.0",
-    "radix-vue": "^1.9.17",
     "reka-ui": "^2.10.4",
     "tailwind-merge": "^3.0.2",
+    "vue-demi": "^0.14.10",
     "vue-sonner": "^2.0.9"
   },
   "peerDependencies": {

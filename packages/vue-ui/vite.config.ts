@@ -34,11 +34,14 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'vue',
-        'radix-vue',
-        'lucide-vue-next',
+        'reka-ui',
+        '@internationalized/date',
+        '@vueuse/core',
         'class-variance-authority',
         'clsx',
+        'lucide-vue-next',
         'tailwind-merge',
+        'vue-sonner',
       ],
       output: {
         assetFileNames: (assetInfo) => {
