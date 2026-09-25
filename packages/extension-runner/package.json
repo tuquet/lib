@@ -1,0 +1,74 @@
+{
+  "name": "@tuquet/extension-runner",
+  "version": "0.1.0",
+  "description": "Isomorphic web extension polyfill, mock runtime, and headless runner bundler for browser automation",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "Tuquet <dev@tuquet.io>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/tuquet-lib.git",
+    "directory": "packages/extension-runner"
+  },
+  "keywords": [
+    "tuquet",
+    "webextension",
+    "polyfill",
+    "chrome-extension",
+    "headless-runner",
+    "automation",
+    "vite-plugin"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/ --max-warnings 0",
+    "check:exports": "publint",
+    "clean": "rm -rf dist .turbo"
+  },
+  "devDependencies": {
+    "@tuquet/eslint-config": "workspace:*",
+    "@tuquet/tsconfig": "workspace:*",
+    "@types/node": "^22.20.3",
+    "publint": "^0.3.7",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.8"
+  },
+  "peerDependencies": {
+    "vite": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    }
+  }
+}
