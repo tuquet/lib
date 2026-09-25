@@ -95,36 +95,67 @@ Runs Vitest across all workspace packages in parallel.
 
 ## 📦 Packages Overview
 
-### 1. `@tuquet/core`
+### 1. `@tuquet/vue-ui`
 
-Core engine and client architecture providing middleware pipeline dispatching, timeouts, and automated retry mechanisms.
+Enterprise UI component library based on **Shadcn-Vue** and **Reka UI (Radix Vue)**, providing 36+ accessible primitives, dark mode tokens, and toast notifications.
 
-```typescript
-import { TuquetClient } from '@tuquet/core';
+```vue
+<script setup lang="ts">
+import { Button, Input, Dialog, DialogTrigger, DialogContent } from '@tuquet/vue-ui';
+</script>
 
-const client = new TuquetClient({ appName: 'My Service' });
+<template>
+  <div class="flex items-center gap-3 p-4">
+    <Input placeholder="Enter workspace name..." />
+    <Button variant="default">Create Workspace</Button>
+  </div>
+</template>
+```
 
-client.use(async (ctx, next) => {
-  console.log(`Executing ${ctx.action}...`);
-  await next();
+📖 _Detailed Documentation_: See [`packages/vue-ui/README.md`](packages/vue-ui/README.md).
+
+### 2. `@tuquet/vue-table`
+
+Enterprise remote-driven Data Table powered by **TanStack Table v8** and **Shadcn-Vue**. Built for high-density business dashboards with virtual scrolling (100,000+ rows), URL query synchronization, and multi-format data export (XLSX, CSV, TSV).
+
+```vue
+<script setup lang="ts">
+import { DataTable, useRemoteTable, type ColumnDef } from '@tuquet/vue-table';
+
+const columns: ColumnDef<Record<string, unknown>>[] = [
+  { accessorKey: 'id', header: 'ID' },
+  { accessorKey: 'name', header: 'Name', enableSorting: true },
+  { accessorKey: 'status', header: 'Status' },
+];
+
+const { tableProps, pagination, search } = useRemoteTable({
+  endpoint: '/api/v1/tenants',
+  columns,
 });
+</script>
 
-const result = await client.dispatch('user:signup', { email: 'dev@tuquet.io' });
+<template>
+  <DataTable v-bind="tableProps" />
+</template>
 ```
 
-### 2. `@tuquet/utils`
+📖 _Detailed Documentation_: See [`packages/vue-table/README.md`](packages/vue-table/README.md).
 
-Essential, dependency-free utilities for Node.js:
+### 3. `@tuquet/lunar`
 
-- **String utilities**: `capitalize`, `truncate`, `slugify`, `camelCase`
-- **Async utilities**: `sleep`, `retry`, `withTimeout`
+High-precision astronomical Vietnamese Lunar-Solar calendar engine based on Jean Meeus' algorithms. Zero dependencies, dual ESM/CJS, supporting Can Chi, 24 Solar Terms (Tiết khí), and recurrence calculations for Vietnamese holidays and memorial events.
 
 ```typescript
-import { slugify, retry } from '@tuquet/utils';
+import { solarToLunar, getSolarTerm, getCanChiYear } from '@tuquet/lunar';
 
-const slug = slugify('Hello World'); // "hello-world"
-const data = await retry(fetchData, { maxRetries: 3 });
+const lunar = solarToLunar({ day: 10, month: 2, year: 2024 });
+console.log(lunar); // { day: 1, month: 1, year: 2024, isLeap: false }
+
+const term = getSolarTerm(2024, 2, 4); // "Lập Xuân"
+const canChi = getCanChiYear(2024); // "Giáp Thìn"
 ```
+
+📖 _Detailed Documentation_: See [`packages/lunar/README.md`](packages/lunar/README.md).
 
 ---
 
