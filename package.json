@@ -8,7 +8,7 @@
   "author": "Tuquet <dev@tuquet.io>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tuquet/tuquet-lib.git"
+    "url": "git+https://github.com/tuquet/lib.git"
   },
   "type": "module",
   "scripts": {
