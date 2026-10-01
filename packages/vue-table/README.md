@@ -2,7 +2,7 @@
 
 Enterprise, remote-driven Data Table system for **Vue 3**, powered by **TanStack Table** and **Shadcn-Vue** ([`@tuquet/vue-ui`](../vue-ui)).
 
-🎨 **Live Interactive Storybook**: [https://storybook.flowup.io.vn](https://storybook.flowup.io.vn)
+🎨 **Live Interactive Storybook**: [https://tuquet.github.io/lib/](https://tuquet.github.io/lib/)
 
 ## ✨ Features
 
