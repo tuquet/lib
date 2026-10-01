@@ -199,7 +199,7 @@ importers:
         specifier: ^3.0.8
         version: 3.2.7(@types/node@22.20.3)(jiti@2.7.0)(stylus@0.57.0)(tsx@4.23.13)(yaml@2.9.1)
 
-  packages/md-pdf:
+  packages/md-export:
     dependencies:
       cac:
         specifier: ^6.7.14
