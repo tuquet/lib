@@ -8,6 +8,7 @@ build/
 out/
 .turbo/
 storybook-static/
+*.tgz
 
 # Test coverage
 coverage/
