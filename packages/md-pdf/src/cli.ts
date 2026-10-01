@@ -7,6 +7,7 @@ const cli = cac('tuquet-md-pdf');
 
 cli
   .command('[dir]', 'Compile Markdown files to PDF and HTML across directory tree')
+  .option('-d, --dir <dir>', 'Root directory to compile (default: current working directory)')
   .option('-f, --format <formats>', 'Export formats (comma separated: pdf,html)', {
     default: 'pdf,html',
   })
@@ -22,6 +23,7 @@ cli
     async (
       dirInput: string | undefined,
       flags: {
+        dir?: string;
         format: string;
         pattern: string;
         styles?: string;
@@ -31,7 +33,7 @@ cli
         silent?: boolean;
       }
     ) => {
-      const rootDir = path.resolve(dirInput || process.cwd());
+      const rootDir = path.resolve(dirInput || flags.dir || process.cwd());
       const formats = flags.format.split(',').map((f) => f.trim().toLowerCase()) as ExportFormat[];
       const styles = flags.styles ? flags.styles.split(',').map((s) => s.trim()) : undefined;
 
