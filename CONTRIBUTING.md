@@ -9,8 +9,8 @@ Thank you for your interest in contributing to `@tuquet` libraries!
 1. **Clone & Install:**
 
    ```bash
-   git clone https://github.com/tuquet/tuquet-lib.git
-   cd tuquet-lib
+   git clone https://github.com/tuquet/lib.git
+   cd lib
    pnpm install
    ```
 

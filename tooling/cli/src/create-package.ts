@@ -154,14 +154,14 @@ export async function runCreatePackage(): Promise<void> {
     sideEffects: false,
     license: 'MIT',
     author: 'Tuquet <dev@tuquet.io>',
-    homepage: `https://github.com/tuquet/tuquet-lib/tree/main/packages/${pkgName}#readme`,
+    homepage: `https://github.com/tuquet/lib/tree/main/packages/${pkgName}#readme`,
     repository: {
       type: 'git',
-      url: 'git+https://github.com/tuquet/tuquet-lib.git',
+      url: 'git+https://github.com/tuquet/lib.git',
       directory: `packages/${pkgName}`,
     },
     bugs: {
-      url: 'https://github.com/tuquet/tuquet-lib/issues',
+      url: 'https://github.com/tuquet/lib/issues',
     },
     keywords: ['tuquet', pkgName, 'nodejs', 'library'],
     publishConfig: {

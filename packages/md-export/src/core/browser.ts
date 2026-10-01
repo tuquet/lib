@@ -45,6 +45,9 @@ export function findBrowserExecutable(customPath?: string): string {
       // Scoop installs
       path.join(userProfile, 'scoop', 'apps', 'googlechrome', 'current', 'chrome.exe'),
       path.join(userProfile, 'scoop', 'apps', 'chromium', 'current', 'chrome.exe'),
+      // Local Tuquet / Automa runtimes
+      path.join(userProfile, '.automa', 'core-dev', 'runtimes', 'chrome-win64', 'chrome.exe'),
+      path.join(userProfile, '.tuquet', 'runtimes', 'chrome-win64', 'chrome.exe'),
       // Brave / Vivaldi as fallbacks
       path.join(programFiles, 'BraveSoftware', 'Brave-Browser', 'Application', 'brave.exe'),
       path.join(localAppData, 'BraveSoftware', 'Brave-Browser', 'Application', 'brave.exe')
@@ -61,6 +64,27 @@ export function findBrowserExecutable(customPath?: string): string {
         'Contents',
         'MacOS',
         'Google Chrome'
+      ),
+      path.join(
+        os.homedir(),
+        '.automa',
+        'core-dev',
+        'runtimes',
+        'chrome-mac-arm64',
+        'Google Chrome for Testing.app',
+        'Contents',
+        'MacOS',
+        'Google Chrome for Testing'
+      ),
+      path.join(
+        os.homedir(),
+        '.tuquet',
+        'runtimes',
+        'chrome-mac-arm64',
+        'Google Chrome for Testing.app',
+        'Contents',
+        'MacOS',
+        'Google Chrome for Testing'
       )
     );
   } else {
@@ -68,22 +92,47 @@ export function findBrowserExecutable(customPath?: string): string {
     candidates.push(
       '/usr/bin/google-chrome-stable',
       '/usr/bin/google-chrome',
-      '/usr/bin/chromium-browser',
       '/usr/bin/chromium',
+      '/usr/bin/chromium-browser',
       '/usr/bin/microsoft-edge-stable',
       '/usr/bin/microsoft-edge',
-      '/snap/bin/chromium'
+      '/snap/bin/chromium',
+      path.join(os.homedir(), '.automa', 'core-dev', 'runtimes', 'chrome-linux64', 'chrome'),
+      path.join(os.homedir(), '.tuquet', 'runtimes', 'chrome-linux64', 'chrome'),
+      path.join(os.homedir(), '.tuquet', 'runtimes', 'chromium-linux64', 'chrome')
     );
   }
 
+  function isUsableExecutable(filePath: string): boolean {
+    if (!fs.existsSync(filePath)) return false;
+    try {
+      const stat = fs.statSync(filePath);
+      if (!stat.isFile()) return false;
+      // On Linux, filter out Ubuntu snap stubs that output error when snap is missing
+      if (platform === 'linux') {
+        const fd = fs.openSync(filePath, 'r');
+        const buffer = Buffer.alloc(512);
+        const bytesRead = fs.readSync(fd, buffer, 0, 512, 0);
+        fs.closeSync(fd);
+        const text = buffer.toString('utf8', 0, bytesRead);
+        if (text.includes('requires the chromium snap to be installed')) {
+          return false;
+        }
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   for (const candidate of candidates) {
-    if (fs.existsSync(candidate)) {
+    if (isUsableExecutable(candidate)) {
       return candidate;
     }
   }
 
   throw new Error(
-    `[tuquet/md-pdf] No compatible Chromium/Chrome/Edge executable found on this system.\n` +
+    `[@tuquet/md-export] No compatible Chromium/Chrome/Edge executable found on this system.\n` +
       `Please install Google Chrome, Microsoft Edge, or set the PUPPETEER_EXECUTABLE_PATH environment variable.`
   );
 }
