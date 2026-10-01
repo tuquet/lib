@@ -41,6 +41,8 @@ export async function discoverTargets(options: MdPdfOptions = {}): Promise<Compi
 
     const pdfPath = path.join(targetDir, `${basename}.pdf`);
     const htmlPath = path.join(targetDir, `${basename}.html`);
+    const pngPath = path.join(targetDir, `${basename}.png`);
+    const jpegPath = path.join(targetDir, `${basename}.jpeg`);
 
     return {
       mdPath,
@@ -48,6 +50,8 @@ export async function discoverTargets(options: MdPdfOptions = {}): Promise<Compi
       basename,
       pdfPath,
       htmlPath,
+      pngPath,
+      jpegPath,
       relPrefix,
     };
   });

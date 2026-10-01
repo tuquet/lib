@@ -8,8 +8,11 @@ const cli = cac('tuquet-md-pdf');
 cli
   .command('[dir]', 'Compile Markdown files to PDF and HTML across directory tree')
   .option('-d, --dir <dir>', 'Root directory to compile (default: current working directory)')
-  .option('-f, --format <formats>', 'Export formats (comma separated: pdf,html)', {
+  .option('-f, --format <formats>', 'Export formats (comma separated: pdf,html,png,jpeg or all)', {
     default: 'pdf,html',
+  })
+  .option('-q, --quality <number>', 'JPEG image quality (0-100)', {
+    default: 90,
   })
   .option('-p, --pattern <pattern>', 'Glob pattern for markdown files', {
     default: '**/README.md',
@@ -25,6 +28,7 @@ cli
       flags: {
         dir?: string;
         format: string;
+        quality?: number;
         pattern: string;
         styles?: string;
         chrome?: string;
@@ -34,7 +38,12 @@ cli
       }
     ) => {
       const rootDir = path.resolve(dirInput || flags.dir || process.cwd());
-      const formats = flags.format.split(',').map((f) => f.trim().toLowerCase()) as ExportFormat[];
+      let formats: ExportFormat[];
+      if (flags.format.trim().toLowerCase() === 'all') {
+        formats = ['pdf', 'html', 'png', 'jpeg'];
+      } else {
+        formats = flags.format.split(',').map((f) => f.trim().toLowerCase()) as ExportFormat[];
+      }
       const styles = flags.styles ? flags.styles.split(',').map((s) => s.trim()) : undefined;
 
       if (!flags.silent) {
@@ -54,6 +63,7 @@ cli
           pattern: flags.pattern,
           format: formats,
           styles,
+          imageQuality: flags.quality ? Number(flags.quality) : 90,
           executablePath: flags.chrome,
           outputDir: flags.outputDir,
           autoRedirectHtml: flags.redirect !== false,

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { performance } from 'node:perf_hooks';
 import type { Browser } from 'puppeteer-core';
 import { createMarkdownParser, extractDocumentTitle } from './core/parser.js';
-import { createPdfBrowser, printHtmlFileToPdf } from './core/printer.js';
+import { createPdfBrowser, renderHtmlToMedia } from './core/printer.js';
 import { renderFullHtml } from './core/template.js';
 import { discoverTargets } from './core/walker.js';
 import type {
@@ -16,7 +16,12 @@ import type {
 export * from './types/index.js';
 export { findBrowserExecutable } from './core/browser.js';
 export { createMarkdownParser } from './core/parser.js';
-export { printHtmlFileToPdf, createPdfBrowser } from './core/printer.js';
+export {
+  printHtmlFileToPdf,
+  captureHtmlFileToImage,
+  renderHtmlToMedia,
+  createPdfBrowser,
+} from './core/printer.js';
 export { renderFullHtml } from './core/template.js';
 export { discoverTargets } from './core/walker.js';
 
@@ -33,6 +38,9 @@ export async function compileTarget(
   const formats = options.format || ['pdf', 'html'];
   const shouldExportHtml = formats.includes('html');
   const shouldExportPdf = formats.includes('pdf');
+  const shouldExportPng = formats.includes('png');
+  const shouldExportJpeg = formats.includes('jpeg');
+  const needsMediaRender = shouldExportPdf || shouldExportPng || shouldExportJpeg;
 
   // 1. Read Markdown content
   const markdownText = fs.readFileSync(target.mdPath, 'utf-8');
@@ -64,24 +72,34 @@ export async function compileTarget(
 
   let exportedHtmlPath: string | undefined = shouldExportHtml ? target.htmlPath : undefined;
   let exportedPdfPath: string | undefined = undefined;
+  let exportedPngPath: string | undefined = undefined;
+  let exportedJpegPath: string | undefined = undefined;
 
-  // 4. Print to PDF if requested
-  if (shouldExportPdf) {
-    await printHtmlFileToPdf(
+  // 4. Render media (PDF, PNG, JPEG) if requested
+  if (needsMediaRender) {
+    await renderHtmlToMedia(
       target.htmlPath,
-      target.pdfPath,
+      {
+        pdfPath: shouldExportPdf ? target.pdfPath : undefined,
+        pngPath: shouldExportPng ? target.pngPath : undefined,
+        jpegPath: shouldExportJpeg ? target.jpegPath : undefined,
+      },
       {
         executablePath: options.executablePath,
         pdfFormat: options.pdfFormat,
         margin: options.margin,
         printBackground: options.printBackground,
+        imageQuality: options.imageQuality,
       },
       sharedBrowser
     );
-    exportedPdfPath = target.pdfPath;
+
+    if (shouldExportPdf) exportedPdfPath = target.pdfPath;
+    if (shouldExportPng) exportedPngPath = target.pngPath;
+    if (shouldExportJpeg) exportedJpegPath = target.jpegPath;
   }
 
-  // If user only wanted PDF and not HTML, delete intermediate HTML
+  // If user only wanted media and not HTML, delete intermediate HTML
   if (!shouldExportHtml && fs.existsSync(target.htmlPath)) {
     fs.unlinkSync(target.htmlPath);
     exportedHtmlPath = undefined;
@@ -93,6 +111,8 @@ export async function compileTarget(
     target,
     htmlPath: exportedHtmlPath,
     pdfPath: exportedPdfPath,
+    pngPath: exportedPngPath,
+    jpegPath: exportedJpegPath,
     durationMs,
   };
 }
@@ -116,8 +136,10 @@ export async function compileWorkspace(
     return { results: [], totalDurationMs: 0 };
   }
 
+  const needsBrowser =
+    targets.length > 0 && formats.some((f) => ['pdf', 'png', 'jpeg'].includes(f));
   let sharedBrowser: Browser | undefined = undefined;
-  if (formats.includes('pdf')) {
+  if (needsBrowser) {
     sharedBrowser = await createPdfBrowser(options.executablePath);
   }
 
@@ -128,7 +150,7 @@ export async function compileWorkspace(
       const res = await compileTarget(target, options, sharedBrowser);
       results.push(res);
       if (!options.silent) {
-        const outList = [res.htmlPath, res.pdfPath]
+        const outList = [res.htmlPath, res.pdfPath, res.pngPath, res.jpegPath]
           .filter(Boolean)
           .map((p) => path.basename(p!))
           .join(', ');

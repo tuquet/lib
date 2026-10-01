@@ -1,6 +1,6 @@
 import type { PaperFormat, PDFMargin } from 'puppeteer-core';
 
-export type ExportFormat = 'pdf' | 'html';
+export type ExportFormat = 'pdf' | 'html' | 'png' | 'jpeg';
 
 export interface MdPdfOptions {
   /** Root directory to scan (default: current working directory) */
@@ -19,6 +19,8 @@ export interface MdPdfOptions {
   margin?: PDFMargin;
   /** Print background colors and images (default: true) */
   printBackground?: boolean;
+  /** Image quality for JPEG format (0-100, default: 90) */
+  imageQuality?: number;
   /** Custom Chromium/Chrome/Edge executable path */
   executablePath?: string;
   /** Custom output directory. If omitted, outputs are placed next to the source markdown file */
@@ -40,6 +42,10 @@ export interface CompileTarget {
   pdfPath: string;
   /** Output HTML destination path */
   htmlPath: string;
+  /** Output PNG destination path */
+  pngPath: string;
+  /** Output JPEG destination path */
+  jpegPath: string;
   /** Relative prefix back to root (e.g. "./" or "../") */
   relPrefix: string;
 }
@@ -48,6 +54,8 @@ export interface CompileFileResult {
   target: CompileTarget;
   htmlPath?: string;
   pdfPath?: string;
+  pngPath?: string;
+  jpegPath?: string;
   durationMs: number;
 }
 

@@ -8,8 +8,9 @@
 ## 🚀 Features
 
 - **Folder-Aware Tree Traversal:** Recursively finds and compiles Markdown files across directory hierarchies (`README.md`, `vi/README.md`, `ja/README.md`) while maintaining correct relative paths.
+- **Full Feature Parity with `vscode-markdown-pdf`:** Export directly to **PDF (`.pdf`)**, **HTML (`.html`)**, **PNG (`.png`)**, and **JPEG (`.jpeg`)** (or all at once).
 - **Zero-Config Browser Auto-Detection:** Automatically discovers system installations of **Google Chrome** and **Microsoft Edge** across Windows, macOS, and Linux without downloading 300MB Chromium bundles.
-- **Fast Batch Compilation:** Reuses a single headless browser instance across multiple documents, speeding up batch PDF exports by up to 5x.
+- **Fast Batch Compilation:** Reuses a single headless browser instance across multiple documents and formats, speeding up batch exports by up to 5x.
 - **Syntax Highlighting & Responsive Tables:** Integrated with `highlight.js` and responsive table wrappers.
 - **Programmatic & CLI Ready:** Use directly from your scripts or via CLI (`tuquet-md-pdf` / `npx @tuquet/md-pdf`).
 
@@ -36,18 +37,19 @@ Compiles all `**/README.md` files in the current directory tree into both `.pdf`
 npx tuquet-md-pdf
 ```
 
-### With Custom Styles & Target Directory
+### Export All Formats (PDF, HTML, PNG, JPEG)
 
 ```bash
-npx tuquet-md-pdf ./docs --styles style/pdf-export.css --format pdf,html
+npx tuquet-md-pdf --dir . --format all --styles style/pdf-export.css
 ```
 
 ### Options
 
 | Flag                     | Description                                      | Default                 |
 | :----------------------- | :----------------------------------------------- | :---------------------- |
-| `[dir]`                  | Target root directory to scan                    | `.` (current directory) |
-| `-f, --format <formats>` | Formats to export (`pdf,html`, `pdf`, or `html`) | `pdf,html`              |
+| `[dir]`, `-d, --dir`     | Target root directory to scan                    | `.` (current directory) |
+| `-f, --format <formats>` | Formats to export (`pdf,html,png,jpeg` or `all`) | `pdf,html`              |
+| `-q, --quality <number>` | JPEG image quality (0-100)                       | `90`                    |
 | `-p, --pattern <glob>`   | Glob pattern for markdown files                  | `**/README.md`          |
 | `-s, --styles <paths>`   | Comma-separated paths to custom CSS files        | `none`                  |
 | `-c, --chrome <path>`    | Custom Chrome / Chromium / Edge executable path  | _Auto-detected_         |

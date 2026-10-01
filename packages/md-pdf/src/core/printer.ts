@@ -8,6 +8,13 @@ export interface PrintOptions {
   pdfFormat?: PaperFormat;
   margin?: PDFMargin;
   printBackground?: boolean;
+  imageQuality?: number;
+}
+
+export interface RenderMediaOutputs {
+  pdfPath?: string;
+  pngPath?: string;
+  jpegPath?: string;
 }
 
 export async function createPdfBrowser(executablePath?: string): Promise<Browser> {
@@ -26,9 +33,9 @@ export async function createPdfBrowser(executablePath?: string): Promise<Browser
   });
 }
 
-export async function printHtmlFileToPdf(
+export async function renderHtmlToMedia(
   htmlPath: string,
-  outputPath: string,
+  outputs: RenderMediaOutputs,
   options: PrintOptions = {},
   existingBrowser?: Browser
 ): Promise<void> {
@@ -46,23 +53,48 @@ export async function printHtmlFileToPdf(
       timeout: 30000,
     });
 
-    // Ensure output directory exists
-    const outDir = path.dirname(outputPath);
-    if (!fs.existsSync(outDir)) {
-      fs.mkdirSync(outDir, { recursive: true });
+    if (outputs.pdfPath) {
+      const outDir = path.dirname(outputs.pdfPath);
+      if (!fs.existsSync(outDir)) {
+        fs.mkdirSync(outDir, { recursive: true });
+      }
+      await page.pdf({
+        path: outputs.pdfPath,
+        format: options.pdfFormat || 'A4',
+        printBackground: options.printBackground !== false,
+        margin: options.margin || {
+          top: '1.5cm',
+          bottom: '1cm',
+          left: '1cm',
+          right: '1cm',
+        },
+      });
     }
 
-    await page.pdf({
-      path: outputPath,
-      format: options.pdfFormat || 'A4',
-      printBackground: options.printBackground !== false,
-      margin: options.margin || {
-        top: '1.5cm',
-        bottom: '1cm',
-        left: '1cm',
-        right: '1cm',
-      },
-    });
+    if (outputs.pngPath) {
+      const outDir = path.dirname(outputs.pngPath);
+      if (!fs.existsSync(outDir)) {
+        fs.mkdirSync(outDir, { recursive: true });
+      }
+      await page.screenshot({
+        path: outputs.pngPath,
+        type: 'png',
+        fullPage: true,
+      });
+    }
+
+    if (outputs.jpegPath) {
+      const outDir = path.dirname(outputs.jpegPath);
+      if (!fs.existsSync(outDir)) {
+        fs.mkdirSync(outDir, { recursive: true });
+      }
+      await page.screenshot({
+        path: outputs.jpegPath,
+        type: 'jpeg',
+        quality: options.imageQuality ?? 90,
+        fullPage: true,
+      });
+    }
 
     await page.close();
   } finally {
@@ -70,4 +102,25 @@ export async function printHtmlFileToPdf(
       await browser.close();
     }
   }
+}
+
+export async function printHtmlFileToPdf(
+  htmlPath: string,
+  outputPath: string,
+  options: PrintOptions = {},
+  existingBrowser?: Browser
+): Promise<void> {
+  return renderHtmlToMedia(htmlPath, { pdfPath: outputPath }, options, existingBrowser);
+}
+
+export async function captureHtmlFileToImage(
+  htmlPath: string,
+  outputPath: string,
+  format: 'png' | 'jpeg',
+  options: PrintOptions = {},
+  existingBrowser?: Browser
+): Promise<void> {
+  const outputs: RenderMediaOutputs =
+    format === 'jpeg' ? { jpegPath: outputPath } : { pngPath: outputPath };
+  return renderHtmlToMedia(htmlPath, outputs, options, existingBrowser);
 }

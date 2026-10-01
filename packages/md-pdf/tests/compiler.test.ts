@@ -67,4 +67,22 @@ describe('@tuquet/md-pdf', () => {
     expect(fs.existsSync(viPdf)).toBe(true);
     expect(fs.statSync(viPdf).size).toBeGreaterThan(1000);
   }, 45000);
+
+  it('compiles Markdown to full-page PNG and JPEG images', async () => {
+    const { results } = await compileWorkspace({
+      rootDir: tempDir,
+      pattern: 'README.md',
+      format: ['png', 'jpeg'],
+      silent: true,
+    });
+
+    expect(results).toHaveLength(1);
+    const rootPng = path.join(tempDir, 'README.png');
+    const rootJpeg = path.join(tempDir, 'README.jpeg');
+
+    expect(fs.existsSync(rootPng)).toBe(true);
+    expect(fs.existsSync(rootJpeg)).toBe(true);
+    expect(fs.statSync(rootPng).size).toBeGreaterThan(1000);
+    expect(fs.statSync(rootJpeg).size).toBeGreaterThan(1000);
+  }, 45000);
 });
