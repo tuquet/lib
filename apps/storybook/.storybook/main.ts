@@ -27,6 +27,7 @@ const config: StorybookConfig = {
       new URL('../../../packages/vue-table/src/index.ts', import.meta.url)
     );
 
+    config.base = process.env.STORYBOOK_BASE_URL || './';
     config.server = config.server || {};
     config.server.host = '0.0.0.0';
     config.server.allowedHosts = true;
