@@ -1,5 +1,5 @@
 ---
-'@tuquet/md-pdf': patch
+'@tuquet/md-export': patch
 ---
 
-Introduce `@tuquet/md-pdf`: Folder-aware Markdown to PDF and HTML compiler powered by headless Chromium (Chrome/Edge auto-discovery), featuring the `tuquet-md-pdf` CLI and programmatic TypeScript API.
+Introduce `@tuquet/md-export`: Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter powered by headless Chromium (Chrome/Edge auto-discovery), featuring the `tuquet-md-export` CLI and programmatic TypeScript API.

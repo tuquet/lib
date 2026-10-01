@@ -2,7 +2,7 @@ import type { PaperFormat, PDFMargin } from 'puppeteer-core';
 
 export type ExportFormat = 'pdf' | 'html' | 'png' | 'jpeg';
 
-export interface MdPdfOptions {
+export interface MdExportOptions {
   /** Root directory to scan (default: current working directory) */
   rootDir?: string;
   /** Glob pattern(s) to match markdown files (default: all README.md files) */
@@ -30,6 +30,9 @@ export interface MdPdfOptions {
   /** Suppress console logs */
   silent?: boolean;
 }
+
+/** Backwards-compatible alias for MdExportOptions */
+export type MdPdfOptions = MdExportOptions;
 
 export interface CompileTarget {
   /** Absolute path to markdown source */

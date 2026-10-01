@@ -5,11 +5,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { compileWorkspace, findBrowserExecutable } from '../src/index.js';
 
-describe('@tuquet/md-pdf', () => {
+describe('@tuquet/md-export', () => {
   let tempDir: string;
 
   beforeAll(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tuquet-md-pdf-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tuquet-md-export-test-'));
 
     // Create root README.md
     fs.writeFileSync(

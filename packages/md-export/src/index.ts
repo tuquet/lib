@@ -10,6 +10,7 @@ import type {
   CompileFileResult,
   CompileTarget,
   CompileWorkspaceResult,
+  MdExportOptions,
   MdPdfOptions,
 } from './types/index.js';
 
@@ -30,7 +31,7 @@ export { discoverTargets } from './core/walker.js';
  */
 export async function compileTarget(
   target: CompileTarget,
-  options: MdPdfOptions = {},
+  options: MdExportOptions = {},
   sharedBrowser?: Browser
 ): Promise<CompileFileResult> {
   const startTime = performance.now();
@@ -122,7 +123,7 @@ export async function compileTarget(
  * Reuses a single headless browser instance across all PDF operations for peak performance.
  */
 export async function compileWorkspace(
-  options: MdPdfOptions = {}
+  options: MdExportOptions = {}
 ): Promise<CompileWorkspaceResult> {
   const overallStart = performance.now();
   const rootDir = path.resolve(options.rootDir || process.cwd());
@@ -131,7 +132,7 @@ export async function compileWorkspace(
 
   if (targets.length === 0) {
     if (!options.silent) {
-      console.warn(`[tuquet/md-pdf] No markdown files matched in: ${rootDir}`);
+      console.warn(`[tuquet/md-export] No markdown files matched in: ${rootDir}`);
     }
     return { results: [], totalDurationMs: 0 };
   }
@@ -156,7 +157,7 @@ export async function compileWorkspace(
           .join(', ');
         const rel = target.relativeDir ? `${target.relativeDir}/` : '';
         console.log(
-          `[tuquet/md-pdf] Compiled ${rel}${target.basename}.md -> [${outList}] (${res.durationMs}ms)`
+          `[tuquet/md-export] Compiled ${rel}${target.basename}.md -> [${outList}] (${res.durationMs}ms)`
         );
       }
     }

@@ -3,10 +3,10 @@ import { cac } from 'cac';
 import { compileWorkspace } from './index.js';
 import type { ExportFormat } from './types/index.js';
 
-const cli = cac('tuquet-md-pdf');
+const cli = cac('tuquet-md-export');
 
 cli
-  .command('[dir]', 'Compile Markdown files to PDF and HTML across directory tree')
+  .command('[dir]', 'Compile Markdown files to PDF, HTML, PNG, and JPEG across directory tree')
   .option('-d, --dir <dir>', 'Root directory to compile (default: current working directory)')
   .option('-f, --format <formats>', 'Export formats (comma separated: pdf,html,png,jpeg or all)', {
     default: 'pdf,html',
@@ -48,7 +48,7 @@ cli
 
       if (!flags.silent) {
         console.log(`\n======================================================`);
-        console.log(`  Tuquet Markdown to PDF & Web Compiler (@tuquet/md-pdf)`);
+        console.log(`  Tuquet Markdown Multi-Format Exporter (@tuquet/md-export)`);
         console.log(`======================================================`);
         console.log(`  Root:     ${rootDir}`);
         console.log(`  Pattern:  ${flags.pattern}`);

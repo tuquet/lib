@@ -1,12 +1,13 @@
 {
-  "name": "@tuquet/md-pdf",
+  "name": "@tuquet/md-export",
   "version": "0.1.0",
-  "description": "Folder-aware Markdown to PDF and HTML compiler using headless Chromium",
+  "description": "Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter using headless Chromium",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "bin": {
+    "tuquet-md-export": "./dist/cli.cjs",
     "tuquet-md-pdf": "./dist/cli.cjs"
   },
   "exports": {
@@ -34,7 +35,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tuquet/lib.git",
-    "directory": "packages/md-pdf"
+    "directory": "packages/md-export"
   },
   "keywords": [
     "tuquet",

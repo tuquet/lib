@@ -1,6 +1,6 @@
-# @tuquet/md-pdf
+# @tuquet/md-export
 
-> **Folder-aware Markdown to PDF and HTML compiler using headless Chromium.**  
+> **Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter using headless Chromium.**  
 > Designed for monorepos, documentation sites, and multilingual profile structures.
 
 ---
@@ -12,7 +12,7 @@
 - **Zero-Config Browser Auto-Detection:** Automatically discovers system installations of **Google Chrome** and **Microsoft Edge** across Windows, macOS, and Linux without downloading 300MB Chromium bundles.
 - **Fast Batch Compilation:** Reuses a single headless browser instance across multiple documents and formats, speeding up batch exports by up to 5x.
 - **Syntax Highlighting & Responsive Tables:** Integrated with `highlight.js` and responsive table wrappers.
-- **Programmatic & CLI Ready:** Use directly from your scripts or via CLI (`tuquet-md-pdf` / `npx @tuquet/md-pdf`).
+- **Programmatic & CLI Ready:** Use directly from your scripts or via CLI (`tuquet-md-export` / `npx @tuquet/md-export`).
 
 ---
 
@@ -20,9 +20,9 @@
 
 ```bash
 # In your project or workspace:
-pnpm add -D @tuquet/md-pdf
+pnpm add -D @tuquet/md-export
 # or
-npm install --save-dev @tuquet/md-pdf
+npm install --save-dev @tuquet/md-export
 ```
 
 ---
@@ -34,13 +34,13 @@ npm install --save-dev @tuquet/md-pdf
 Compiles all `**/README.md` files in the current directory tree into both `.pdf` and `.html`:
 
 ```bash
-npx tuquet-md-pdf
+npx tuquet-md-export
 ```
 
 ### Export All Formats (PDF, HTML, PNG, JPEG)
 
 ```bash
-npx tuquet-md-pdf --dir . --format all --styles style/pdf-export.css
+npx tuquet-md-export --dir . --format all --styles style/pdf-export.css
 ```
 
 ### Options
@@ -62,7 +62,7 @@ npx tuquet-md-pdf --dir . --format all --styles style/pdf-export.css
 ## 💻 Programmatic API
 
 ```typescript
-import { compileWorkspace, compileTarget, discoverTargets } from '@tuquet/md-pdf';
+import { compileWorkspace, compileTarget, discoverTargets } from '@tuquet/md-export';
 
 // Compile an entire directory tree
 const { results, totalDurationMs } = await compileWorkspace({
