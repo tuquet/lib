@@ -2,7 +2,7 @@
 
 > Production-ready Node.js library monorepo architecture using **pnpm**, **Turborepo**, **tsup**, **Vitest**, **publint**, and **Changesets**.
 >
-> 🎨 **Live Storybook Showcase**: [https://storybook.flowup.io.vn](https://storybook.flowup.io.vn)
+> 🎨 **Live Storybook Showcase**: [https://tuquet.github.io/lib/](https://tuquet.github.io/lib/)
 
 ---
 
@@ -14,7 +14,7 @@ tuquet-lib/
 ├── packages/                 # Publishable libraries (@tuquet/*)
 │   ├── lunar/                # @tuquet/lunar (Vietnamese astronomical Lunar-Solar calendar)
 │   ├── extension-runner/     # @tuquet/extension-runner (Isomorphic WebExtension polyfill & headless bundler)
-│   ├── md-pdf/               # @tuquet/md-pdf (Folder-aware Markdown to PDF & HTML compiler via Chromium)
+│   ├── md-export/            # @tuquet/md-export (Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter)
 │   ├── vue-ui/               # @tuquet/vue-ui (Enterprise Shadcn-Vue 35+ component library)
 │   └── vue-table/            # @tuquet/vue-table (Remote Data Table with TanStack & Shadcn-Vue)
 ├── tooling/                  # Shared configurations across packages
@@ -38,7 +38,7 @@ tuquet-lib/
 | :----------------------------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------- |
 | **`@tuquet/lunar`**            | [`packages/lunar`](packages/lunar)                       | Astronomical Vietnamese Lunar-Solar calendar converter, Can Chi, 24 Tiết Khí, and recurrence calculator (Giỗ, Rằm, Mùng 1).            | Zero-dep • Dual ESM/CJS • 17/17 tests      |
 | **`@tuquet/extension-runner`** | [`packages/extension-runner`](packages/extension-runner) | Isomorphic WebExtension polyfill, crash-proof mock runtime, and headless runner bundler plugin.                                        | Dual ESM/CJS • Types • Publint • Vitest    |
-| **`@tuquet/md-pdf`**           | [`packages/md-pdf`](packages/md-pdf)                     | Folder-aware Markdown to PDF & HTML compiler powered by headless Chromium (Chrome/Edge zero-config discovery), CLI & API.              | Dual ESM/CJS • CLI • Types • Vitest        |
+| **`@tuquet/md-export`**        | [`packages/md-export`](packages/md-export)               | Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter via Chromium (zero-config discovery), CLI & API.               | Dual ESM/CJS • CLI • Types • Vitest        |
 | **`@tuquet/vue-ui`**           | [`packages/vue-ui`](packages/vue-ui)                     | Official Shadcn-Vue component library with 36+ accessible components powered by Reka UI (Radix Vue), Tailwind CSS, and Sonner Toaster. | Dual ESM/CJS • Types • Style.css • Publint |
 | **`@tuquet/vue-table`**        | [`packages/vue-table`](packages/vue-table)               | Remote-driven Data Table with TanStack, virtual scrolling, multi-format export (CSV, TSV, XLSX), URL sync, and AbortController.        | Dual ESM/CJS • Types • Publint • Vitest    |
 | **`apps/`**                    | [`apps/`](apps)                                          | Root directory for runnable end-user products, bots, and full-stack services.                                                          | Workspace standard                         |
@@ -161,27 +161,27 @@ const canChi = getCanChiYear(2024); // "Giáp Thìn"
 
 📖 _Detailed Documentation_: See [`packages/lunar/README.md`](packages/lunar/README.md).
 
-### 4. `@tuquet/md-pdf`
+### 4. `@tuquet/md-export`
 
-High-performance, directory-aware Markdown to PDF and HTML compiler powered by headless Chromium (Chrome/Edge zero-config discovery). Designed for monorepos, automated documentation pipelines, and multi-lingual resume/profile generation.
+High-performance, directory-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter powered by headless Chromium (Chrome/Edge zero-config discovery). Designed for monorepos, automated documentation pipelines, and multi-lingual resume/profile generation.
 
 ```bash
 # Compile root README and all locale subfolders (vi/README.md, etc.)
-tuquet-md-pdf --dir . --format pdf,html --styles style/pdf-export.css
+tuquet-md-export --dir . --format all --styles style/pdf-export.css
 ```
 
 ```typescript
-import { compileDirectory } from '@tuquet/md-pdf';
+import { compileWorkspace } from '@tuquet/md-export';
 
-const results = await compileDirectory({
+const { results } = await compileWorkspace({
   rootDir: process.cwd(),
   pattern: '**/README.md',
-  format: ['pdf', 'html'],
-  pdfOptions: { format: 'A4', printBackground: true },
+  format: ['pdf', 'html', 'png', 'jpeg'],
+  styles: ['style/pdf-export.css'],
 });
 ```
 
-📖 _Detailed Documentation_: See [`packages/md-pdf/README.md`](packages/md-pdf/README.md).
+📖 _Detailed Documentation_: See [`packages/md-export/README.md`](packages/md-export/README.md).
 
 ---
 

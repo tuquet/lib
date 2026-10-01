@@ -65,7 +65,7 @@ _Trách nhiệm: Đảm bảo độ tin cậy tuyệt đối, zero styling debt,
   - [x] Hỗ trợ xuất dữ liệu đa định dạng: XLSX, CSV, TSV.
   - [x] Bộ kiểm thử 138/138 tests passed (21 test files).
 - [x] **`@tuquet/lunar`:** Thuật toán thiên văn Lịch Âm - Dương, Can Chi, 24 Tiết Khí (17/17 tests passed).
-- [x] **Showcase & CI/CD:** Storybook online (`storybook.flowup.io.vn`), Changesets release tự động lên npm registry qua GitHub Actions.
+- [x] **Showcase & CI/CD:** Storybook online (`tuquet.github.io/lib`), Changesets release tự động lên npm registry qua GitHub Actions.
 - [ ] **[Next Tasks - Hardening]**:
   - [ ] Kiểm thử độ tương thích giao diện trên màn hình nhỏ và hỗ trợ phím tắt điều hướng bảng.
   - [ ] Bổ sung Storybook stories cho toàn bộ các trường hợp biên của Dynamic Filters.

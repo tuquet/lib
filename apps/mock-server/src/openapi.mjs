@@ -97,7 +97,7 @@ export const fullOpenApiSpec = {
       'REST API CRUD hoàn chỉnh phục vụ thực hành cho All-In-One Enterprise Data Grid & Mobile Dynamic Form. Hỗ trợ phân trang, sắp xếp, tìm kiếm debounce, lọc đa điều kiện, sửa inline (PATCH), sửa mobile form (PUT), xóa đơn (DELETE), thao tác hàng loạt (Bulk Actions), và khôi phục dữ liệu mẫu (Reset).',
     contact: {
       name: 'Tuquet Core Team',
-      url: 'https://storybook.flowup.io.vn',
+      url: 'https://tuquet.github.io/lib/',
     },
   },
   servers: [

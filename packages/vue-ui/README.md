@@ -2,7 +2,7 @@
 
 Enterprise UI component library based on **Shadcn-Vue** and **Reka UI (Radix Vue)**, fully typed and ready for modern Vue 3 applications.
 
-🎨 **Live Interactive Storybook**: [https://storybook.flowup.io.vn](https://storybook.flowup.io.vn)
+🎨 **Live Interactive Storybook**: [https://tuquet.github.io/lib/](https://tuquet.github.io/lib/)
 
 ## ✨ Features
 
