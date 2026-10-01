@@ -115,8 +115,10 @@ pre code {
     padding: 0 !important;
     background: transparent !important;
   }
-  .page-break {
+  .page-break,
+  .page {
     page-break-after: always;
+    break-after: page;
   }
 }
 `;
@@ -155,6 +157,16 @@ if (window.location.protocol.startsWith('http') && window.location.pathname.ends
 </script>`
     : '';
 
+  const mermaidScript = content.includes('class="mermaid"')
+    ? `
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  }
+</script>`
+    : '';
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,6 +177,7 @@ ${redirectScript}
 ${injectedStyles}
 </head>
 <body>
+${mermaidScript}
 ${content}
 </body>
 </html>

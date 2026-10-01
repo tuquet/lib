@@ -17,6 +17,9 @@ export function createMarkdownParser(): MarkdownIt {
     linkify: true,
     typographer: true,
     highlight: (str: string, lang: string): string => {
+      if (lang && lang.match(/\bmermaid\b/i)) {
+        return `<div class="mermaid">${str}</div>`;
+      }
       if (lang && hljs.getLanguage(lang)) {
         try {
           return `<pre class="hljs"><code class="language-${lang}">${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
