@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Safe Recursive Proxy Mock for Browser Extension APIs
  * Provides crash-proof fallbacks for browser.* and chrome.* in Web, Studio, Node, and Webview environments.

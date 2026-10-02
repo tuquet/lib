@@ -11,7 +11,6 @@ import type {
   CompileTarget,
   CompileWorkspaceResult,
   MdExportOptions,
-  MdPdfOptions,
 } from './types/index.js';
 
 export * from './types/index.js';

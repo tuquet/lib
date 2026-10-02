@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Isomorphic Browser Polyfill
  * Resolves native browser/chrome in extensions, or seamlessly falls back to crash-proof Mock in Web/Studio.
