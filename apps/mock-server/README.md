@@ -2,70 +2,70 @@
 
 Enterprise Mock REST CRUD API Server for `@tuquet/vue-table` and `@tuquet/vue-ui`.
 
-Provides high-performance, real HTTP REST endpoints conforming to the **OpenAPI 3.0+** specification, specifically designed for testing and practicing with **All-In-One Enterprise Data Grid**, **Inline Cell Editing**, and **Mobile Dynamic Form Bottom Sheet Drawer**.
+Provides high-performance HTTP REST endpoints conforming to the **OpenAPI 3.0+** specification, specifically designed for testing and developing with **All-In-One Enterprise Data Grids**, **Inline Cell Editing**, and **Mobile Dynamic Form Bottom Sheet Drawers**.
 
 ---
 
-## 🚀 Tính năng Nổi bật
+## 🚀 Key Features
 
-- **Đầy đủ chuẩn RESTful CRUD**:
-  - `GET /api/orders`: Phân trang (`page`, `limit`), sắp xếp đa cột (`sort`), tìm kiếm debounce (`q` / `search`), lọc trạng thái (`status`), lọc ngày (`createdAt_start`, `createdAt_end`).
-  - `GET /api/orders/:id`: Tra cứu chi tiết theo ID hệ thống (`ord_1000`) hoặc mã đơn (`ORD-202600`).
-  - `POST /api/orders`: Tạo mới đơn hàng với validation OpenAPI.
-  - `PATCH /api/orders/:id`: Cập nhật từng trường riêng lẻ (tối ưu cho Inline Cell Editing).
-  - `PUT /api/orders/:id`: Cập nhật toàn bộ đơn hàng (dành cho Mobile Bottom Sheet Drawer).
-  - `DELETE /api/orders/:id`: Xóa đơn hàng đơn lẻ.
-  - `POST /api/orders/bulk-delete`: Xóa hàng loạt bản ghi (Floating Action Bar).
-  - `POST /api/orders/bulk-update`: Đổi trạng thái hàng loạt đơn hàng.
-  - `POST /api/orders/reset`: Khôi phục và sinh lại 1.000 - 10.000 bản ghi mẫu bất kỳ lúc nào.
-- **Tích hợp OpenAPI 3.0 Specs**:
-  - `GET /api/openapi.json`: Tải toàn bộ đặc tả OpenAPI 3.0.
-  - `GET /api/orders/schema`: Lấy schema JSON của model Order với các vendor extensions `x-ui-*`.
-- **Giao diện Trực quan Interactive Docs**:
-  - `GET /api/docs`: Web UI trực quan có nút test live mọi endpoint và sinh lệnh cURL tức thì.
-- **Mô phỏng Độ trễ Mạng**:
-  - Hỗ trợ tham số `?delay=200` hoặc header `x-mock-delay: 200` để kiểm thử skeleton loading và race conditions.
+- **Full RESTful CRUD Standards**:
+  - `GET /api/orders`: Pagination (`page`, `limit`), multi-column sorting (`sort`), debounced search (`q` / `search`), status filtering (`status`), date range filtering (`createdAt_start`, `createdAt_end`).
+  - `GET /api/orders/:id`: Lookup record details by internal ID (`ord_1000`) or code (`ORD-202600`).
+  - `POST /api/orders`: Create new order record with OpenAPI validation.
+  - `PATCH /api/orders/:id`: Partial record updates (optimized for Inline Cell Editing).
+  - `PUT /api/orders/:id`: Complete record replacement (designed for Mobile Bottom Sheet Drawer forms).
+  - `DELETE /api/orders/:id`: Single record removal.
+  - `POST /api/orders/bulk-delete`: Multi-record bulk deletion (Floating Action Bar integration).
+  - `POST /api/orders/bulk-update`: Multi-record status transition.
+  - `POST /api/orders/reset`: Reset and reseed 1,000 to 10,000 mock records on demand.
+- **OpenAPI 3.0 Integration**:
+  - `GET /api/openapi.json`: Full OpenAPI 3.0 specification download.
+  - `GET /api/orders/schema`: Order model JSON schema with `x-ui-*` metadata annotations.
+- **Interactive Documentation**:
+  - `GET /api/docs`: Interactive web interface to test endpoints and generate cURL commands live.
+- **Network Latency Simulation**:
+  - Supports query parameter `?delay=200` or header `x-mock-delay: 200` to stress-test skeleton loaders and race condition handling.
 
 ---
 
-## 🛠️ Cài đặt & Khởi chạy
+## 🛠️ Installation & Execution
 
 ```bash
-# Khởi chạy server ở chế độ thường (port 3001)
+# Start server in production mode (port 3001)
 pnpm --filter=@tuquet/mock-server start
 
-# Khởi chạy ở chế độ dev (tự động reload khi sửa code)
+# Start in development mode (hot-reloading on file change)
 pnpm --filter=@tuquet/mock-server dev
 
-# Chạy test suite
+# Run unit tests
 pnpm --filter=@tuquet/mock-server test
 ```
 
 ---
 
-## 📖 Hướng dẫn Gọi API qua cURL
+## 📖 cURL API Examples
 
-### 1. Truy vấn danh sách có phân trang và sắp xếp
+### 1. Paginated & Sorted Query
 
 ```bash
-curl -s "http://157.66.24.171:6006/api/orders?page=1&limit=5&sort=-createdAt&status=completed"
+curl -s "http://127.0.0.1:3001/api/orders?page=1&limit=5&sort=-createdAt&status=completed"
 ```
 
-### 2. Inline Edit (PATCH một cell)
+### 2. Inline Edit (PATCH single cell)
 
 ```bash
-curl -X PATCH "http://157.66.24.171:6006/api/orders/ord_1000" \
+curl -X PATCH "http://127.0.0.1:3001/api/orders/ord_1000" \
   -H "Content-Type: application/json" \
-  -d '{"customer": "Tập đoàn Vingroup VIP", "progress": 90}'
+  -d '{"customer": "Acme Global VIP", "progress": 90}'
 ```
 
-### 3. Mobile Form Drawer Edit (PUT toàn bộ)
+### 3. Mobile Form Drawer Edit (PUT full entity)
 
 ```bash
-curl -X PUT "http://157.66.24.171:6006/api/orders/ord_1000" \
+curl -X PUT "http://127.0.0.1:3001/api/orders/ord_1000" \
   -H "Content-Type: application/json" \
   -d '{
-    "customer": "Công ty TNHH Phần mềm Tuquet",
+    "customer": "Acme Enterprise Inc.",
     "role": "Procurement Lead",
     "status": "completed",
     "progress": 100,
@@ -73,18 +73,18 @@ curl -X PUT "http://157.66.24.171:6006/api/orders/ord_1000" \
   }'
 ```
 
-### 4. Bulk Update (Đổi trạng thái nhiều đơn cùng lúc)
+### 4. Bulk Update (Batch status update)
 
 ```bash
-curl -X POST "http://157.66.24.171:6006/api/orders/bulk-update" \
+curl -X POST "http://127.0.0.1:3001/api/orders/bulk-update" \
   -H "Content-Type: application/json" \
   -d '{"ids": ["ord_1001", "ord_1002"], "updates": {"status": "completed"}}'
 ```
 
-### 5. Reset Dữ liệu về trạng thái ban đầu
+### 5. Reset Data to Seed State
 
 ```bash
-curl -X POST "http://157.66.24.171:6006/api/orders/reset" \
+curl -X POST "http://127.0.0.1:3001/api/orders/reset" \
   -H "Content-Type: application/json" \
   -d '{"count": 1000}'
 ```

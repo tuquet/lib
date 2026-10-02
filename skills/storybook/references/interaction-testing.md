@@ -1,10 +1,10 @@
-# Hướng dẫn Kiểm thử Tương tác Tự động với `play` function
+# Automated Interaction Testing with `play` Functions
 
-Hàm `play` trong Storybook cho phép mô phỏng các hành động thực tế của người dùng (click, gõ phím, chọn checkbox, cuộn trang) và assert kết quả ngay trên trình duyệt bằng `@storybook/test`.
+Storybook's `play` function simulates user interactions (clicks, keyboard input, checkbox toggles, scrolling) and asserts DOM results in the browser using `@storybook/test`.
 
 ---
 
-## 1. Cấu trúc Chuẩn của `play` function
+## 1. Baseline `play` Function Structure
 
 ```typescript
 import { within, userEvent, expect } from '@storybook/test';
@@ -14,21 +14,21 @@ export const MyStory: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('1. Khởi tạo và kiểm tra nội dung ban đầu', async () => {
-      const heading = await canvas.findByText(/Tiêu đề/i);
+    await step('1. Verify initial mount state', async () => {
+      const heading = await canvas.findByText(/Title/i);
       expect(heading).toBeInTheDocument();
     });
 
-    await step('2. Tương tác gõ phím vào input tìm kiếm', async () => {
-      const searchInput = canvas.getByPlaceholderText(/tìm kiếm/i);
-      await userEvent.type(searchInput, 'Từ khóa', { delay: 40 });
-      expect(searchInput).toHaveValue('Từ khóa');
+    await step('2. Simulate typing into search input', async () => {
+      const searchInput = canvas.getByPlaceholderText(/search/i);
+      await userEvent.type(searchInput, 'Keyword', { delay: 40 });
+      expect(searchInput).toHaveValue('Keyword');
     });
 
-    await step('3. Click nút hành động và kiểm tra kết quả', async () => {
-      const submitBtn = canvas.getByRole('button', { name: /xác nhận/i });
+    await step('3. Click action button and assert result', async () => {
+      const submitBtn = canvas.getByRole('button', { name: /confirm/i });
       await userEvent.click(submitBtn);
-      expect(await canvas.findByText(/thành công/i)).toBeInTheDocument();
+      expect(await canvas.findByText(/success/i)).toBeInTheDocument();
     });
   },
 };
@@ -36,69 +36,69 @@ export const MyStory: Story = {
 
 ---
 
-## 2. Các Kịch bản Kiểm thử Thường gặp
+## 2. Common Interaction Testing Scenarios
 
-### 1. Kiểm tra Tìm kiếm Debounce
+### 1. Testing Debounced Search
 
 ```typescript
-await step('Tương tác tìm kiếm debounce', async () => {
+await step('Interact with debounced search input', async () => {
   const searchInput = canvas.getByPlaceholderText(/filter records/i);
   await userEvent.type(searchInput, 'ORD-202603', { delay: 40 });
   expect(searchInput).toHaveValue('ORD-202603');
 
-  // Xóa input
+  // Clear input
   await userEvent.clear(searchInput);
 });
 ```
 
-### 2. Kiểm tra Checkbox Select-All
+### 2. Testing Select-All Checkbox
 
 ```typescript
-await step('Tương tác Select All ở checkbox header', async () => {
+await step('Toggle Select-All checkbox in header', async () => {
   const checkboxes = await canvas.findAllByRole('checkbox');
   const headerCheckbox = checkboxes[0];
   await userEvent.click(headerCheckbox);
 
-  // Kiểm tra thanh bulk action nổi xuất hiện
-  const bulkBtn = await canvas.findByText(/hoàn thành \(/i);
+  // Assert floating bulk action toolbar appears
+  const bulkBtn = await canvas.findByText(/complete \(/i);
   expect(bulkBtn).toBeInTheDocument();
 
-  // Click lại để bỏ chọn tất cả
+  // Click again to deselect all
   await userEvent.click(headerCheckbox);
 });
 ```
 
-### 3. Kiểm tra Mở Dropdown Menu
+### 3. Testing Dropdown Menu Open
 
 ```typescript
-await step('Kiểm tra nút Xuất dữ liệu mở menu', async () => {
-  const exportBtn = canvas.getByRole('button', { name: /xuất dữ liệu/i });
+await step('Verify export button opens dropdown menu', async () => {
+  const exportBtn = canvas.getByRole('button', { name: /export/i });
   expect(exportBtn).toBeInTheDocument();
   await userEvent.click(exportBtn);
 });
 ```
 
-### 4. Kiểm tra Inline Cell Editing
+### 4. Testing Inline Cell Editing
 
 ```typescript
-await step('Tương tác Inline Edit: Sửa tên khách hàng', async () => {
-  const customerCell = await canvas.findByText('Nguyễn Văn An #1');
+await step('Interact with inline cell edit: Customer Name', async () => {
+  const customerCell = await canvas.findByText('John Doe #1');
   expect(customerCell).toBeInTheDocument();
   await userEvent.click(customerCell);
 
   const cellInput = canvasElement.querySelector('input.font-mono') as HTMLInputElement | null;
   if (cellInput) {
     await userEvent.clear(cellInput);
-    await userEvent.type(cellInput, 'Nguyễn Văn An VIP{enter}');
-    expect(await canvas.findByText('Nguyễn Văn An VIP')).toBeInTheDocument();
-    expect(await canvas.findByText(/Đã cập nhật khách hàng/i)).toBeInTheDocument();
+    await userEvent.type(cellInput, 'John Doe VIP{enter}');
+    expect(await canvas.findByText('John Doe VIP')).toBeInTheDocument();
+    expect(await canvas.findByText(/Customer updated/i)).toBeInTheDocument();
   }
 });
 ```
 
 ---
 
-## 3. Lưu ý quan trọng
+## 3. Key Testing Best Practices
 
-- Luôn bọc các khối tương tác trong `await step('Tên bước', async () => { ... })` để Storybook hiển thị chi tiết tiến trình trực quan trên bảng điều khiển Interactions.
-- Thêm `{ delay: 40 }` khi gọi `userEvent.type()` để mô phỏng chính xác tốc độ gõ phím của con người và kích hoạt debounce timer một cách tự nhiên.
+- Wrap interaction blocks in `await step('Step name', async () => { ... })` so Storybook displays detailed step-by-step progress in the Interactions panel.
+- Supply `{ delay: 40 }` to `userEvent.type()` to accurately simulate realistic human typing cadence and trigger debounce timers naturally.

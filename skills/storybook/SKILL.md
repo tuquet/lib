@@ -1,112 +1,112 @@
 ---
 name: storybook
 description: >-
-  Chuyên gia phát triển, cấu hình, tối ưu và kiểm thử Vue 3 Storybook stories (CSF3 + Vite + Tailwind + TypeScript)
-  trong monorepo tuquet-lib. Kích hoạt khi tạo story mới, viết interaction test (play function), bổ sung controls/argTypes,
-  tinh chỉnh layout/density/virtual scroll, xử lý inline editing, hoặc debug hiển thị components trên Storybook.
+  Specialized skill for developing, configuring, optimizing, and testing Vue 3 Storybook stories (CSF3 + Vite + Tailwind + TypeScript)
+  within the lib monorepo. Activate when authoring new stories, writing interaction tests (play function), adding controls/argTypes,
+  fine-tuning layout/density/virtual scroll, handling inline cell editing, or debugging components in Storybook.
 ---
 
-# Hướng dẫn Phát triển Component với Storybook (tuquet-lib)
+# Component Development Guide with Storybook (Lib Monorepo)
 
-Tài liệu này cung cấp toàn bộ quy chuẩn, workflow và giải pháp kỹ thuật đã được kiểm chứng để phát triển, tài liệu hóa và kiểm thử tự động các Vue 3 components với Storybook 8+ trong monorepo `@tuquet`.
+This document provides verified standards, workflows, and technical solutions for developing, documenting, and automatically testing Vue 3 components with Storybook 8+ in the `@tuquet` monorepo.
 
 ---
 
-## 1. 🎯 Nguyên tắc Cốt lõi & Kiến trúc Monorepo
+## 1. 🎯 Core Principles & Monorepo Architecture
 
 1. **Co-location Story Files**:
-   - Tất cả các file Storybook được đặt ngay cạnh component mà nó đại diện:
-     - Component bảng & filters: `packages/vue-table/src/components/*.stories.ts`
-     - Component UI primitives: `packages/vue-ui/src/components/ui/**/*.stories.ts`
-   - Storybook server tập trung chạy tại `apps/storybook` (Port 6006 / 6007).
+   - All Storybook files are placed adjacent to their corresponding components:
+     - Table and filter components: `packages/vue-table/src/components/*.stories.ts`
+     - UI primitives: `packages/vue-ui/src/components/ui/**/*.stories.ts`
+   - Central Storybook server runs in `apps/storybook` (Port 6006 / 6007).
 
-2. **Tuân thủ chuẩn CSF3 (Component Story Format v3)**:
-   - Sử dụng định nghĩa kiểu an toàn `Meta<typeof Component>` và `StoryObj<typeof meta>`.
-   - Cung cấp đầy đủ `argTypes` controls để người dùng có thể tùy biến mọi props trực tiếp trên giao diện.
+2. **CSF3 (Component Story Format v3) Compliance**:
+   - Use strict type declarations: `Meta<typeof Component>` and `StoryObj<typeof meta>`.
+   - Provide comprehensive `argTypes` controls enabling users to customize props directly in the canvas.
 
-3. **Master Story cho Composite Components**:
-   - Thay vì tạo quá nhiều story vụn vặt gây khó theo dõi, hãy ưu tiên xây dựng **1 Master Story tổng hợp toàn diện** (như `AllInOneEnterpriseTable`), phản ánh đúng nghiệp vụ thực tế (Remote fetch, Virtual scroll, Column pinning, Density toggle, Bulk actions, Export và Inline cell editing).
+3. **Master Story for Composite Components**:
+   - Rather than creating numerous fragmented stories, build **1 Comprehensive Master Story** (such as `AllInOneEnterpriseTable`), reflecting real-world workflows (Remote fetch, Virtual scroll, Column pinning, Density toggle, Bulk actions, Export, and Inline cell editing).
 
 ---
 
-## 2. ⚡ Quy trình 4 Bước Phát triển Story Hoàn chỉnh
+## 2. ⚡ 4-Step Story Development Lifecycle
 
 ```mermaid
 flowchart LR
-    S1["1. Khai báo Meta\n& Controls (argTypes)"] --> S2["2. Viết Story Definition\n(render & setup)"]
-    S2 --> S3["3. Thêm Interaction Test\n(play function)"]
-    S3 --> S4["4. Kiểm tra Typecheck\n& Build Static"]
+    S1["1. Declare Meta\n& Controls (argTypes)"] --> S2["2. Author Story Definition\n(render & setup)"]
+    S2 --> S3["3. Add Interaction Test\n(play function)"]
+    S3 --> S4["4. Verify Typecheck\n& Build Static"]
 ```
 
-### Bước 1: Khai báo Meta & Controls đầy đủ
+### Step 1: Declare Meta & Comprehensive Controls
 
-- Đặt `title` theo cấu trúc danh mục, ví dụ: `'Vue Table/DataTable'` hoặc `'Vue UI/RangeCalendar'`.
-- Khai báo chi tiết `argTypes` cho mọi tham số có thể tương tác (boolean, select, range, inline-radio) kèm mô tả tiếng Việt và phân loại `table.category`.
-- Xem chi tiết tại: [Hướng dẫn Controls & ArgTypes](./references/controls-and-args.md)
+- Set `title` matching category hierarchy, e.g., `'Vue Table/DataTable'` or `'Vue UI/RangeCalendar'`.
+- Define explicit `argTypes` for interactive parameters (boolean, select, range, inline-radio) with clear English descriptions and `table.category` grouping.
+- See: [Controls & ArgTypes Reference](./references/controls-and-args.md)
 
-### Bước 2: Viết Story Definition với render function và setup
+### Step 2: Author Story Definition with Render Function and Setup
 
-- Khai báo tất cả các components con cần thiết trong `components: { ... }`.
-- Khởi tạo state, watchers (`watch(() => args.prop)`), methods trong `setup()`.
-- Viết template HTML trực quan, gọn gàng.
-- ⚠️ **QUY TẮC SỐNG CÒN**: **TUYỆT ĐỐI KHÔNG** dùng từ khóa `as` (ép kiểu TypeScript) bên trong chuỗi template HTML. Mọi type casting phải thực hiện trong `setup()`.
-- Xem chi tiết tại: [Chuẩn mực CSF3 cho Vue 3](./references/csf3-vue-standards.md) và [Danh sách Lỗi Thường gặp](./references/common-pitfalls.md)
+- Register all dependent child components in `components: { ... }`.
+- Initialize reactive state, watchers (`watch(() => args.prop)`), and methods in `setup()`.
+- Keep template HTML clean and intuitive.
+- ⚠️ **CRITICAL INVARIANT**: **NEVER** use the `as` keyword (TypeScript type assertion) inside HTML template strings. Perform all type assertions in `setup()`.
+- See: [CSF3 Vue Standards](./references/csf3-vue-standards.md) and [Common Pitfalls Reference](./references/common-pitfalls.md)
 
-### Bước 3: Thêm kịch bản kiểm thử tương tác tự động (`play` function)
+### Step 3: Implement Automated Interaction Tests (`play` function)
 
-- Sử dụng thư viện `@storybook/test`: `step`, `within`, `userEvent`, `expect`.
-- Chia kịch bản thành từng bước rõ ràng: Khởi tạo, gõ từ khóa tìm kiếm debounce, chọn checkbox, click dropdown, nhảy nhanh dòng, inline edit.
-- Xem chi tiết tại: [Hướng dẫn Interaction Testing](./references/interaction-testing.md)
+- Use `@storybook/test` utilities: `step`, `within`, `userEvent`, `expect`.
+- Structure test suites into distinct steps: Mount assertion, debounced search typing, row selection, dropdown menus, jump-to-row, inline editing.
+- See: [Interaction Testing Reference](./references/interaction-testing.md)
 
-### Bước 4: Kiểm tra và Build
+### Step 4: Verification and Static Build
 
-- Chạy typecheck monorepo: `pnpm typecheck`
-- Chạy unit tests: `pnpm test`
-- Kiểm tra syntax story: `node skills/storybook/scripts/validate-stories.mjs`
-- Khởi động dev server: `pnpm storybook`
-
----
-
-## 3. 📚 Thư viện Tài liệu Chuyên sâu (`references/`)
-
-Đọc các tài liệu chuyên đề khi cần đi sâu vào từng tính năng kỹ thuật:
-
-| Tài liệu                                                                | Nội dung chính                                                                         |
-| :---------------------------------------------------------------------- | :------------------------------------------------------------------------------------- |
-| 📖 [CSF3 Vue Standards](./references/csf3-vue-standards.md)             | Cấu trúc chuẩn TypeScript, render function, reactivity, dynamic mock data              |
-| 🎛️ [Controls & ArgTypes](./references/controls-and-args.md)             | Cách cấu hình mọi loại controls: boolean, select, range, inline-radio, category        |
-| 🧪 [Interaction Testing](./references/interaction-testing.md)           | Kỹ thuật viết play function với step, userEvent, expect mô phỏng người dùng            |
-| 🎨 [Layout & Styling](./references/layout-and-styling.md)               | Cố định layout fixed, Column pinning, Density không vỡ ô, Group hover, Inline edit     |
-| 🚀 [Enterprise Table Stories](./references/enterprise-table-stories.md) | Mẫu story cho Table API Facade, Saved Views, Mobile Card View, Plugins và Dynamic Form |
-| ⚠️ [Common Pitfalls](./references/common-pitfalls.md)                   | Tổng hợp các lỗi runtime thường gặp (như `as` trong template) và cách xử lý            |
+- Run monorepo typecheck: `pnpm typecheck`
+- Run unit tests: `pnpm test`
+- Validate story syntax: `node skills/storybook/scripts/validate-stories.mjs`
+- Launch dev server: `pnpm storybook`
 
 ---
 
-## 4. 📋 Bộ Templates Mẫu Sẵn dùng (`templates/`)
+## 3. 📚 Reference Guides (`references/`)
 
-Copy trực tiếp các mẫu story chuẩn để tiết kiệm thời gian:
+Consult detailed technical references for deep dives into specific topics:
 
-- [simple-component.story.ts](./templates/simple-component.story.ts): Dành cho component đơn (Button, Badge, Input, Card).
-- [data-grid.story.ts](./templates/data-grid.story.ts): Dành cho bảng dữ liệu phức hợp (Virtual scrolling, Pinning, Density, Inline edit).
-- [form-controls.story.ts](./templates/form-controls.story.ts): Dành cho component nhập liệu / lựa chọn nâng cao (RemoteCombobox, DateRange).
+| Reference Document                                                      | Primary Scope                                                                            |
+| :---------------------------------------------------------------------- | :--------------------------------------------------------------------------------------- |
+| 📖 [CSF3 Vue Standards](./references/csf3-vue-standards.md)             | TypeScript structure, render functions, reactivity, dynamic mock datasets                |
+| 🎛️ [Controls & ArgTypes](./references/controls-and-args.md)             | Configuring controls: boolean, select, range, inline-radio, category grouping            |
+| 🧪 [Interaction Testing](./references/interaction-testing.md)           | Writing play functions with step, userEvent, expect simulating user interactions         |
+| 🎨 [Layout & Styling](./references/layout-and-styling.md)               | Fixed table layout, column pinning, density resilience, group hover, inline editing      |
+| 🚀 [Enterprise Table Stories](./references/enterprise-table-stories.md) | Story recipes for Table API Facade, Saved Views, Mobile Card View, Plugins, Dynamic Form |
+| ⚠️ [Common Pitfalls](./references/common-pitfalls.md)                   | Runtime issues (such as `as` in templates) and verified remedies                         |
 
 ---
 
-## 5. 🛠️ Lệnh thường dùng & Automation Scripts
+## 4. 📋 Production Templates (`templates/`)
 
-- Kiểm tra cú pháp toàn bộ stories:
+Use pre-built templates for rapid development:
+
+- [simple-component.story.ts](./templates/simple-component.story.ts): For atomic components (Button, Badge, Input, Card).
+- [data-grid.story.ts](./templates/data-grid.story.ts): For complex data tables (Virtual scrolling, Pinning, Density, Inline edit).
+- [form-controls.story.ts](./templates/form-controls.story.ts): For advanced input controls (RemoteCombobox, DateRange).
+
+---
+
+## 5. 🛠️ Automation & Verification Commands
+
+- Validate story syntax:
   ```bash
   node skills/storybook/scripts/validate-stories.mjs
   ```
-- Khởi động Storybook dev server:
+- Launch Storybook dev server:
   ```bash
   pnpm storybook
   ```
-- Build Storybook static production:
+- Build Storybook static production output:
   ```bash
   pnpm build:storybook
   ```
-- Xem trước bản build tĩnh:
+- Preview static production build:
   ```bash
   pnpm preview:storybook
   ```

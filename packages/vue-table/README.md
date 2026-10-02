@@ -1,4 +1,17 @@
-# @tuquet/vue-table
+<div align="center">
+  <img src="./assets/logo.svg" width="76" height="76" alt="Vue Table Logo" />
+  <h1>@tuquet/vue-table</h1>
+  <p><strong>Remote-Driven High-Density Data Table Engine for Vue 3 powered by TanStack Table</strong></p>
+
+  <p>
+    <a href="https://tuquet.github.io/lib/"><img src="https://img.shields.io/badge/Storybook-Live%20Showcase-ff4785.svg" alt="Storybook" /></a>
+    <img src="https://img.shields.io/badge/Vue-3.x-brightgreen.svg" alt="Vue 3" />
+    <img src="https://img.shields.io/badge/TanStack-Table%20v8-blue.svg" alt="TanStack Table" />
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
+  </p>
+</div>
+
+---
 
 Enterprise, remote-driven Data Table system for **Vue 3**, powered by **TanStack Table** and **Shadcn-Vue** ([`@tuquet/vue-ui`](../vue-ui)).
 
@@ -328,7 +341,7 @@ Filter records within date intervals using `<DataTableDateRangeFilter>`:
 
 Features:
 
-- Built-in shortcuts: _Hôm nay, Hôm qua, 7 ngày qua, 30 ngày qua, Tháng này, Tháng trước_.
+- Built-in shortcuts: _Today, Yesterday, Last 7 days, Last 30 days, This month, Last month_.
 - Dual-month interactive calendar.
 - Automatically serializes to `_start` and `_end` (`StandardRestAdapter`) or `[gte]` and `[lte]` (`LhsBracketsAdapter`).
 
@@ -366,19 +379,19 @@ import {
 } from '@tuquet/vue-table';
 
 const columnDefs: ColumnFilterDefinition[] = [
-  { id: 'customer', label: 'Khách hàng', dataType: 'text' },
-  { id: 'total', label: 'Tổng tiền ($)', dataType: 'number' },
+  { id: 'customer', label: 'Customer', dataType: 'text' },
+  { id: 'total', label: 'Total ($)', dataType: 'number' },
   {
     id: 'status',
-    label: 'Trạng thái',
+    label: 'Status',
     dataType: 'select',
     options: [
-      { label: 'Hoàn thành', value: 'completed' },
-      { label: 'Chờ xử lý', value: 'pending' },
-      { label: 'Đã hủy', value: 'cancelled' },
+      { label: 'Completed', value: 'completed' },
+      { label: 'Pending', value: 'pending' },
+      { label: 'Cancelled', value: 'cancelled' },
     ],
   },
-  { id: 'createdAt', label: 'Ngày tạo', dataType: 'date' },
+  { id: 'createdAt', label: 'Created At', dataType: 'date' },
 ];
 
 const dynamicRules = ref<DynamicFilterRule[]>([]);
@@ -412,13 +425,13 @@ const conjunction = ref<'and' | 'or'>('and');
 
 ### Supported Operators by Data Type
 
-| Data Type     | Supported Operators                                                                                                        |
-| :------------ | :------------------------------------------------------------------------------------------------------------------------- |
-| **`text`**    | `contains` (Chứa), `notContains` (Không chứa), `eq` (=), `ne` (!=), `startsWith`, `endsWith`, `isEmpty`, `isNotEmpty`      |
-| **`number`**  | `eq` (=), `ne` (!=), `gt` (>), `gte` (>=), `lt` (<), `lte` (<=), `between` (Trong khoảng min-max), `isEmpty`, `isNotEmpty` |
-| **`select`**  | `is` (Là), `isNot` (Không phải), `in` (Thuộc danh sách), `notIn` (Không thuộc), `isEmpty`, `isNotEmpty`                    |
-| **`date`**    | `is` (Là ngày), `isNot` (Khác ngày), `before` (Trước), `after` (Sau), `between` (Khoảng ngày), `isEmpty`, `isNotEmpty`     |
-| **`boolean`** | `isTrue` (Đúng / Bật), `isFalse` (Sai / Tắt)                                                                               |
+| Data Type     | Supported Operators                                                                                                 |
+| :------------ | :------------------------------------------------------------------------------------------------------------------ |
+| **`text`**    | `contains`, `notContains`, `eq` (=), `ne` (!=), `startsWith`, `endsWith`, `isEmpty`, `isNotEmpty`                   |
+| **`number`**  | `eq` (=), `ne` (!=), `gt` (>), `gte` (>=), `lt` (<), `lte` (<=), `between` (Range min-max), `isEmpty`, `isNotEmpty` |
+| **`select`**  | `is`, `isNot`, `in` (In list), `notIn` (Not in list), `isEmpty`, `isNotEmpty`                                       |
+| **`date`**    | `is`, `isNot`, `before`, `after`, `between` (Date range), `isEmpty`, `isNotEmpty`                                   |
+| **`boolean`** | `isTrue`, `isFalse`                                                                                                 |
 
 ### In-Memory Evaluation Engine
 
@@ -430,6 +443,34 @@ import { filterDataset, evaluateFilterRule } from '@tuquet/vue-table';
 const filteredOrders = filterDataset(allOrders, dynamicRules.value, 'and');
 ```
 
+---
+
+## 🌐 Ecosystem
+
+Part of the **Automation & Agent Ecosystem**:
+
+- [Automa](https://github.com/tuquet/automa) — Native Chrome/Edge Desktop UI Automation Browser.
+- [Runner](https://github.com/tuquet/runner) — High-Performance Distributed Process Supervision Engine in Rust.
+- [Browser](https://github.com/tuquet/browser) — High-Performance Headless Web Scraping & Stealth Automation Core.
+- [Cloud](https://github.com/tuquet/cloud) — Enterprise Orchestration & Real-time Task Control Plane.
+- [CLI](https://github.com/tuquet/cli) — Developer Ergonomic CLI & Unified Command Center.
+- [Lib](https://github.com/tuquet/lib) — Monorepo for Shared Enterprise UI & Utilities (`vue-ui`, `vue-table`, `md-export`, `extension-runner`, `lunar`).
+- [Scoop Bucket](https://github.com/tuquet/scoop-bucket) — Official Windows Scoop Distribution Channel.
+
+---
+
 ## 📄 License
 
-MIT © Tuquet
+Distributed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+  <samp>
+    <a href="https://tuquet.github.io">Portfolio</a> •
+    <a href="https://tuquet.github.io/cv">CV &amp; Resume</a> •
+    <a href="https://tuquet.github.io/automa">Automa Studio</a> •
+    <a href="https://tuquet.github.io/lib">Component Lab</a> •
+    <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
+  </samp>
+</div>

@@ -1,10 +1,10 @@
-# Chuẩn mực CSF3 (Component Story Format v3) cho Vue 3 & TypeScript
+# CSF3 (Component Story Format v3) Standards for Vue 3 & TypeScript
 
-Tài liệu này định nghĩa cấu trúc chuẩn và các quy tắc kỹ thuật khi viết Storybook stories cho Vue 3 trong monorepo `@tuquet`.
+This document establishes the standard structure and engineering conventions for writing Vue 3 Storybook stories in the `@tuquet` monorepo.
 
 ---
 
-## 1. Cấu trúc Khung Cơ bản của một Story File
+## 1. Baseline Story File Structure
 
 ```typescript
 import type { Meta, StoryObj } from '@storybook/vue3';
@@ -18,15 +18,15 @@ const meta: Meta<typeof MyComponent> = {
   parameters: {
     docs: {
       description: {
-        component: 'Mô tả ngắn gọn mục đích và chức năng của component.',
+        component: 'Concise summary of component purpose and operational API.',
       },
     },
   },
   argTypes: {
-    // Khai báo controls tại đây
+    // Declare controls here
   },
   args: {
-    // Giá trị mặc định ban đầu
+    // Default initial values
   },
 };
 
@@ -34,12 +34,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  name: 'Mặc định',
+  name: 'Default',
   args: {},
   render: (args) => ({
     components: { MyComponent },
     setup() {
-      // Logic reactivity, computed, watchers
+      // Reactivity logic, computed, watchers
       return { args };
     },
     template: `<MyComponent v-bind="args" />`,
@@ -49,27 +49,27 @@ export const Default: Story = {
 
 ---
 
-## 2. Các Quy tắc Reactivity & Đồng bộ Args
+## 2. Reactivity & Args Synchronization Rules
 
-Khi người dùng thay đổi giá trị trong tab **Controls** của Storybook, đối tượng `args` được truyền vào `render` sẽ cập nhật reactive:
+When users manipulate values in Storybook's **Controls** panel, the `args` object passed to `render` updates reactively:
 
-### Cách 1: Sử dụng `v-bind="args"` trực tiếp
+### Pattern 1: Direct `v-bind="args"`
 
-Nếu props của component nhận trực tiếp từ `args`, hãy dùng `v-bind="args"`:
+When component props map 1:1 with `args`:
 
 ```typescript
 template: `<MyComponent v-bind="args" />`;
 ```
 
-### Cách 2: Sử dụng `watch` khi component có internal state
+### Pattern 2: `watch` for Controlled Internal State
 
-Nếu Story tự quản lý state phụ thuộc vào `args` (ví dụ: `density`, `datasetSize`):
+When the story encapsulates state dependent on `args` (e.g. `density`, `datasetSize`):
 
 ```typescript
 setup() {
   const density = ref(args.density || 'compact');
 
-  // Lắng nghe khi args thay đổi từ Controls panel
+  // React to args mutations from Controls panel
   watch(
     () => args.density,
     (newVal) => {
@@ -83,11 +83,11 @@ setup() {
 
 ---
 
-## 3. Quy tắc Render Component Phức hợp (Composite Stories)
+## 3. Composite Stories & Component Integration
 
-Đối với các component lớn cần tích hợp nhiều component con (như `DataTable` kết hợp `Button`, `DropdownMenu`, `EditableCell`):
+For composite components integrating multiple sub-components (such as `DataTable` combining `Button`, `DropdownMenu`, and `EditableCell`):
 
-1. **Đăng ký đầy đủ trong `components`**:
+1. **Explicitly register child components in `components`**:
    ```typescript
    components: {
      DataTable,
@@ -101,6 +101,6 @@ setup() {
      Pencil,
    }
    ```
-2. **Khai báo types an toàn trong `setup()`**:
-   - Khởi tạo mock data bằng hàm helper bên ngoài (ví dụ: `generateEnterpriseOrders(count)`).
-   - Tuyệt đối không để chuỗi HTML template chứa biểu thức TypeScript phức tạp.
+2. **Strict Type Safety in `setup()`**:
+   - Initialize mock datasets using external generator helpers (e.g. `generateEnterpriseOrders(count)`).
+   - Avoid embedding complex TypeScript expressions or type assertions inside HTML template strings.

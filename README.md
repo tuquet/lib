@@ -1,6 +1,19 @@
-# @tuquet Monorepo
+<div align="center">
+  <img src="./assets/logo.svg" width="76" height="76" alt="Lib Logo" />
+  <h1>Lib Monorepo</h1>
+  <p><strong>Enterprise UI Design System, Remote Data Grids &amp; Modular Developer Toolchain</strong></p>
 
-> Production-ready Node.js library monorepo architecture using **pnpm**, **Turborepo**, **tsup**, **Vitest**, **publint**, and **Changesets**.
+  <p>
+    <a href="https://tuquet.github.io/lib/"><img src="https://img.shields.io/badge/Storybook-Live%20Showcase-ff4785.svg" alt="Storybook" /></a>
+    <a href="https://pnpm.io/"><img src="https://img.shields.io/badge/pnpm-9.x-orange.svg" alt="pnpm" /></a>
+    <a href="https://turbo.build/"><img src="https://img.shields.io/badge/Turborepo-2.x-blue.svg" alt="Turborepo" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
+  </p>
+</div>
+
+---
+
+> Production-ready TypeScript & Vue 3 library monorepo architecture using **pnpm**, **Turborepo**, **tsup**, **Vitest**, **publint**, and **Changesets**.
 >
 > 🎨 **Live Storybook Showcase**: [https://tuquet.github.io/lib/](https://tuquet.github.io/lib/)
 
@@ -34,14 +47,14 @@ tuquet-lib/
 
 ## 📦 Packages & Applications Catalog
 
-| Package / Directory            | Path                                                     | Description                                                                                                                            | Status & Build                             |
-| :----------------------------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------- |
-| **`@tuquet/lunar`**            | [`packages/lunar`](packages/lunar)                       | Astronomical Vietnamese Lunar-Solar calendar converter, Can Chi, 24 Tiết Khí, and recurrence calculator (Giỗ, Rằm, Mùng 1).            | Zero-dep • Dual ESM/CJS • 17/17 tests      |
-| **`@tuquet/extension-runner`** | [`packages/extension-runner`](packages/extension-runner) | Isomorphic WebExtension polyfill, crash-proof mock runtime, and headless runner bundler plugin.                                        | Dual ESM/CJS • Types • Publint • Vitest    |
-| **`@tuquet/md-export`**        | [`packages/md-export`](packages/md-export)               | Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter via Chromium (zero-config discovery), CLI & API.               | Dual ESM/CJS • CLI • Types • Vitest        |
-| **`@tuquet/vue-ui`**           | [`packages/vue-ui`](packages/vue-ui)                     | Official Shadcn-Vue component library with 36+ accessible components powered by Reka UI (Radix Vue), Tailwind CSS, and Sonner Toaster. | Dual ESM/CJS • Types • Style.css • Publint |
-| **`@tuquet/vue-table`**        | [`packages/vue-table`](packages/vue-table)               | Remote-driven Data Table with TanStack, virtual scrolling, multi-format export (CSV, TSV, XLSX), URL sync, and AbortController.        | Dual ESM/CJS • Types • Publint • Vitest    |
-| **`apps/`**                    | [`apps/`](apps)                                          | Root directory for runnable end-user products, bots, and full-stack services.                                                          | Workspace standard                         |
+| Package / Directory            | Path                                                     | Description                                                                                                                                                                | Status & Build                             |
+| :----------------------------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------- |
+| **`@tuquet/lunar`**            | [`packages/lunar`](packages/lunar)                       | Astronomical Vietnamese Lunar-Solar calendar converter, Sexagenary Cycle (Can Chi), 24 Solar Terms (Tiet Khi), and recurrence calculator (Memorials, Full Moon, New Moon). | Zero-dep • Dual ESM/CJS • 17/17 tests      |
+| **`@tuquet/extension-runner`** | [`packages/extension-runner`](packages/extension-runner) | Isomorphic WebExtension polyfill, crash-proof mock runtime, and headless runner bundler plugin.                                                                            | Dual ESM/CJS • Types • Publint • Vitest    |
+| **`@tuquet/md-export`**        | [`packages/md-export`](packages/md-export)               | Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter via Chromium (zero-config discovery), CLI & API.                                                   | Dual ESM/CJS • CLI • Types • Vitest        |
+| **`@tuquet/vue-ui`**           | [`packages/vue-ui`](packages/vue-ui)                     | Official Shadcn-Vue component library with 36+ accessible components powered by Reka UI (Radix Vue), Tailwind CSS, and Sonner Toaster.                                     | Dual ESM/CJS • Types • Style.css • Publint |
+| **`@tuquet/vue-table`**        | [`packages/vue-table`](packages/vue-table)               | Remote-driven Data Table with TanStack, virtual scrolling, multi-format export (CSV, TSV, XLSX), URL sync, and AbortController.                                            | Dual ESM/CJS • Types • Publint • Vitest    |
+| **`apps/`**                    | [`apps/`](apps)                                          | Root directory for runnable end-user products, bots, and full-stack services.                                                                                              | Workspace standard                         |
 
 ---
 
@@ -147,7 +160,7 @@ const { tableProps, pagination, search } = useRemoteTable({
 
 ### 3. `@tuquet/lunar`
 
-High-precision astronomical Vietnamese Lunar-Solar calendar engine based on Jean Meeus' algorithms. Zero dependencies, dual ESM/CJS, supporting Can Chi, 24 Solar Terms (Tiết khí), and recurrence calculations for Vietnamese holidays and memorial events.
+High-precision astronomical Vietnamese Lunar-Solar calendar engine based on Jean Meeus' algorithms. Zero dependencies, dual ESM/CJS, supporting Sexagenary Cycle (Can Chi), 24 Solar Terms, and recurrence calculations for lunar holidays and memorial events.
 
 ```typescript
 import { solarToLunar, getSolarTerm, getCanChiYear } from '@tuquet/lunar';
@@ -155,8 +168,8 @@ import { solarToLunar, getSolarTerm, getCanChiYear } from '@tuquet/lunar';
 const lunar = solarToLunar({ day: 10, month: 2, year: 2024 });
 console.log(lunar); // { day: 1, month: 1, year: 2024, isLeap: false }
 
-const term = getSolarTerm(2024, 2, 4); // "Lập Xuân"
-const canChi = getCanChiYear(2024); // "Giáp Thìn"
+const term = getSolarTerm(2024, 2, 4); // "Lap Xuan" (Beginning of Spring)
+const canChi = getCanChiYear(2024); // "Giap Thin" (Year of the Dragon)
 ```
 
 📖 _Detailed Documentation_: See [`packages/lunar/README.md`](packages/lunar/README.md).
@@ -206,3 +219,35 @@ We use **Changesets** to automate SemVer releases:
 3. Commit the generated markdown file under `.changeset/`.
 4. When the PR merges into `main`, GitHub Actions (`release.yml`) automatically creates a release PR with updated versions and changelogs.
 5. Merging the release PR will publish the updated packages to npm.
+
+---
+
+## 🌐 Ecosystem
+
+Part of the **Automation & Agent Ecosystem**:
+
+- [Automa](https://github.com/tuquet/automa) — Native Chrome/Edge Desktop UI Automation Browser.
+- [Runner](https://github.com/tuquet/runner) — High-Performance Distributed Process Supervision Engine in Rust.
+- [Browser](https://github.com/tuquet/browser) — High-Performance Headless Web Scraping & Stealth Automation Core.
+- [Cloud](https://github.com/tuquet/cloud) — Enterprise Orchestration & Real-time Task Control Plane.
+- [CLI](https://github.com/tuquet/cli) — Developer Ergonomic CLI & Unified Command Center.
+- [Lib](https://github.com/tuquet/lib) — Monorepo for Shared Enterprise UI & Utilities (`vue-ui`, `vue-table`, `md-export`, `extension-runner`, `lunar`).
+- [Scoop Bucket](https://github.com/tuquet/scoop-bucket) — Official Windows Scoop Distribution Channel.
+
+---
+
+## 📄 License
+
+Distributed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+  <samp>
+    <a href="https://tuquet.github.io">Portfolio</a> •
+    <a href="https://tuquet.github.io/cv">CV &amp; Resume</a> •
+    <a href="https://tuquet.github.io/automa">Automa Studio</a> •
+    <a href="https://tuquet.github.io/lib">Component Lab</a> •
+    <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
+  </samp>
+</div>

@@ -1,46 +1,47 @@
-# 🚀 @tuquet/extension-runner
+<div align="center">
+  <img src="./assets/logo.svg" width="76" height="76" alt="Extension Runner Logo" />
+  <h1>@tuquet/extension-runner</h1>
+  <p><strong>Universal Isomorphic WebExtension Polyfill, Crash-Proof Mock Runtime &amp; Headless Bundler</strong></p>
 
-> **Universal Isomorphic WebExtension Polyfill, Crash-Proof Mock Runtime & Headless Extension Bundler.**
-
-[![npm version](https://img.shields.io/npm/v/@tuquet/extension-runner.svg)](https://www.npmjs.com/package/@tuquet/extension-runner)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](<>)
-[![Type Checked](https://img.shields.io/badge/typescript-strict-blue.svg)](<>)
-[![Tests](https://img.shields.io/badge/tests-7%2F7%20passing-brightgreen.svg)](<>)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-Part of the **Tuquet Ecosystem** for enterprise-grade web automation, RPA orchestration, and distributed compute fleet management.
-
----
-
-## 📖 Bối Cảnh & Vấn Đề Kỹ Thuật (Why This Library Exists?)
-
-Trong các ứng dụng tự động hoá trình duyệt và Web Extensions hiện đại (như Automa, Studio, Canvas Flow), các kỹ sư thường gặp phải **2 bài toán nan giải**:
-
-1. **Lỗi Crash StorageArea trên Chrome mới (v129+)**:
-   Thư viện `webextension-polyfill` gốc từ Mozilla có cơ chế wrap `StorageArea` gây xung đột ngữ cảnh `this`, dẫn đến lỗi nghiêm trọng `Illegal invocation` hoặc `TypeError: Cannot read properties of undefined` trên các phiên bản Chromium gần đây.
-2. **Khó khăn khi chia sẻ UI Components giữa Extension & Web Studio (Isomorphism)**:
-   Khi muốn dùng chung Canvas Editor, Block Palette, hoặc Form cấu hình giữa **Bản Full Extension** và **Bản Nhẹ Web Studio (chạy ngoài browser/Storybook)**, mã nguồn thường xuyên bị crash do gọi trực tiếp vào `browser.storage.local`, `browser.runtime.*`, `browser.tabs.*` vốn không tồn tại trong môi trường Web thông thường.
-
-👉 **`@tuquet/extension-runner` sinh ra để giải quyết dứt điểm 2 bài toán trên trong duy nhất 1 package tinh gọn.**
+  <p>
+    <a href="https://www.npmjs.com/package/@tuquet/extension-runner"><img src="https://img.shields.io/npm/v/@tuquet/extension-runner.svg" alt="npm version" /></a>
+    <img src="https://img.shields.io/badge/Manifest-V3%20Ready-brightgreen.svg" alt="Manifest V3" />
+    <img src="https://img.shields.io/badge/Tests-Passing-brightgreen.svg" alt="Tests" />
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
+  </p>
+</div>
 
 ---
 
-## ✨ Tính Năng Nổi Bật (Key Features)
+## 📖 Background & Problem Statement (Why This Library Exists)
 
-- 🌐 **Zero-Config Isomorphism**: Tự động nhận diện ngữ cảnh đang chạy:
-  - **Môi trường Extension (Chrome MV3 / Firefox)**: Kết nối trực tiếp native API không qua wrapper rườm rà.
-  - **Môi trường Web / Webview / Node / Test**: Tự động kích hoạt **Crash-Proof Mock Runtime**.
-- 🛡️ **Recursive Safe Proxy**: Bất kỳ API Chrome/Browser nào chưa được mock rõ ràng (ví dụ: `browser.cookies.getAll()`, `browser.contextMenus.create()`) đều được uỷ quyền qua Proxy và tự động trả về `Promise.resolve({})`, **tuyệt đối không bao giờ crash màn hình UI**.
-- 💾 **Full In-Memory & LocalStorage State**: Triển khai đầy đủ chuẩn API `browser.storage.local` (`get`, `set`, `remove`, `clear`) và hệ thống thông báo thay đổi `storage.onChanged.addListener`.
-- 📦 **Headless Runner Bundler Plugin**: Tích hợp sẵn Vite Plugin chuyên dụng giúp tự động bóc tách UI khỏi `manifest.json` và sinh scaffolding (`dummy.html`, `offscreen.html`, `sandbox.html`) cho các headless worker siêu nhẹ.
-- 🪶 **Siêu nhẹ & Dual ESM/CJS**: Đóng gói chuẩn mực bằng `tsup`, hỗ trợ cả ECMAScript Modules (`.mjs`) lẫn CommonJS (`.cjs`), types `.d.ts` hoàn chỉnh.
+In modern browser automation and Web Extension applications (such as Automa, Studio, Canvas Flow), engineers frequently encounter **two critical architectural challenges**:
+
+1. **StorageArea Crash on Modern Chrome (v129+)**:
+   Mozilla's original `webextension-polyfill` binds `StorageArea` in a manner that causes context loss, leading to fatal `Illegal invocation` or `TypeError: Cannot read properties of undefined` exceptions on recent Chromium versions.
+2. **Difficulties Sharing UI Components between Extension & Web Studio (Isomorphism)**:
+   Reusing canvas editors, block palettes, or form controls between a **Full Browser Extension** and an **External Web Studio (running standalone on web or Storybook)** causes crashes when invoking `browser.storage.local`, `browser.runtime.*`, or `browser.tabs.*` that do not natively exist in plain browser tabs.
+
+👉 **`@tuquet/extension-runner` was engineered to resolve both challenges cleanly in a single, lightweight package.**
 
 ---
 
-## 📦 Cài Đặt (Installation)
+## ✨ Key Features
+
+- 🌐 **Zero-Config Isomorphism**: Automatically detects execution environment:
+  - **Extension Environment (Chrome MV3 / Firefox)**: Binds directly to native browser APIs without fragile wrappers.
+  - **Web / Webview / Node / Test Environment**: Automatically activates the **Crash-Proof Mock Runtime**.
+- 🛡️ **Recursive Safe Proxy**: Any Chrome/Browser API that is not explicitly mocked (e.g., `browser.cookies.getAll()`, `browser.contextMenus.create()`) is safely delegated through a recursive Proxy and returns `Promise.resolve({})`—**guaranteeing the UI never crashes**.
+- 💾 **Full In-Memory & LocalStorage State**: Implements the full `browser.storage.local` API specification (`get`, `set`, `remove`, `clear`) alongside reactive change notifications via `storage.onChanged.addListener`.
+- 📦 **Headless Runner Bundler Plugin**: Includes a dedicated Vite plugin that strips UI declarations from `manifest.json` and generates runner scaffolding (`dummy.html`, `offscreen.html`, `sandbox.html`) for ultra-lightweight headless workers.
+- 🪶 **Zero-Dependency & Dual ESM/CJS**: Built with `tsup`, supporting both ECMAScript Modules (`.mjs`) and CommonJS (`.cjs`) with complete `.d.ts` declaration files.
+
+---
+
+## 📦 Installation
 
 ```bash
-# Using pnpm (Khuyến nghị trong Tuquet Ecosystem)
+# Using pnpm (Recommended)
 pnpm add @tuquet/extension-runner
 
 # Using npm
@@ -52,23 +53,23 @@ yarn add @tuquet/extension-runner
 
 ---
 
-## 🚀 Hướng Dẫn Sử Dụng (Usage Guide)
+## 🚀 Usage Guide
 
-### 1. Sử dụng Polyfill Isomorphic trong Vue 3 / TypeScript
+### 1. Isomorphic Polyfill in Vue 3 / TypeScript
 
-Import trực tiếp đối tượng `browser` chuẩn:
+Import the standard `browser` object directly:
 
 ```typescript
 import browser, { isExtensionEnv, isWebEnv } from '@tuquet/extension-runner';
 
-// 1. Kiểm tra môi trường đang chạy
+// 1. Detect current execution environment
 if (isExtensionEnv()) {
-  console.log('Đang chạy bên trong Chrome Extension!');
+  console.log('Running inside live Chrome Extension!');
 } else {
-  console.log('Đang chạy trên Web Studio / Storybook!');
+  console.log('Running inside Web Studio / Storybook!');
 }
 
-// 2. Thao tác với Storage API an toàn trên CẢ HAI môi trường
+// 2. Safely interact with Storage API across BOTH environments
 async function saveWorkflow(workflow: any) {
   await browser.storage.local.set({
     [`workflow_${workflow.id}`]: workflow,
@@ -80,30 +81,30 @@ async function loadWorkflow(workflowId: string) {
   return result[`workflow_${workflowId}`];
 }
 
-// 3. Gọi các API chưa mock mà không sợ crash UI
-await browser.cookies.getAll({}); // Trả về Promise an toàn, không ném ngoại lệ!
+// 3. Call un-mocked APIs without risking UI crashes
+await browser.cookies.getAll({}); // Returns safe resolved Promise, never throws!
 ```
 
 ---
 
-### 2. Lắng nghe sự kiện thay đổi dữ liệu (`onChanged`)
+### 2. Listening to Storage Change Events (`onChanged`)
 
 ```typescript
 import browser from '@tuquet/extension-runner';
 
-// Lắng nghe realtime khi có biến hoặc workflow mới được lưu
+// Real-time listener when a variable or active workflow updates
 browser.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'local' && changes.activeWorkflow) {
-    console.log('Workflow vừa đổi thành:', changes.activeWorkflow.newValue);
+    console.log('Active workflow changed to:', changes.activeWorkflow.newValue);
   }
 });
 ```
 
 ---
 
-### 3. Cấu hình Vite Plugin đóng gói Headless Runner (`tuquetRunnerPlugin`)
+### 3. Vite Plugin Configuration for Headless Runner (`tuquetRunnerPlugin`)
 
-Khi xây dựng một Extension Runner chạy ngầm (không cần giao diện popup/options, chỉ cần worker offscreen chạy automation):
+When bundling a headless background runner extension (omitting popup/options UI to run offscreen automation scripts):
 
 ```typescript
 // vite.runner.config.ts
@@ -116,7 +117,7 @@ export default defineConfig({
     vue(),
     tuquetRunnerPlugin({
       manifestPath: './src/manifest.chrome.json',
-      name: 'Tuquet Headless Automation Runner',
+      name: 'Headless Automation Runner',
       version: '1.2.0',
       offscreenScript: './offscreen.bundle.js',
       sandboxScript: './sandbox.bundle.js',
@@ -128,17 +129,17 @@ export default defineConfig({
 });
 ```
 
-**Plugin sẽ tự động:**
+**The plugin automatically:**
 
-1. Đọc `manifest.chrome.json`, bóc tách các trường UI (`action`, `options_ui`, `chrome_url_overrides`).
-2. Sinh file `manifest.json` tối giản vào thư mục `dist`.
-3. Sinh `dummy.html`, `offscreen.html`, `sandbox.html` sẵn sàng cho Chrome nạp làm worker.
+1. Parses `manifest.chrome.json` and strips UI keys (`action`, `options_ui`, `chrome_url_overrides`).
+2. Emits a sanitized `manifest.json` into `dist`.
+3. Scaffolds `dummy.html`, `offscreen.html`, and `sandbox.html` ready for Chrome offscreen execution.
 
 ---
 
-### 4. Sử dụng trong Unit Test (Vitest / Jest)
+### 4. Unit Testing with Vitest / Jest
 
-Tạo mock storage độc lập cho từng test case:
+Create an isolated mock storage instance for each test suite:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -156,33 +157,57 @@ describe('Workflow Service Tests', () => {
 
 ---
 
-## 📊 So Sánh: `@tuquet/extension-runner` vs `webextension-polyfill`
+## 📊 Comparison: `@tuquet/extension-runner` vs `webextension-polyfill`
 
-| Tiêu Chí                              | `webextension-polyfill` (Mozilla)                     | `@tuquet/extension-runner` (Tuquet)                |
-| :------------------------------------ | :---------------------------------------------------- | :------------------------------------------------- |
-| **Hỗ trợ Chrome MV3 mới (v129+)**     | ❌ Dễ crash StorageArea do lỗi binding context        | ✅ Hoạt động 100% mượt mà với native `chrome.*`    |
-| **Chạy ngoài Extension (Web Studio)** | ❌ Ném ngoại lệ `Cannot read properties of undefined` | ✅ Tự động kích hoạt **Recursive Safe Proxy Mock** |
-| **Crash-Proof Guarantee**             | ❌ Crash khi gọi API không được định nghĩa            | ✅ Không bao giờ crash, luôn fallback an toàn      |
-| **Công cụ đóng gói Runner (Vite)**    | ❌ Không hỗ trợ                                       | ✅ Tích hợp sẵn `tuquetRunnerPlugin` cho Headless  |
-| **Độ phụ thuộc (Dependencies)**       | Cồng kềnh                                             | 🪶 **Zero runtime dependencies**                   |
+| Evaluation Criteria                    | `webextension-polyfill` (Mozilla)                             | `@tuquet/extension-runner`                             |
+| :------------------------------------- | :------------------------------------------------------------ | :----------------------------------------------------- |
+| **Modern Chrome MV3 Support (v129+)**  | ❌ Prone to StorageArea crashes due to `this` context binding | ✅ 100% native `chrome.*` compatibility                |
+| **Run Outside Extension (Web Studio)** | ❌ Throws `Cannot read properties of undefined`               | ✅ Automatically enables **Recursive Safe Proxy Mock** |
+| **Crash-Proof Guarantee**              | ❌ Crashes when un-mocked APIs are called                     | ✅ Never crashes, always falls back safely             |
+| **Runner Bundler Tool (Vite)**         | ❌ Not supported                                              | ✅ Built-in `tuquetRunnerPlugin` for Headless builds   |
+| **Runtime Dependencies**               | Heavy external dependencies                                   | 🪶 **Zero runtime dependencies**                       |
 
 ---
 
 ## 🔧 API Reference
 
-### Exports chính từ `@tuquet/extension-runner`:
-
-| Tên Export                    | Kiểu (Type)         | Mô Tả                                                                    |
-| :---------------------------- | :------------------ | :----------------------------------------------------------------------- |
-| `default` / `browser`         | `any`               | Đối tượng tương thích API trình duyệt (Isomorphic instance).             |
-| `isExtensionEnv()`            | `() => boolean`     | Trả về `true` nếu đang chạy trong extension Chrome/Edge/Firefox thực tế. |
-| `isWebEnv()`                  | `() => boolean`     | Trả về `true` nếu đang chạy trên web browser / webview / node / studio.  |
-| `createBrowserMock(initial?)` | `(data?) => any`    | Factory tạo instance mock hoàn chỉnh với Safe Proxy đệ quy.              |
-| `InMemoryStorageArea`         | `class`             | Lớp mô phỏng bộ nhớ lưu trữ `browser.storage.local`.                     |
-| `tuquetRunnerPlugin(options)` | `(opts?) => Plugin` | Vite plugin đóng gói headless extension runner.                          |
+| Export Name                   | Type                | Description                                                                 |
+| :---------------------------- | :------------------ | :-------------------------------------------------------------------------- |
+| `default` / `browser`         | `any`               | Isomorphic browser API instance compatible with WebExtension specs.         |
+| `isExtensionEnv()`            | `() => boolean`     | Returns `true` when running inside a real Chrome/Edge/Firefox extension.    |
+| `isWebEnv()`                  | `() => boolean`     | Returns `true` when running in a standalone web browser, webview, or node.  |
+| `createBrowserMock(initial?)` | `(data?) => any`    | Factory to instantiate an isolated mock runtime with recursive safe proxy.  |
+| `InMemoryStorageArea`         | `class`             | Memory-backed storage implementation conforming to `browser.storage.local`. |
+| `tuquetRunnerPlugin(options)` | `(opts?) => Plugin` | Vite build plugin for scaffolding and packaging headless extension runners. |
 
 ---
 
-## 📜 Giấy Phép (License)
+## 🌐 Ecosystem
 
-Phát hành dưới giấy phép [MIT License](LICENSE) © 2026 [Tuquet Ecosystem](https://github.com/tuquet).
+Part of the **Automation & Agent Ecosystem**:
+
+- [Automa](https://github.com/tuquet/automa) — Native Chrome/Edge Desktop UI Automation Browser.
+- [Runner](https://github.com/tuquet/runner) — High-Performance Distributed Process Supervision Engine in Rust.
+- [Browser](https://github.com/tuquet/browser) — High-Performance Headless Web Scraping & Stealth Automation Core.
+- [Cloud](https://github.com/tuquet/cloud) — Enterprise Orchestration & Real-time Task Control Plane.
+- [CLI](https://github.com/tuquet/cli) — Developer Ergonomic CLI & Unified Command Center.
+- [Lib](https://github.com/tuquet/lib) — Monorepo for Shared Enterprise UI & Utilities (`vue-ui`, `vue-table`, `md-export`, `extension-runner`, `lunar`).
+- [Scoop Bucket](https://github.com/tuquet/scoop-bucket) — Official Windows Scoop Distribution Channel.
+
+---
+
+## 📜 License
+
+Distributed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+  <samp>
+    <a href="https://tuquet.github.io">Portfolio</a> •
+    <a href="https://tuquet.github.io/cv">CV &amp; Resume</a> •
+    <a href="https://tuquet.github.io/automa">Automa Studio</a> •
+    <a href="https://tuquet.github.io/lib">Component Lab</a> •
+    <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
+  </samp>
+</div>

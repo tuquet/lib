@@ -1,25 +1,25 @@
-# Hướng dẫn Xử lý Layout, Column Pinning, Density & Styling
+# Layout, Column Pinning, Density & Styling Guide
 
-Tài liệu này tổng hợp các giải pháp chuyên sâu đã được kiểm chứng để xử lý bố cục bảng doanh nghiệp, chống vỡ layout khi đổi density, ghim cột (freeze/pin) và đồng bộ hiệu ứng hover.
+This document synthesizes verified solutions for enterprise table layout management, preventing layout shifts across density changes, sticky column freezing/pinning, and synchronized hover states.
 
 ---
 
-## 1. Cơ chế Chống Vỡ Layout & Đè Cột khi Đổi Density
+## 1. Preventing Layout Breakage & Column Overlap on Density Shifts
 
-### Nguyên nhân gây lỗi:
+### Root Cause:
 
-Khi thẻ `<table>` dùng `table-layout: auto`, padding ngang (như `px-4`) khi đổi density từ `compact` sang `normal`/`comfortable` sẽ làm ô ghim (như Checkbox 40px) phình to thành ~65px. Tuy nhiên, TanStack Table lại ghim cột kế tiếp (STT) ở tọa độ cố định `left: 40px`, dẫn đến cột STT nằm đè 25px lên cột Checkbox!
+When `<table>` relies on `table-layout: auto`, horizontal cell padding changes (such as `px-4`) occurring when density shifts from `compact` to `comfortable` expand pinned cells (such as the 40px Checkbox) to ~65px. However, TanStack Table pins the adjacent column (Index/STT) at fixed coordinates (`left: 40px`), causing the adjacent column to overlap the Checkbox column by 25px.
 
-### Giải pháp xử lý triệt để:
+### Comprehensive Solution:
 
-1. **Bắt buộc dùng `table-layout: fixed`**:
+1. **Enforce `table-layout: fixed`**:
    ```html
    <table
      class="w-full caption-bottom text-sm table-fixed border-collapse"
      :style="{ minWidth: `${totalTableWidth}px` }"
    ></table>
    ```
-2. **Hàm `getColumnStyle` áp dụng đồng thời `width`, `minWidth`, `maxWidth`**:
+2. **Apply `width`, `minWidth`, and `maxWidth` simultaneously in `getColumnStyle`**:
    ```typescript
    function getColumnStyle(column: Column<any, any>, isHeader = false) {
      const isPinned = column.getIsPinned();
@@ -38,7 +38,7 @@ Khi thẻ `<table>` dùng `table-layout: auto`, padding ngang (như `px-4`) khi 
      return style;
    }
    ```
-3. **Cố định padding riêng cho ô ghim icon/checkbox**:
+3. **Isolate dedicated padding for icon/checkbox columns**:
    ```typescript
    function getCellDensityClass(columnId: string) {
      if (columnId === 'select' || columnId === 'actions') {
@@ -47,7 +47,7 @@ Khi thẻ `<table>` dùng `table-layout: auto`, padding ngang (như `px-4`) khi 
      return `${getVerticalPaddingClass()} px-3`;
    }
    ```
-4. **Tự động remeasure hàng ảo khi đổi density**:
+4. **Automatically remeasure virtual rows on density changes**:
    ```typescript
    watch(
      () => props.density,
@@ -61,36 +61,36 @@ Khi thẻ `<table>` dùng `table-layout: auto`, padding ngang (như `px-4`) khi 
 
 ---
 
-## 2. Đồng bộ Màu Nền Hover & Selection trên Ô Ghim Cố định
+## 2. Synchronizing Hover & Selection Backgrounds on Pinned Cells
 
-### Vấn đề:
+### Problem:
 
-Các ô ghim mang nền đục `bg-background` (để chữ cuộn ngang không bị lộ xuyên qua). Khi rê chuột vào hàng, hiệu ứng `hover:bg-muted/50` của thẻ `<tr>` bị màu nền đục của `<td>` che mất, khiến hàng bị loang lổ (chỉ sáng ở giữa, 2 bên ghim vẫn trắng bóc).
+Pinned cells must carry an opaque `bg-background` to prevent horizontally scrolled text from bleeding through. When hovering over a row, the `hover:bg-muted/50` style on the parent `<tr>` is masked by the opaque `<td>` background, producing an inconsistent row appearance (row center is highlighted while pinned left/right columns remain stark white).
 
-### Giải pháp:
+### Solution:
 
-1. Thêm class `group` vào `<tr>` trong `TableRow.vue`:
+1. Add the `group` class to `<tr>` in `TableRow.vue`:
    ```html
    <tr
      :class="cn('group border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted', props.class)"
    ></tr>
    ```
-2. Thêm class `group-hover:bg-muted/50` và `group-data-[state=selected]:bg-muted` vào các ô ghim:
+2. Add `group-hover:bg-muted/50` and `group-data-[state=selected]:bg-muted` to pinned cells:
    ```html
    :class="[ cell.column.getIsPinned() ? 'sticky bg-background group-hover:bg-muted/50
    group-data-[state=selected]:bg-muted transition-colors' : 'transition-colors' ]"
    ```
-   Khi rê chuột vào bất kỳ đâu trên hàng, cả hàng và các ô ghim lập tức đổi sang cùng một dải màu nền thống nhất!
+   Hovering anywhere over the row immediately updates the background color across both scrollable and pinned cells uniformly.
 
 ---
 
-## 3. Phân Tầng Z-Index Chuẩn
+## 3. Standardized Z-Index Tiering
 
-Tránh hiện tượng ô cuộn đè lên header hoặc floating bar:
+Prevents scrolling body cells from clipping above sticky headers or floating toolbars:
 
-- `z-10`: Hàng thường
-- `z-20`: Ô ghim sticky ở phần thân bảng (`tbody td.sticky`)
-- `z-30`: Ô ghim sticky ở phần tiêu đề (`thead th.sticky`)
-- `z-40`: Thanh Toolbar cố định
-- `z-50`: Thanh Bulk Actions Floating Bar (`fixed/absolute bottom-6`)
-- `z-100`: Dropdown Menu, Modal, Tooltip, Popover
+- `z-10`: Standard table rows
+- `z-20`: Sticky pinned cells in table body (`tbody td.sticky`)
+- `z-30`: Sticky pinned cells in header (`thead th.sticky`)
+- `z-40`: Pinned table toolbar
+- `z-50`: Bulk actions floating toolbar (`fixed/absolute bottom-6`)
+- `z-100`: Dropdown menus, Modals, Tooltips, and Popovers

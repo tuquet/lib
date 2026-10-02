@@ -1,21 +1,21 @@
-# Hướng dẫn Khai báo Controls & ArgTypes Chuyên nghiệp
+# Professional Controls & ArgTypes Guide
 
-Storybook Controls cho phép người dùng (Developer, QA, Designer, PM) tương tác và thay đổi props trực tiếp trên UI mà không cần sửa code.
+Storybook Controls allow developers, QA engineers, designers, and product managers to interactively modify component props directly from the UI without touching code.
 
 ---
 
-## 1. Cấu trúc Khai báo một ArgType chuẩn
+## 1. Standard ArgType Declaration Structure
 
 ```typescript
 argTypes: {
   propertyName: {
     control: { type: 'control-type' },
-    options: ['optionA', 'optionB'], // Dành cho select, radio
-    description: 'Giải thích bằng tiếng Việt về tác dụng của prop này',
+    options: ['optionA', 'optionB'], // For select, radio
+    description: 'Clear English explanation of prop behavior',
     table: {
-      type: { summary: 'kiểu dữ liệu' },
-      defaultValue: { summary: 'giá trị mặc định' },
-      category: 'Tên nhóm phân loại',
+      type: { summary: 'data type' },
+      defaultValue: { summary: 'default value' },
+      category: 'Category Group Name',
     },
   },
 }
@@ -23,14 +23,14 @@ argTypes: {
 
 ---
 
-## 2. Các Kiểu Controls Thông dụng
+## 2. Common Control Types
 
-### 1. Boolean Toggle (Bật / Tắt)
+### 1. Boolean Toggle
 
 ```typescript
 virtual: {
   control: { type: 'boolean' },
-  description: 'Chuyển đổi giữa chế độ Cuộn ảo (Virtual Scrolling) và Phân trang truyền thống',
+  description: 'Toggle between Virtual Scrolling mode and traditional pagination',
   table: {
     type: { summary: 'boolean' },
     defaultValue: { summary: 'true' },
@@ -39,13 +39,13 @@ virtual: {
 },
 ```
 
-### 2. Inline Radio (Lựa chọn nhanh ít option)
+### 2. Inline Radio (Compact Choices)
 
 ```typescript
 density: {
   control: { type: 'inline-radio' },
   options: ['compact', 'normal', 'comfortable'],
-  description: 'Mật độ hiển thị khoảng cách hàng trong bảng',
+  description: 'Row spacing density across table rows',
   table: {
     type: { summary: "'compact' | 'normal' | 'comfortable'" },
     defaultValue: { summary: "'compact'" },
@@ -54,13 +54,13 @@ density: {
 },
 ```
 
-### 3. Select Dropdown (Nhiều options)
+### 3. Select Dropdown (Multiple Options)
 
 ```typescript
 datasetSize: {
   control: { type: 'select' },
   options: [1000, 5000, 10000, 25000],
-  description: 'Số lượng bản ghi mẫu sinh ngẫu nhiên trong bộ nhớ RAM',
+  description: 'Number of mock records generated in memory',
   table: {
     type: { summary: 'number' },
     defaultValue: { summary: '10000' },
@@ -69,12 +69,12 @@ datasetSize: {
 },
 ```
 
-### 4. Range Slider (Thanh trượt số)
+### 4. Range Slider
 
 ```typescript
 overscan: {
   control: { type: 'range', min: 0, max: 30, step: 1 },
-  description: 'Số lượng hàng DOM render dự phòng phía trên và dưới viewport',
+  description: 'Buffer count of DOM rows rendered outside the active viewport',
   table: {
     type: { summary: 'number' },
     defaultValue: { summary: '5' },
@@ -83,23 +83,23 @@ overscan: {
 },
 ```
 
-### 5. Text Input (Nhập chuỗi)
+### 5. Text Input
 
 ```typescript
 emptyMessage: {
   control: { type: 'text' },
-  description: 'Nội dung thông báo hiển thị khi không có bản ghi phù hợp',
+  description: 'Feedback message rendered when no records match filter query',
   table: {
     type: { summary: 'string' },
-    defaultValue: { summary: "'Không có dữ liệu phù hợp.'" },
+    defaultValue: { summary: "'No matching data found.'" },
     category: 'Appearance',
   },
 },
 ```
 
-### 6. Ẩn Control không cần thiết (`control: false`)
+### 6. Disabling Controls (`control: false`)
 
-Đối với các props nhận object phức tạp (như instance composable `remote` hay custom render functions):
+For complex object props (such as the `remote` composable instance or custom VNode renderers):
 
 ```typescript
 remote: { control: false },
@@ -107,11 +107,11 @@ remote: { control: false },
 
 ---
 
-## 3. Phân nhóm Controls bằng `category`
+## 3. Organizing Controls with `category`
 
-Nên nhóm các controls lại để tab Controls trong Storybook hiển thị ngăn nắp:
+Group related controls to keep the Storybook Controls panel intuitive:
 
-- `Appearance`: Màu sắc, density, theme, skeletonRows.
+- `Appearance`: Colors, density, theme, skeletonRows.
 - `Virtual Scrolling`: virtual, virtualHeight, overscan.
 - `Layout & Features`: showToolbar, showPagination, showFloatingBar.
 - `Data & Performance`: datasetSize, debounceMs, cacheTime.

@@ -1,9 +1,20 @@
-# @tuquet/md-export
+<div align="center">
+  <img src="./assets/logo.svg" width="76" height="76" alt="MD Export Logo" />
+  <h1>@tuquet/md-export</h1>
+  <p><strong>Folder-Aware Markdown to PDF, HTML, PNG, and JPEG Exporter</strong></p>
+
+  <p>
+    <a href="https://pnpm.io/"><img src="https://img.shields.io/badge/pnpm-ready-orange.svg" alt="pnpm" /></a>
+    <img src="https://img.shields.io/badge/Formats-PDF%20%7C%20HTML%20%7C%20PNG%20%7C%20JPEG-blue.svg" alt="Formats" />
+    <img src="https://img.shields.io/badge/Engine-Chromium%20Zero--Config-brightgreen.svg" alt="Chromium" />
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
+  </p>
+</div>
+
+---
 
 > **Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter using headless Chromium.**  
 > Designed for monorepos, documentation sites, and multilingual profile structures.
-
----
 
 ## 🚀 Features
 
@@ -77,6 +88,32 @@ console.log(`Compiled ${results.length} files in ${totalDurationMs}ms`);
 
 ---
 
+## 🌐 Ecosystem
+
+Part of the **Automation & Agent Ecosystem**:
+
+- [Automa](https://github.com/tuquet/automa) — Native Chrome/Edge Desktop UI Automation Browser.
+- [Runner](https://github.com/tuquet/runner) — High-Performance Distributed Process Supervision Engine in Rust.
+- [Browser](https://github.com/tuquet/browser) — High-Performance Headless Web Scraping & Stealth Automation Core.
+- [Cloud](https://github.com/tuquet/cloud) — Enterprise Orchestration & Real-time Task Control Plane.
+- [CLI](https://github.com/tuquet/cli) — Developer Ergonomic CLI & Unified Command Center.
+- [Lib](https://github.com/tuquet/lib) — Monorepo for Shared Enterprise UI & Utilities (`vue-ui`, `vue-table`, `md-export`, `extension-runner`, `lunar`).
+- [Scoop Bucket](https://github.com/tuquet/scoop-bucket) — Official Windows Scoop Distribution Channel.
+
+---
+
 ## 📄 License
 
-MIT © Tuquet Ecosystem
+Distributed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+  <samp>
+    <a href="https://tuquet.github.io">Portfolio</a> •
+    <a href="https://tuquet.github.io/cv">CV &amp; Resume</a> •
+    <a href="https://tuquet.github.io/automa">Automa Studio</a> •
+    <a href="https://tuquet.github.io/lib">Component Lab</a> •
+    <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
+  </samp>
+</div>

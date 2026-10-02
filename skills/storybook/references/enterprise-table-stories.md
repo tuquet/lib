@@ -1,14 +1,14 @@
-# Hướng dẫn Xây dựng Story cho Enterprise Table & Các Tính năng Nâng cao
+# Enterprise Table Stories & Advanced Features Guide
 
-Tài liệu này cung cấp hướng dẫn chuyên sâu để xây dựng các stories chất lượng cao cho hệ sinh thái **DataTable Enterprise** trong `@tuquet/vue-table`, tận dụng đầy đủ các tính năng mới nhất: Facade API, Saved Views, Mobile Card View, Plugins và Dynamic Form.
+This document provides in-depth guidance for building high-fidelity stories for the **DataTable Enterprise** ecosystem in `@tuquet/vue-table`, utilizing its latest features: API Facade, Saved Views, Mobile Card View, Lifecycle Plugins, and Dynamic Form integration.
 
 ---
 
-## 1. Sử dụng Enterprise Table API Facade trong Stories
+## 1. Using the Enterprise Table API Facade in Stories
 
-`useRemoteTable` và `DataTable` cung cấp đối tượng Facade API hợp nhất (`remote.api` hoặc slot/ref `api`), gom nhóm các thao tác bảng theo từng domain rõ ràng.
+`useRemoteTable` and `DataTable` expose a unified API Facade (`remote.api` or slot/ref `api`), grouping table operations by domain.
 
-### Cấu trúc API Facade:
+### API Facade Structure:
 
 - `api.column`: `pin(colId, 'left'|'right')`, `unpin(colId)`, `toggle(colId)`, `hide(colId)`, `show(colId)`, `resize(colId, size)`, `order(orderArray)`.
 - `api.filter`: `set(field, value)`, `get(field)`, `remove(field)`, `reset()`, `setConjunction('and'|'or')`, `addDynamicRule(rule)`.
@@ -19,7 +19,7 @@ Tài liệu này cung cấp hướng dẫn chuyên sâu để xây dựng các s
 - `api.views`: `saveView(name, state)`, `applyView(view)`, `deleteView(id)`, `list()`, `active()`.
 - `api.scroll`: `scrollToIndex(index, options)`, `scrollToOffset(offset)`.
 
-### Mẫu Story minh họa Custom Action Bar điều khiển bảng qua API:
+### Reference Story: Custom Action Bar Controlling Table via Facade
 
 ```typescript
 export const ApiFacadeDemo: Story = {
@@ -32,7 +32,7 @@ export const ApiFacadeDemo: Story = {
         columns,
       });
 
-      // Điều khiển bảng qua API facade chuyên biệt
+      // Control table through domain facade
       function freezeFirstColumn() {
         remote.api.column.pin('customer', 'left');
       }
@@ -56,13 +56,13 @@ export const ApiFacadeDemo: Story = {
       <div class="space-y-3">
         <div class="flex items-center gap-2 p-2 bg-muted/30 rounded-lg border">
           <Button size="sm" variant="outline" @click="freezeFirstColumn">
-            Ghim cột Khách hàng
+            Pin Customer Column
           </Button>
           <Button size="sm" variant="outline" @click="selectAllCompleted">
-            Chọn đơn 'Completed'
+            Select 'Completed' Orders
           </Button>
           <Button size="sm" variant="default" @click="exportFilteredExcel">
-            Xuất Excel
+            Export Excel
           </Button>
         </div>
         <DataTable :remote="remote" />
@@ -74,9 +74,9 @@ export const ApiFacadeDemo: Story = {
 
 ---
 
-## 2. Minh họa Chế độ xem đã lưu (Saved Views System)
+## 2. Saved Views System
 
-Saved Views cho phép lưu trữ và khôi phục trạng thái bộ lọc, sắp xếp, ẩn/hiện cột và ghim cột.
+Saved Views persist and restore filters, sorting, column visibility, and pinned columns.
 
 ```typescript
 export const SavedViewsDemo: Story = {
@@ -106,18 +106,18 @@ export const SavedViewsDemo: Story = {
 
 ---
 
-## 3. Kiểm thử Giao diện Di động & Responsive Card View
+## 3. Mobile Viewport & Responsive Card View Testing
 
-Để kiểm thử giao diện di động trong Storybook:
+To test mobile responsive layouts in Storybook:
 
-1. **Cấu hình Viewport trong Story parameters**:
+1. **Configure Viewport parameters**:
 
 ```typescript
 export const MobileCardView: Story = {
   name: 'Mobile Card View (<768px)',
   parameters: {
     viewport: {
-      defaultViewport: 'iphone14', // Tự động mở khung iPhone 14 (393px)
+      defaultViewport: 'iphone14', // Automatically renders in iPhone 14 viewport (393px)
     },
   },
   args: {
@@ -134,14 +134,14 @@ export const MobileCardView: Story = {
     template: `
       <div class="max-w-md mx-auto p-2 bg-background min-h-screen">
         <DataTable :remote="remote" v-bind="args">
-          <!-- Tùy biến slot card nếu cần thiết -->
+          <!-- Optional custom card slot -->
           <template #card="{ row, isSelected, toggleSelected }">
             <div class="p-3 border rounded-xl bg-card space-y-2">
               <div class="flex justify-between items-center">
                 <span class="font-bold text-sm">{{ row.original.customer }}</span>
                 <input type="checkbox" :checked="isSelected" @change="toggleSelected" />
               </div>
-              <p class="text-xs text-muted-foreground">Mã: {{ row.original.code }}</p>
+              <p class="text-xs text-muted-foreground">Code: {{ row.original.code }}</p>
             </div>
           </template>
         </DataTable>
@@ -153,7 +153,7 @@ export const MobileCardView: Story = {
 
 ---
 
-## 4. Gắn Plugins Hệ thống (`storagePlugin`, `auditLogPlugin`)
+## 4. Attaching System Plugins (`storagePlugin`, `auditLogPlugin`)
 
 ```typescript
 import { storagePlugin, auditLogPlugin } from '@tuquet/vue-table';
@@ -183,10 +183,10 @@ export const PluginsDemo: Story = {
 
 ---
 
-## 5. Tích hợp OpenAPI Dynamic Form & Row Editing
+## 5. Integrating OpenAPI Dynamic Form & Row Editing
 
-Khi kết hợp `@tuquet/vue-ui` (`DynamicForm`, `DynamicRowEditSheet`) với `@tuquet/vue-table`:
+When combining `@tuquet/vue-ui` (`DynamicForm`, `DynamicRowEditSheet`) with `@tuquet/vue-table`:
 
-- Sử dụng `row-click` để mở `DynamicRowEditSheet`.
-- Schema JSON / OpenAPI schema tự động sinh trường nhập liệu tương ứng.
-- Khi người dùng bấm "Lưu", gọi `remote.mutateRow(rowId, updatedValues)` để cập nhật dữ liệu bảng tức thời (optimistic update).
+- Bind `@row-click` to trigger `DynamicRowEditSheet`.
+- JSON schema / OpenAPI specifications automatically generate corresponding input fields.
+- On save, invoke `remote.mutateRow(rowId, updatedValues)` to apply immediate optimistic updates to table state.

@@ -200,18 +200,18 @@ Interaction testing allows you to verify functional UI behaviors directly inside
      play: async ({ canvasElement, step }) => {
        const canvas = within(canvasElement);
 
-       await step('1. Kiểm tra trạng thái khởi tạo', async () => {
+       await step('1. Verify initial mount state', async () => {
          const trigger = await canvas.findByRole('button');
          expect(trigger).toBeInTheDocument();
        });
 
-       await step('2. Mô phỏng người dùng click / gõ phím', async () => {
+       await step('2. Simulate user interaction', async () => {
          const trigger = canvas.getByRole('button');
          await userEvent.click(trigger);
        });
 
-       await step('3. Xác thực kết quả phản hồi trong DOM', async () => {
-         expect(await canvas.findByText('Thành công')).toBeInTheDocument();
+       await step('3. Assert DOM response result', async () => {
+         expect(await canvas.findByText('Success')).toBeInTheDocument();
        });
      },
    };

@@ -1,37 +1,37 @@
-# Danh sách Lỗi Thường gặp (Common Pitfalls) & Cách Phòng tránh
+# Common Pitfalls & Prevention Guide
 
-Tài liệu này liệt kê các lỗi runtime phổ biến nhất khi phát triển Storybook cho Vue 3 và giải pháp triệt để.
+This document catalogs the most frequent runtime issues when developing Vue 3 stories in Storybook, along with their solutions.
 
 ---
 
-## 1. ❌ Lỗi Cú pháp: `Unexpected identifier 'as'`
+## 1. ❌ Syntax Error: `Unexpected identifier 'as'`
 
-### Mô tả lỗi:
+### Error Symptom:
 
-Giao diện Storybook báo lỗi đỏ:
+Storybook displays a runtime red error box:
 
 ```text
 Unexpected identifier 'as'
 The component failed to render properly, likely due to a configuration issue in Storybook.
 ```
 
-### Nguyên nhân:
+### Root Cause:
 
-Trình biên dịch template của Vue 3 (đặc biệt trong chuỗi template string của Storybook) là runtime template compiler (JavaScript thuần), **KHÔNG** hỗ trợ cú pháp TypeScript.
-Nếu bạn viết từ khóa `as` trong chuỗi template HTML:
+The Vue 3 runtime template compiler in Storybook executes as pure JavaScript and does **NOT** support TypeScript syntax.
+Using the `as` type assertion keyword inside an inline HTML template string crashes the compiler:
 
 ```html
-<!-- ❌ SAI: Gây lỗi crash Storybook -->
+<!-- ❌ WRONG: Causes Storybook to crash -->
 <button @click="setDensity(d as TableDensity)">{{ d }}</button>
 <div v-for="(item, idx) in (data as MyType[])">...</div>
 ```
 
-### Cách khắc phục:
+### Remediation:
 
-**TUYỆT ĐỐI KHÔNG** dùng từ khóa `as` trong template string. Mọi logic ép kiểu hoặc validation kiểu phải thực hiện bên trong hàm xử lý của `setup()`:
+**NEVER** use the `as` keyword inside template strings. All type casting and validation must take place inside `setup()` functions:
 
 ```typescript
-// ✅ ĐÚNG: Xử lý type casting trong setup()
+// ✅ CORRECT: Handle type assertion in setup()
 setup() {
   function setDensity(d: string) {
     density.value = d as TableDensity;
@@ -40,7 +40,7 @@ setup() {
 }
 ```
 
-Và trong template chỉ gọi hàm thông thường:
+In the template, call the typed handler function:
 
 ```html
 <button @click="setDensity(d)">{{ d }}</button>
@@ -48,35 +48,35 @@ Và trong template chỉ gọi hàm thông thường:
 
 ---
 
-## 2. ❌ Lỗi Cú pháp: `missing ) after argument list`
+## 2. ❌ Syntax Error: `missing ) after argument list`
 
-### Nguyên nhân:
+### Root Cause:
 
-Thường xảy ra khi truyền closure hoặc object lồng nhau chưa đóng ngoặc đơn/ngoặc nhọn chuẩn trong template string, hoặc sử dụng regex không escape đúng.
+Passing unclosed inline closures, unescaped regex patterns, or deeply nested objects directly inside template strings.
 
-### Cách khắc phục:
+### Remediation:
 
-Đưa toàn bộ biểu thức phức tạp thành `computed` hoặc `methods` trong `setup()`, giữ template HTML thuần túy chỉ gồm component tags và data binding cơ bản.
+Move complex expressions into `computed` properties or helper methods inside `setup()`. Keep HTML templates concise, containing only component tags and direct bindings.
 
 ---
 
-## 3. ❌ Lỗi Checkbox Header Không hoạt động / Không đồng bộ
+## 3. ❌ Header Checkbox Desynchronization
 
-### Nguyên nhân:
+### Root Cause:
 
-Hàm render của cột checkbox tạo thêm thẻ `<div>` bọc ngoài component `Checkbox`:
+Wrapping the `Checkbox` component in an extra outer `<div>` within the column render function:
 
 ```typescript
-// ❌ SAI: Khó cho test và có thể cản trở event propagation
+// ❌ WRONG: Obstructs event propagation and complicates interaction testing
 cell: ({ row }) => h('div', { class: 'text-center' }, [h(Checkbox, ...)])
 ```
 
-### Cách khắc phục:
+### Remediation:
 
-Trả về VNode `Checkbox` trực tiếp từ hàm render, căn giữa bằng utility classes của Tailwind:
+Return the `Checkbox` VNode directly from the render function, using Tailwind utility classes for alignment:
 
 ```typescript
-// ✅ ĐÚNG: Checkbox là VNode gốc, props.checked và onUpdate được kiểm tra trực tiếp
+// ✅ CORRECT: Checkbox is the root VNode; props and events bind cleanly
 cell: ({ row }) =>
   h(Checkbox, {
     checked: row.getIsSelected(),
@@ -87,13 +87,13 @@ cell: ({ row }) =>
 
 ---
 
-## 4. ❌ Lỗi Cột Bảng bị Đè Chồng lên Nhau khi Đổi Density
+## 4. ❌ Column Overlap upon Density Change
 
-### Nguyên nhân:
+### Root Cause:
 
-Sử dụng `table-layout: auto` khiến trình duyệt tự ý tính toán lại chiều rộng cột khi padding thay đổi, làm sai lệch tọa độ pixel cố định của TanStack Table Pinning.
+Using `table-layout: auto` causes the browser to dynamically recalculate column widths when padding changes, conflicting with TanStack Table's fixed pixel pinning coordinates.
 
-### Cách khắc phục:
+### Remediation:
 
-- Xem chi tiết tại: [Hướng dẫn Layout & Styling](./layout-and-styling.md).
-- Luôn đặt `table-fixed` và gán đồng thời `width`, `minWidth`, `maxWidth` cho từng ô thông qua `getColumnStyle()`.
+- See: [Layout & Styling Reference](./layout-and-styling.md).
+- Always apply `table-fixed` and assign `width`, `minWidth`, and `maxWidth` concurrently via `getColumnStyle()`.
