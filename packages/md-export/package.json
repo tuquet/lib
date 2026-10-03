@@ -1,6 +1,6 @@
 {
   "name": "@tuquet/md-export",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter using headless Chromium",
   "type": "module",
   "main": "./dist/index.cjs",
