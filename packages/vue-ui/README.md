@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.svg" width="76" height="76" alt="Vue UI Logo" />
+  <img src="https://tuquet.github.io/icons/vue-ui.svg" width="76" height="76" alt="Vue UI Logo" />
   <h1>@tuquet/vue-ui</h1>
   <p><strong>Enterprise UI Component System based on Shadcn-Vue &amp; Reka UI</strong></p>
 

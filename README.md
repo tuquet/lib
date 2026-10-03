@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.svg" width="76" height="76" alt="Lib Logo" />
+  <img src="https://tuquet.github.io/icons/lib.svg" width="76" height="76" alt="Lib Logo" />
   <h1>Lib Monorepo</h1>
   <p><strong>Enterprise UI Design System, Remote Data Grids &amp; Modular Developer Toolchain</strong></p>
 

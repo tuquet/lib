@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.svg" width="76" height="76" alt="Extension Runner Logo" />
+  <img src="https://tuquet.github.io/icons/extension-runner.svg" width="76" height="76" alt="Extension Runner Logo" />
   <h1>@tuquet/extension-runner</h1>
   <p><strong>Universal Isomorphic WebExtension Polyfill, Crash-Proof Mock Runtime &amp; Headless Bundler</strong></p>
 

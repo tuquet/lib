@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.svg" width="76" height="76" alt="MD Export Logo" />
+  <img src="https://tuquet.github.io/icons/md-export.svg" width="76" height="76" alt="MD Export Logo" />
   <h1>@tuquet/md-export</h1>
   <p><strong>Folder-Aware Markdown to PDF, HTML, PNG, and JPEG Exporter</strong></p>
 

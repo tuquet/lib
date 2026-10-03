@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.svg" width="76" height="76" alt="Vue Table Logo" />
+  <img src="https://tuquet.github.io/icons/vue-table.svg" width="76" height="76" alt="Vue Table Logo" />
   <h1>@tuquet/vue-table</h1>
   <p><strong>Remote-Driven High-Density Data Table Engine for Vue 3 powered by TanStack Table</strong></p>
 

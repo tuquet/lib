@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.svg" width="76" height="76" alt="Lunar Logo" />
+  <img src="https://tuquet.github.io/icons/lunar.svg" width="76" height="76" alt="Lunar Logo" />
   <h1>@tuquet/lunar</h1>
   <p><strong>Astronomical Vietnamese Lunar-Solar Calendar Converter &amp; Recurrence Engine</strong></p>
 
