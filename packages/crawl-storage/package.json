@@ -1,7 +1,7 @@
 {
-  "name": "@tuquet/crawler",
+  "name": "@tuquet/crawl-storage",
   "version": "0.1.0",
-  "description": "Universal web crawling & data extraction pipeline assembling metadata, heuristics, interactions, and markdown cleaner",
+  "description": "Enterprise dual-layer storage adapters and canonical document schemas for web crawlers (Supabase, MongoDB, Lakehouse)",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -27,29 +27,23 @@
   "sideEffects": false,
   "license": "MIT",
   "author": "Tuquet <dev@tuquet.io>",
-  "homepage": "https://github.com/tuquet/lib/tree/main/packages/crawler#readme",
+  "homepage": "https://github.com/tuquet/lib/tree/main/packages/crawl-storage#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tuquet/lib.git",
-    "directory": "packages/crawler"
+    "directory": "packages/crawl-storage"
   },
   "keywords": [
     "tuquet",
     "crawler",
-    "web-scraper",
-    "metadata",
-    "heuristics",
-    "markdown",
-    "llm-scraper"
+    "storage",
+    "supabase",
+    "mongodb",
+    "lakehouse",
+    "pgvector",
+    "rag-chunks",
+    "deduplication"
   ],
-  "dependencies": {
-    "@tuquet/crawl-cleaner": "workspace:*",
-    "@tuquet/crawl-heuristics": "workspace:*",
-    "@tuquet/crawl-interact": "workspace:*",
-    "@tuquet/crawl-metadata": "workspace:*",
-    "@tuquet/crawl-stealth": "workspace:*",
-    "@tuquet/crawl-storage": "workspace:*"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -62,7 +56,6 @@
   },
   "devDependencies": {
     "@tuquet/tsconfig": "workspace:*",
-    "happy-dom": "^17.1.7",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
