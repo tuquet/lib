@@ -27,7 +27,7 @@ export default defineConfig([
     sourcemap: false,
     minify: true,
     footer: {
-      js: 'if(typeof globalThis!=="undefined"){globalThis.TuquetCrawler=TuquetCrawler;}if(typeof window!=="undefined"){window.TuquetCrawler=TuquetCrawler;}',
+      js: 'if(typeof globalThis!=="undefined"){globalThis.TuquetCrawler=TuquetCrawler;}if(typeof window!=="undefined"){window.TuquetCrawler=TuquetCrawler;try{TuquetCrawler.applyStealthInPage();}catch(e){}}',
     },
   },
 ]);
