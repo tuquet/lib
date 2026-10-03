@@ -25,6 +25,12 @@
 tuquet-lib/
 ├── apps/                     # Runnable applications & consumer products
 ├── packages/                 # Publishable libraries (@tuquet/*)
+│   ├── crawler/              # @tuquet/crawler (Universal Web Scraping & Semantic Extraction Pipeline)
+│   ├── crawl-metadata/       # @tuquet/crawl-metadata (Schema.org JSON-LD & OpenGraph metadata extractor)
+│   ├── crawl-interact/       # @tuquet/crawl-interact (Autonomous GDPR/Cookie dismissal & smooth scrolling)
+│   ├── crawl-heuristics/     # @tuquet/crawl-heuristics (Text-to-Tag ratio scoring & Reader Mode extractor)
+│   ├── crawl-cleaner/        # @tuquet/crawl-cleaner (DOM sanitizer & HTML-to-Markdown token reducer)
+│   ├── crawl-stealth/        # @tuquet/crawl-stealth (Anti-bot fingerprint spoofing & CDP injection)
 │   ├── lunar/                # @tuquet/lunar (Vietnamese astronomical Lunar-Solar calendar)
 │   ├── extension-runner/     # @tuquet/extension-runner (Isomorphic WebExtension polyfill & headless bundler)
 │   ├── md-export/            # @tuquet/md-export (Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter)
@@ -49,6 +55,12 @@ tuquet-lib/
 
 | Package / Directory            | Path                                                     | Description                                                                                                                                                                | Status & Build                             |
 | :----------------------------- | :------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------- |
+| **`@tuquet/crawler`**          | [`packages/crawler`](packages/crawler)                   | Universal Web Crawling & Semantic Data Extraction Pipeline assembling metadata, heuristics, interactions, and markdown cleaner.                                            | Dual ESM/CJS • IIFE • Types • Vitest       |
+| **`@tuquet/crawl-metadata`**   | [`packages/crawl-metadata`](packages/crawl-metadata)     | Zero-dependency universal metadata & Schema.org JSON-LD extractor for web scraping.                                                                                        | Zero-dep • Dual ESM/CJS • Types • Vitest   |
+| **`@tuquet/crawl-interact`**   | [`packages/crawl-interact`](packages/crawl-interact)     | Autonomous DOM interactions: cookie/GDPR banner dismissal, progressive smooth scrolling, and DOM quietness.                                                                | Dual ESM/CJS • Types • Vitest              |
+| **`@tuquet/crawl-heuristics`** | [`packages/crawl-heuristics`](packages/crawl-heuristics) | Zero-dependency DOM text-to-tag ratio density scoring and Reader-Mode content extractor.                                                                                   | Zero-dep • Dual ESM/CJS • Types • Vitest   |
+| **`@tuquet/crawl-cleaner`**    | [`packages/crawl-cleaner`](packages/crawl-cleaner)       | Zero-dependency DOM sanitizer and HTML-to-Markdown token reducer for LLM web scraping pipelines.                                                                           | Zero-dep • Dual ESM/CJS • Types • Vitest   |
+| **`@tuquet/crawl-stealth`**    | [`packages/crawl-stealth`](packages/crawl-stealth)       | Client-side anti-bot stealth injections and fingerprint spoofing for CDP and headless automation.                                                                          | Dual ESM/CJS • Types • Vitest              |
 | **`@tuquet/lunar`**            | [`packages/lunar`](packages/lunar)                       | Astronomical Vietnamese Lunar-Solar calendar converter, Sexagenary Cycle (Can Chi), 24 Solar Terms (Tiet Khi), and recurrence calculator (Memorials, Full Moon, New Moon). | Zero-dep • Dual ESM/CJS • 17/17 tests      |
 | **`@tuquet/extension-runner`** | [`packages/extension-runner`](packages/extension-runner) | Isomorphic WebExtension polyfill, crash-proof mock runtime, and headless runner bundler plugin.                                                                            | Dual ESM/CJS • Types • Publint • Vitest    |
 | **`@tuquet/md-export`**        | [`packages/md-export`](packages/md-export)               | Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter via Chromium (zero-config discovery), CLI & API.                                                   | Dual ESM/CJS • CLI • Types • Vitest        |

@@ -1,0 +1,62 @@
+{
+  "name": "@tuquet/crawl-heuristics",
+  "version": "0.1.0",
+  "description": "Zero-dependency DOM text-to-tag ratio density scoring and Reader-Mode content extractor",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "Tuquet <dev@tuquet.io>",
+  "homepage": "https://github.com/tuquet/lib/tree/main/packages/crawl-heuristics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/lib.git",
+    "directory": "packages/crawl-heuristics"
+  },
+  "keywords": [
+    "tuquet",
+    "crawler",
+    "readability",
+    "heuristics",
+    "text-density",
+    "reader-mode",
+    "scraping"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "devDependencies": {
+    "@tuquet/tsconfig": "workspace:*",
+    "happy-dom": "^17.1.7",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}
