@@ -47,3 +47,25 @@ export function extractStandardMeta(root: Document | Element | any) {
     modifiedTime,
   };
 }
+
+/**
+ * Extracts meta tags starting with a specific prefix (e.g., 'og:', 'twitter:')
+ */
+export function extractMetaPrefix(
+  root: Document | Element | any,
+  prefix: string
+): Record<string, string> {
+  const result: Record<string, string> = {};
+  const metas = Array.from(
+    root?.querySelectorAll?.(`meta[name^="${prefix}" i], meta[property^="${prefix}" i]`) || []
+  ) as any[];
+
+  for (const meta of metas) {
+    const key = (meta.getAttribute('name') || meta.getAttribute('property') || '')
+      .slice(prefix.length)
+      .trim();
+    const content = (meta.getAttribute('content') || '').trim();
+    if (key && content) result[key] = content;
+  }
+  return result;
+}

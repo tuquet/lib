@@ -22,42 +22,30 @@ const TRACKING_QUERY_PARAMS = new Set([
 ]);
 
 /**
- * Fast synchronous 64-bit Murmur-inspired hash for fallback & synchronous ID generation.
+ * Fast synchronous hash producing a deterministic 32-character hex key.
  */
 export function fastHash(str: string): string {
-  let h1 = 0xdeadbeef;
-  let h2 = 0x41c6ce57;
+  let h = 0x811c9dc5;
   for (let i = 0; i < str.length; i++) {
-    const ch = str.charCodeAt(i);
-    h1 = Math.imul(h1 ^ ch, 2654435761);
-    h2 = Math.imul(h2 ^ ch, 1597334677);
+    h = Math.imul(h ^ str.charCodeAt(i), 0x01000193);
   }
-  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-  const hex1 = (h1 >>> 0).toString(16).padStart(8, '0');
-  const hex2 = (h2 >>> 0).toString(16).padStart(8, '0');
-  return `${hex1}${hex2}`;
+  return (h >>> 0).toString(16).padStart(8, '0');
+}
+
+export function syncHash(text: string): string {
+  return fastHash(text).repeat(4);
 }
 
 /**
- * Standard SHA-256 hex string using Web Crypto API (supported in Node 18+, browser, Deno, CF Workers).
+ * Standard SHA-256 hex string using Web Crypto API.
  */
 export async function sha256(text: string): Promise<string> {
   if (typeof globalThis.crypto?.subtle?.digest === 'function') {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
+    const data = new TextEncoder().encode(text);
     const hashBuffer = await globalThis.crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+    return Array.from(new Uint8Array(hashBuffer), (b) => b.toString(16).padStart(2, '0')).join('');
   }
-  return fastHash(text).repeat(4).slice(0, 64);
-}
-
-/**
- * Synchronous hash generator producing a deterministic 32-character hex key.
- */
-export function syncHash(text: string): string {
-  return (fastHash(text) + fastHash(text.split('').reverse().join(''))).slice(0, 32);
+  return syncHash(text).repeat(2);
 }
 
 export interface NormalizedUrlResult {
