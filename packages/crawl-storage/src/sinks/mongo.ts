@@ -25,25 +25,13 @@ export class MongoStorageSink implements StorageSink {
   static toMongoDocument(doc: CanonicalCrawlDocument): Record<string, any> {
     return {
       _id: doc.identity.urlHash,
-      identity: {
-        url: doc.identity.url,
-        normalizedUrl: doc.identity.normalizedUrl,
-        domain: doc.identity.domain,
-        pageType: doc.identity.pageType,
-      },
+      identity: doc.identity,
       lifecycle: {
+        ...doc.lifecycle,
         crawledAt: new Date(doc.lifecycle.crawledAt),
         lastSeenAt: new Date(),
-        contentHash: doc.lifecycle.contentHash,
-        httpStatus: doc.lifecycle.httpStatus,
-        executionMs: doc.lifecycle.executionMs,
       },
-      content: {
-        title: doc.content.title,
-        markdown: doc.content.markdown,
-        excerpt: doc.content.excerpt,
-        tokenSavings: doc.content.tokenSavings,
-      },
+      content: doc.content,
       structuredPayload: doc.payload,
       rawMeta: doc.rawMeta ?? {},
       ragChunks: doc.chunks ?? [],

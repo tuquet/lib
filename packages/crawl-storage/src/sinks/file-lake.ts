@@ -18,32 +18,36 @@ export class FileLakeStorageSink implements StorageSink {
   }
 
   static toMarkdownWithFrontmatter(doc: CanonicalCrawlDocument): string {
-    const yamlLines = [
+    const meta: Record<string, any> = {
+      id: doc.id,
+      url: doc.identity.url,
+      normalized_url: doc.identity.normalizedUrl,
+      domain: doc.identity.domain,
+      page_type: doc.identity.pageType,
+      title: doc.content.title,
+      crawled_at: doc.lifecycle.crawledAt,
+      content_hash: doc.lifecycle.contentHash,
+      raw_tokens: doc.content.tokenSavings.rawTokens,
+      clean_tokens: doc.content.tokenSavings.cleanTokens,
+      token_reduction_percent: doc.content.tokenSavings.reductionPercent,
+    };
+
+    const payload =
+      doc.payload && Object.keys(doc.payload).length > 0
+        ? [
+            'payload:',
+            ...Object.entries(doc.payload).map(([k, v]) => `  ${k}: ${JSON.stringify(v)}`),
+          ]
+        : [];
+
+    return [
       '---',
-      `id: "${doc.id}"`,
-      `url: "${doc.identity.url}"`,
-      `normalized_url: "${doc.identity.normalizedUrl}"`,
-      `domain: "${doc.identity.domain}"`,
-      `page_type: "${doc.identity.pageType}"`,
-      `title: ${JSON.stringify(doc.content.title)}`,
-      `crawled_at: "${doc.lifecycle.crawledAt}"`,
-      `content_hash: "${doc.lifecycle.contentHash}"`,
-      `raw_tokens: ${doc.content.tokenSavings.rawTokens}`,
-      `clean_tokens: ${doc.content.tokenSavings.cleanTokens}`,
-      `token_reduction_percent: ${doc.content.tokenSavings.reductionPercent}`,
-    ];
-
-    if (doc.payload && Object.keys(doc.payload).length > 0) {
-      yamlLines.push('payload:');
-      for (const [k, v] of Object.entries(doc.payload)) {
-        if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') {
-          yamlLines.push(`  ${k}: ${JSON.stringify(v)}`);
-        }
-      }
-    }
-
-    yamlLines.push('---', '', doc.content.markdown);
-    return yamlLines.join('\n');
+      ...Object.entries(meta).map(([k, v]) => `${k}: ${JSON.stringify(v)}`),
+      ...payload,
+      '---',
+      '',
+      doc.content.markdown,
+    ].join('\n');
   }
 
   async exists(

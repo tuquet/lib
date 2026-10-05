@@ -51,26 +51,11 @@ export function extractMainContent(root?: Document | Element | any): ExtractedAr
   const cloned = container.cloneNode(true) as Element;
 
   // Strip obvious noise elements
-  const noisySelectors = [
-    'script',
-    'style',
-    'noscript',
-    'svg',
-    'iframe',
-    'nav',
-    'footer',
-    'header',
-    'aside',
-    '.ad',
-    '.ads',
-    '.social-share',
-    '.related-posts',
-    '.comments',
-    '#comments',
-  ];
-  for (const sel of noisySelectors) {
-    cloned.querySelectorAll(sel).forEach((el: any) => el.remove());
-  }
+  cloned
+    .querySelectorAll(
+      'script, style, noscript, svg, iframe, nav, footer, header, aside, .ad, .ads, .social-share, .related-posts, .comments, #comments'
+    )
+    .forEach((el: any) => el.remove());
 
   const text = (cloned.textContent || '').replace(/\s+/g, ' ').trim();
   const words = text ? text.split(/\s+/).length : 0;
