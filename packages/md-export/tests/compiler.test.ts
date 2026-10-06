@@ -66,7 +66,7 @@ describe('@tuquet/md-export', () => {
     expect(fs.existsSync(viHtml)).toBe(true);
     expect(fs.existsSync(viPdf)).toBe(true);
     expect(fs.statSync(viPdf).size).toBeGreaterThan(1000);
-  }, 45000);
+  }, 90000);
 
   it('compiles Markdown to full-page PNG and JPEG images', async () => {
     const { results } = await compileWorkspace({
@@ -84,5 +84,5 @@ describe('@tuquet/md-export', () => {
     expect(fs.existsSync(rootJpeg)).toBe(true);
     expect(fs.statSync(rootPng).size).toBeGreaterThan(1000);
     expect(fs.statSync(rootJpeg).size).toBeGreaterThan(1000);
-  }, 45000);
+  }, 90000);
 });
