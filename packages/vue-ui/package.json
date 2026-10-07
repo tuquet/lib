@@ -1,0 +1,98 @@
+{
+  "name": "@tuquet/vue-ui",
+  "version": "0.2.1",
+  "description": "Enterprise UI component library based on Shadcn-Vue and Reka UI",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "sideEffects": [
+    "**/*.css",
+    "./dist/style.css"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "author": "Tuquet <dev@tuquet.io>",
+  "homepage": "https://github.com/tuquet/lib/tree/main/packages/vue-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/lib.git",
+    "directory": "packages/vue-ui"
+  },
+  "bugs": {
+    "url": "https://github.com/tuquet/lib/issues"
+  },
+  "keywords": [
+    "tuquet",
+    "vue",
+    "vue3",
+    "ui",
+    "shadcn",
+    "shadcn-vue",
+    "reka-ui",
+    "components",
+    "tailwind"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build && node -e \"fs.copyFileSync('dist/index.d.ts', 'dist/index.d.cts')\"",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "check:exports": "publint"
+  },
+  "dependencies": {
+    "@internationalized/date": "^3.12.4",
+    "@lucide/vue": "^1.47.0",
+    "@vueuse/core": "^15.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-vue-next": "^1.0.0",
+    "reka-ui": "^2.10.4",
+    "tailwind-merge": "^3.0.2",
+    "vue-demi": "^0.14.10",
+    "vue-sonner": "^2.0.9"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0 || ^3.5.0"
+  },
+  "devDependencies": {
+    "@storybook/test": "^8.6.0",
+    "@storybook/vue3": "^8.6.0",
+    "@tuquet/tsconfig": "workspace:*",
+    "@types/node": "^22.13.9",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "publint": "^0.3.24",
+    "shadcn-vue": "2.6.2",
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.0.8",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.8"
+  }
+}

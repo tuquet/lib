@@ -1,0 +1,63 @@
+{
+  "name": "@tuquet/crawl-storage",
+  "version": "0.1.0",
+  "description": "Enterprise dual-layer storage adapters and canonical document schemas for web crawlers (Supabase, MongoDB, Lakehouse)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "Tuquet <dev@tuquet.io>",
+  "homepage": "https://github.com/tuquet/lib/tree/main/packages/crawl-storage#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/lib.git",
+    "directory": "packages/crawl-storage"
+  },
+  "keywords": [
+    "tuquet",
+    "crawler",
+    "storage",
+    "supabase",
+    "mongodb",
+    "lakehouse",
+    "pgvector",
+    "rag-chunks",
+    "deduplication"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "devDependencies": {
+    "@tuquet/tsconfig": "workspace:*",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

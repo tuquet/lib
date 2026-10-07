@@ -1,0 +1,7 @@
+{
+  "extends": "@tuquet/tsconfig/base.json",
+  "compilerOptions": {
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"]
+}

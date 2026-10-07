@@ -1,0 +1,97 @@
+name: Storybook CI/CD & GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+      - 'apps/storybook/**'
+      - 'tooling/**'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+      - '.github/workflows/deploy-storybook.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+      - 'apps/storybook/**'
+      - 'tooling/**'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-and-build:
+    name: Verify & Build Storybook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Packages
+        run: pnpm build:packages
+
+      - name: Typecheck Storybook
+        run: pnpm --filter @tuquet/storybook typecheck
+
+      - name: Build Storybook
+        run: pnpm build:storybook
+
+      - name: Verify Storybook Acceptance Suite
+        run: node tooling/scripts/verify-storybook.mjs
+
+      - name: Upload Pages Artifact
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/storybook/storybook-static
+
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: verify-and-build
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  notify:
+    name: Notify Telegram
+    needs: [verify-and-build, deploy-pages]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Telegram Notification
+        uses: tuquet/bot@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          status: ${{ needs.deploy-pages.result }}
+          type: 'deploy'

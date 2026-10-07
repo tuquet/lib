@@ -1,0 +1,24 @@
+{
+  "name": "@tuquet/table-demo",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tuquet/vue-ui": "workspace:*",
+    "@tuquet/vue-table": "workspace:*",
+    "lucide-vue-next": "^1.0.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@tuquet/tsconfig": "workspace:*",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vue-tsc": "^2.2.8"
+  }
+}

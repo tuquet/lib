@@ -1,0 +1,35 @@
+<!-- Custom head content for Storybook Manager -->
+<script>
+  (function() {
+    try {
+      var search = window.location.search;
+      var params = new URLSearchParams(search);
+      var path = params.get('path');
+      if (path) {
+        var legacyMap = {
+          'datatable--all-in-one-enterprise-data-grid': 'table-datatable--all-in-one-enterprise-table',
+          'datatable--vip-enterprise-data-grid': 'table-datatable--vip-enterprise-data-grid',
+          'datatable--default': 'table-datatable--all-in-one-enterprise-table',
+          'datatable-legacy--legacy-table': 'table-datatable--all-in-one-enterprise-table',
+          'datatable-filter-builder--default': 'table-advanced-filter-builder--default',
+          'copyable-cell--interactive': 'table-copyable-cell--interactive',
+          'copyable-cell--gallery-showcase': 'table-copyable-cell--gallery-showcase',
+          'remote-combobox--default-infinite-scroll': 'table-remote-combobox--default-infinite-scroll',
+          'remote-combobox--inline-create-and-delete': 'table-remote-combobox--inline-create-and-delete',
+          'remote-combobox--custom-template-slot': 'table-remote-combobox--custom-template-slot',
+          'ui-command--default': 'table-datatable--all-in-one-enterprise-table',
+          'ui-range-calendar--default': 'table-column-filters--date-range-filter-story'
+        };
+
+        for (var oldId in legacyMap) {
+          if (path.indexOf(oldId) !== -1) {
+            var newPath = path.replace(oldId, legacyMap[oldId]);
+            params.set('path', newPath);
+            window.location.search = params.toString();
+            break;
+          }
+        }
+      }
+    } catch (e) {}
+  })();
+</script>

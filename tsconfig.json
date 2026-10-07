@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/lunar" },
+    { "path": "./packages/ui" },
+    { "path": "./packages/vue-table" }
+  ]
+}

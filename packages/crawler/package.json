@@ -1,0 +1,70 @@
+{
+  "name": "@tuquet/crawler",
+  "version": "0.1.0",
+  "description": "Universal web crawling & data extraction pipeline assembling metadata, heuristics, interactions, and markdown cleaner",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "author": "Tuquet <dev@tuquet.io>",
+  "homepage": "https://github.com/tuquet/lib/tree/main/packages/crawler#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/lib.git",
+    "directory": "packages/crawler"
+  },
+  "keywords": [
+    "tuquet",
+    "crawler",
+    "web-scraper",
+    "metadata",
+    "heuristics",
+    "markdown",
+    "llm-scraper"
+  ],
+  "dependencies": {
+    "@tuquet/crawl-cleaner": "workspace:*",
+    "@tuquet/crawl-heuristics": "workspace:*",
+    "@tuquet/crawl-interact": "workspace:*",
+    "@tuquet/crawl-metadata": "workspace:*",
+    "@tuquet/crawl-stealth": "workspace:*",
+    "@tuquet/crawl-storage": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "devDependencies": {
+    "@tuquet/tsconfig": "workspace:*",
+    "happy-dom": "^17.1.7",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

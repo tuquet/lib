@@ -1,0 +1,37 @@
+<style>
+  html, body, #storybook-root {
+    min-height: 100vh;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  html.dark, body.dark {
+    color-scheme: dark;
+  }
+
+  /* Ensure Storybook Docs mode is properly styled in dark mode */
+  html.dark .sbdocs,
+  html.dark .sbdocs-wrapper,
+  html.dark .sbdocs-content {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  html.dark .sbdocs h1,
+  html.dark .sbdocs h2,
+  html.dark .sbdocs h3,
+  html.dark .sbdocs h4,
+  html.dark .sbdocs p,
+  html.dark .sbdocs li {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  html.dark .sbdocs code {
+    color: hsl(var(--foreground)) !important;
+    background-color: hsl(var(--muted)) !important;
+  }
+
+  html.dark .sbdocs hr {
+    border-color: hsl(var(--border)) !important;
+  }
+</style>

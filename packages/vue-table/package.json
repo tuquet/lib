@@ -1,0 +1,86 @@
+{
+  "name": "@tuquet/vue-table",
+  "version": "0.2.1",
+  "description": "Remote-driven Data Table system for Vue 3 powered by TanStack Table and Shadcn-Vue (@tuquet/vue-ui)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "author": "Tuquet <dev@tuquet.io>",
+  "homepage": "https://github.com/tuquet/lib/tree/main/packages/vue-table#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/lib.git",
+    "directory": "packages/vue-table"
+  },
+  "bugs": {
+    "url": "https://github.com/tuquet/lib/issues"
+  },
+  "keywords": [
+    "tuquet",
+    "vue",
+    "vue3",
+    "table",
+    "data-table",
+    "tanstack-table",
+    "shadcn-vue",
+    "remote-table",
+    "virtual-scroll"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build && node -e \"fs.copyFileSync('dist/index.d.ts', 'dist/index.d.cts')\"",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "check:exports": "publint"
+  },
+  "dependencies": {
+    "@internationalized/date": "^3.12.4",
+    "@tanstack/vue-table": "^8.21.3",
+    "@tanstack/vue-virtual": "^3.13.39",
+    "@tuquet/vue-ui": "workspace:*",
+    "@vueuse/core": "^15.0.0",
+    "lucide-vue-next": "^1.0.0",
+    "write-excel-file": "^4.1.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0 || ^3.5.0"
+  },
+  "devDependencies": {
+    "@storybook/test": "^8.6.0",
+    "@storybook/vue3": "^8.6.0",
+    "@tuquet/tsconfig": "workspace:*",
+    "@types/node": "^22.13.9",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "publint": "^0.3.24",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.0.8",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.8"
+  }
+}
