@@ -1,5 +1,13 @@
 # @tuquet/vue-table
 
+## 0.2.2
+
+### Patch Changes
+
+- bc7ff78: Standardize `@tuquet/vue-ui` on Reka UI, externalize dependencies in Vite build (reducing bundle size by 75%), mirror all 37 primitives directly from official upstream Shadcn-Vue registry, and optimize `@tuquet/vue-table` build exports.
+- Updated dependencies [bc7ff78]
+  - @tuquet/vue-ui@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes
