@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://tuquet.com/icons/lib.svg" width="76" height="76" alt="Lib Logo" />
-  <h1>Lib Monorepo</h1>
-  <p><strong>Enterprise UI Design System, Remote Data Grids &amp; Modular Developer Toolchain</strong></p>
+  <h1>Tuquet UI Library Monorepo</h1>
+  <p><strong>Enterprise Component Library, Remote Data Grids &amp; Modular Developer Toolchain</strong></p>
 
   <p>
     <a href="https://storybook.tuquet.com/"><img src="https://img.shields.io/badge/Storybook-Live%20Showcase-ff4785.svg" alt="Storybook" /></a>
@@ -260,7 +260,7 @@ Distributed under the [MIT License](LICENSE).
   <samp>
     <a href="https://tuquet.com">Portfolio</a> •
     <a href="https://tuquet.com/cv">CV &amp; Resume</a> •
-    <a href="https://specter.specter.tuquet.com/automa/">Automa Studio</a> •
+    <a href="https://specter.tuquet.com/automa/">Automa Studio</a> •
     <a href="https://storybook.tuquet.com/">Component Lab</a> •
     <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
   </samp>
