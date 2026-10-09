@@ -206,7 +206,7 @@ Distributed under the [MIT License](LICENSE).
   <samp>
     <a href="https://tuquet.com">Portfolio</a> •
     <a href="https://tuquet.com/cv">CV &amp; Resume</a> •
-    <a href="https://specter.tuquet.com/automa/">Automa Studio</a> •
+    <a href="https://docs.tuquet.com/en/specter/automa/">Automa Studio</a> •
     <a href="https://storybook.tuquet.com/">Component Lab</a> •
     <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
   </samp>
