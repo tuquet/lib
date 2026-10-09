@@ -1,10 +1,10 @@
 <div align="center">
-  <img src="https://tuquet.github.io/icons/vue-ui.svg" width="76" height="76" alt="Vue UI Logo" />
+  <img src="https://tuquet.com/icons/vue-ui.svg" width="76" height="76" alt="Vue UI Logo" />
   <h1>@tuquet/vue-ui</h1>
   <p><strong>Enterprise UI Component System based on Shadcn-Vue &amp; Reka UI</strong></p>
 
   <p>
-    <a href="https://tuquet.github.io/lib/"><img src="https://img.shields.io/badge/Storybook-Live%20Showcase-ff4785.svg" alt="Storybook" /></a>
+    <a href="https://storybook.tuquet.com/"><img src="https://img.shields.io/badge/Storybook-Live%20Showcase-ff4785.svg" alt="Storybook" /></a>
     <img src="https://img.shields.io/badge/Vue-3.x-brightgreen.svg" alt="Vue 3" />
     <img src="https://img.shields.io/badge/Components-35+-blue.svg" alt="Components" />
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
@@ -15,7 +15,7 @@
 
 Enterprise UI component library based on **Shadcn-Vue** and **Reka UI (Radix Vue)**, fully typed and ready for modern Vue 3 applications.
 
-🎨 **Live Interactive Storybook**: [https://tuquet.github.io/lib/](https://tuquet.github.io/lib/)
+🎨 **Live Interactive Storybook**: [https://storybook.tuquet.com/](https://storybook.tuquet.com/)
 
 ## ✨ Features
 
@@ -139,10 +139,10 @@ Distributed under the [MIT License](LICENSE).
 
 <div align="center">
   <samp>
-    <a href="https://tuquet.github.io">Portfolio</a> •
-    <a href="https://tuquet.github.io/cv">CV &amp; Resume</a> •
-    <a href="https://tuquet.github.io/automa">Automa Studio</a> •
-    <a href="https://tuquet.github.io/lib">Component Lab</a> •
+    <a href="https://tuquet.com">Portfolio</a> •
+    <a href="https://tuquet.com/cv">CV &amp; Resume</a> •
+    <a href="https://specter.specter.tuquet.com/automa/">Automa Studio</a> •
+    <a href="https://storybook.tuquet.com/">Component Lab</a> •
     <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
   </samp>
 </div>

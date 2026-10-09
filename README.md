@@ -1,10 +1,10 @@
 <div align="center">
-  <img src="https://tuquet.github.io/icons/lib.svg" width="76" height="76" alt="Lib Logo" />
+  <img src="https://tuquet.com/icons/lib.svg" width="76" height="76" alt="Lib Logo" />
   <h1>Lib Monorepo</h1>
   <p><strong>Enterprise UI Design System, Remote Data Grids &amp; Modular Developer Toolchain</strong></p>
 
   <p>
-    <a href="https://tuquet.github.io/lib/"><img src="https://img.shields.io/badge/Storybook-Live%20Showcase-ff4785.svg" alt="Storybook" /></a>
+    <a href="https://storybook.tuquet.com/"><img src="https://img.shields.io/badge/Storybook-Live%20Showcase-ff4785.svg" alt="Storybook" /></a>
     <a href="https://pnpm.io/"><img src="https://img.shields.io/badge/pnpm-9.x-orange.svg" alt="pnpm" /></a>
     <a href="https://turbo.build/"><img src="https://img.shields.io/badge/Turborepo-2.x-blue.svg" alt="Turborepo" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
@@ -15,7 +15,7 @@
 
 > Production-ready TypeScript & Vue 3 library monorepo architecture using **pnpm**, **Turborepo**, **tsup**, **Vitest**, **publint**, and **Changesets**.
 >
-> 🎨 **Live Storybook Showcase**: [https://tuquet.github.io/lib/](https://tuquet.github.io/lib/)
+> 🎨 **Live Storybook Showcase**: [https://storybook.tuquet.com/](https://storybook.tuquet.com/)
 
 ---
 
@@ -258,10 +258,10 @@ Distributed under the [MIT License](LICENSE).
 
 <div align="center">
   <samp>
-    <a href="https://tuquet.github.io">Portfolio</a> •
-    <a href="https://tuquet.github.io/cv">CV &amp; Resume</a> •
-    <a href="https://tuquet.github.io/automa">Automa Studio</a> •
-    <a href="https://tuquet.github.io/lib">Component Lab</a> •
+    <a href="https://tuquet.com">Portfolio</a> •
+    <a href="https://tuquet.com/cv">CV &amp; Resume</a> •
+    <a href="https://specter.specter.tuquet.com/automa/">Automa Studio</a> •
+    <a href="https://storybook.tuquet.com/">Component Lab</a> •
     <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
   </samp>
 </div>

@@ -65,7 +65,7 @@ _Ownership: Ensure absolute reliability, zero styling technical debt, and maximu
   - [x] Multi-format export: XLSX, CSV, TSV.
   - [x] Test suite: 138/138 tests passed across 21 test files.
 - [x] **`@tuquet/lunar`:** High-precision astronomical Lunar-Solar calendar converter, Sexagenary Cycle (Can Chi), 24 Solar Terms (17/17 tests passed).
-- [x] **Showcase & CI/CD:** Storybook online (`tuquet.github.io/lib`), automated Changesets releases to npm registry via GitHub Actions.
+- [x] **Showcase & CI/CD:** Storybook online (`storybook.tuquet.com`), automated Changesets releases to npm registry via GitHub Actions.
 - [ ] **[Next Tasks - Hardening]**:
   - [ ] Mobile responsive layout testing and keyboard navigation shortcuts for data table.
   - [ ] Additional Storybook stories covering edge cases for Dynamic Filters.

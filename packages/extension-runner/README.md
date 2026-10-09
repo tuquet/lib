@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://tuquet.github.io/icons/extension-runner.svg" width="76" height="76" alt="Extension Runner Logo" />
+  <img src="https://tuquet.com/icons/extension-runner.svg" width="76" height="76" alt="Extension Runner Logo" />
   <h1>@tuquet/extension-runner</h1>
   <p><strong>Universal Isomorphic WebExtension Polyfill, Crash-Proof Mock Runtime &amp; Headless Bundler</strong></p>
 
@@ -204,10 +204,10 @@ Distributed under the [MIT License](LICENSE).
 
 <div align="center">
   <samp>
-    <a href="https://tuquet.github.io">Portfolio</a> •
-    <a href="https://tuquet.github.io/cv">CV &amp; Resume</a> •
-    <a href="https://tuquet.github.io/automa">Automa Studio</a> •
-    <a href="https://tuquet.github.io/lib">Component Lab</a> •
+    <a href="https://tuquet.com">Portfolio</a> •
+    <a href="https://tuquet.com/cv">CV &amp; Resume</a> •
+    <a href="https://specter.specter.tuquet.com/automa/">Automa Studio</a> •
+    <a href="https://storybook.tuquet.com/">Component Lab</a> •
     <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
   </samp>
 </div>

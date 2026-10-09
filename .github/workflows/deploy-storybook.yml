@@ -58,7 +58,9 @@ jobs:
         run: pnpm --filter @tuquet/storybook typecheck
 
       - name: Build Storybook
-        run: pnpm build:storybook
+        run: |
+          pnpm build:storybook
+          echo "storybook.tuquet.com" > apps/storybook/storybook-static/CNAME
 
       - name: Verify Storybook Acceptance Suite
         run: node tooling/scripts/verify-storybook.mjs
