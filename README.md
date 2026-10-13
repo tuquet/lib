@@ -246,7 +246,6 @@ Part of the **Automation & Agent Ecosystem**:
 - [Cloud](https://github.com/tuquet/cloud) — Enterprise Orchestration & Real-time Task Control Plane.
 - [CLI](https://github.com/tuquet/cli) — Developer Ergonomic CLI & Unified Command Center.
 - [Lib](https://github.com/tuquet/lib) — Monorepo for Shared Enterprise UI & Utilities (`vue-ui`, `vue-table`, `md-export`, `extension-runner`, `lunar`).
-- [Scoop Bucket](https://github.com/tuquet/scoop-bucket) — Official Windows Scoop Distribution Channel.
 
 ---
 
@@ -262,6 +261,6 @@ Distributed under the [MIT License](LICENSE).
     <a href="https://tuquet.com/cv">CV &amp; Resume</a> •
     <a href="https://docs.tuquet.com/en/specter/automa/">Automa Studio</a> •
     <a href="https://storybook.tuquet.com/">Component Lab</a> •
-    <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
+    <a href="https://docs.tuquet.com">Documentation Hub</a>
   </samp>
 </div>

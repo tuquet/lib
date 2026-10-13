@@ -1,5 +1,15 @@
 # @tuquet/vue-ui
 
+## 0.3.0
+
+### Minor Changes
+
+- Expand to 58 full Shadcn-Vue components and upgrade to Tailwind CSS v4
+
+### Patch Changes
+
+- bc7ff78: Standardize `@tuquet/vue-ui` on Reka UI, externalize dependencies in Vite build (reducing bundle size by 75%), mirror all 37 primitives directly from official upstream Shadcn-Vue registry, and optimize `@tuquet/vue-table` build exports.
+
 ## 0.2.1
 
 ### Patch Changes

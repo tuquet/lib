@@ -9,14 +9,14 @@ Powered by [@clack/prompts](https://github.com/natemoo-re/clack) and [picocolors
 > [!NOTE]
 > **Internal Developer Tooling vs Rust Master CLI (`tuquet`)**:
 > This package (`@tuquet/cli` located in `lib/tooling/cli/`) is a **Node.js / TypeScript internal developer wizard and package scaffolding tool**.
-> It is **NOT** the compiled native Rust Master CLI (`tuquet/cli` binary `tuquet` distributed via Scoop bucket `tuquet/scoop-bucket`).
+> It is **NOT** the compiled native Rust Master CLI (`tuquet/cli` binary `specter`).
 >
-> | Facet            | `@tuquet/cli` (This Package)            | `tuquet` (Rust Master CLI)                          |
+> | Facet            | `@tuquet/cli` (This Package)            | `specter` (Rust Master CLI)                         |
 > | :--------------- | :-------------------------------------- | :-------------------------------------------------- |
 > | **Location**     | `lib/tooling/cli/`                      | `cli/` (Crate root)                                 |
 > | **Runtime**      | Node.js / TypeScript (`tsx`)            | Compiled Native Rust (`clap`, `tokio`, `ratatui`)   |
 > | **Scope**        | Monorepo package creation & task wizard | Production supervisor, scoped shell, network bridge |
-> | **Distribution** | Private monorepo package                | Official Scoop Bucket (`tuquet/scoop-bucket`)       |
+> | **Distribution** | Private monorepo package                | Standalone Native Binaries & Web Installers         |
 
 ---
 

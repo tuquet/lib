@@ -6,7 +6,7 @@
   <p>
     <a href="https://storybook.tuquet.com/"><img src="https://img.shields.io/badge/Storybook-Live%20Showcase-ff4785.svg" alt="Storybook" /></a>
     <img src="https://img.shields.io/badge/Vue-3.x-brightgreen.svg" alt="Vue 3" />
-    <img src="https://img.shields.io/badge/Components-35+-blue.svg" alt="Components" />
+    <img src="https://img.shields.io/badge/Components-58+-blue.svg" alt="Components" />
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License" /></a>
   </p>
 </div>
@@ -19,7 +19,7 @@ Enterprise UI component library based on **Shadcn-Vue** and **Reka UI (Radix Vue
 
 ## ✨ Features
 
-- **35+ Full Components**: Complete set of accessible, high-performance UI components generated via official `shadcn-vue` CLI.
+- **58 Official Components**: Complete suite of accessible, high-performance UI components mirroring the entire official Shadcn-Vue registry.
 - **WAI-ARIA Compliant**: Powered by Reka UI / Radix Vue primitives with built-in keyboard navigation, focus management, and screen reader accessibility.
 - **Customizable with Tailwind CSS**: Styled with Tailwind utility classes and CSS variables supporting dark mode and light mode out-of-the-box.
 - **Dual Build ESM & CJS**: Fully compliant with `publint` standards with complete TypeScript declaration files (`.d.ts` and `.d.cts`).
@@ -127,7 +127,6 @@ Part of the **Automation & Agent Ecosystem**:
 - [Cloud](https://github.com/tuquet/cloud) — Enterprise Orchestration & Real-time Task Control Plane.
 - [CLI](https://github.com/tuquet/cli) — Developer Ergonomic CLI & Unified Command Center.
 - [Lib](https://github.com/tuquet/lib) — Monorepo for Shared Enterprise UI & Utilities (`vue-ui`, `vue-table`, `md-export`, `extension-runner`, `lunar`).
-- [Scoop Bucket](https://github.com/tuquet/scoop-bucket) — Official Windows Scoop Distribution Channel.
 
 ---
 
@@ -143,6 +142,6 @@ Distributed under the [MIT License](LICENSE).
     <a href="https://tuquet.com/cv">CV &amp; Resume</a> •
     <a href="https://docs.tuquet.com/en/specter/automa/">Automa Studio</a> •
     <a href="https://storybook.tuquet.com/">Component Lab</a> •
-    <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
+    <a href="https://docs.tuquet.com">Documentation Hub</a>
   </samp>
 </div>

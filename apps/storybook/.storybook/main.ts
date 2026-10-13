@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/vue3-vite';
 import { fileURLToPath } from 'node:url';
+import tailwindcss from '@tailwindcss/vite';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../../../packages/vue-table/src/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
@@ -20,6 +21,19 @@ const config: StorybookConfig = {
     check: false,
   },
   async viteFinal(config) {
+    config.plugins = config.plugins || [];
+    const hasTailwind = config.plugins.some(
+      (p) =>
+        p &&
+        typeof p === 'object' &&
+        'name' in p &&
+        typeof p.name === 'string' &&
+        p.name.includes('tailwind')
+    );
+    if (!hasTailwind) {
+      config.plugins.push(tailwindcss());
+    }
+
     const vueUiSrc = fileURLToPath(new URL('../../../packages/vue-ui/src', import.meta.url));
     const vueUiIndex = fileURLToPath(
       new URL('../../../packages/vue-ui/src/index.ts', import.meta.url)

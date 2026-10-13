@@ -2,7 +2,7 @@ import type { Preview } from '@storybook/vue3';
 import { themes } from 'storybook/internal/theming';
 import { addons } from 'storybook/internal/preview-api';
 import { GLOBALS_UPDATED, SET_GLOBALS } from 'storybook/internal/core-events';
-import '../../../packages/vue-ui/src/styles/globals.css';
+import './preview.css';
 
 const urlParams =
   typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
