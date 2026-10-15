@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../../../packages/vue-table/src/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
+  stories: ['../src/**/*.mdx', '../../../packages/vue-ui/src/**/*.stories.@(js|jsx|ts|tsx|mdx)'],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -38,9 +38,6 @@ const config: StorybookConfig = {
     const vueUiIndex = fileURLToPath(
       new URL('../../../packages/vue-ui/src/index.ts', import.meta.url)
     );
-    const vueTableIndex = fileURLToPath(
-      new URL('../../../packages/vue-table/src/index.ts', import.meta.url)
-    );
 
     config.base = process.env.STORYBOOK_BASE_URL || './';
     config.server = config.server || {};
@@ -52,7 +49,6 @@ const config: StorybookConfig = {
       ...config.resolve.alias,
       '@': vueUiSrc,
       '@tuquet/vue-ui': vueUiIndex,
-      '@tuquet/vue-table': vueTableIndex,
     };
     config.build = {
       ...config.build,

@@ -4,7 +4,6 @@
 @source './';
 @source '../src';
 @source '../../../packages/vue-ui/src';
-@source '../../../packages/vue-table/src';
 
 /* Dark mode uses .dark class selector */
 @custom-variant dark (&:is(.dark, .dark *));

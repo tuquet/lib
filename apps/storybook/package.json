@@ -10,7 +10,6 @@
     "preview": "vite preview --outDir storybook-static --port 6007"
   },
   "dependencies": {
-    "@tuquet/vue-table": "workspace:*",
     "@tuquet/vue-ui": "workspace:*",
     "lucide-vue-next": "^1.0.0",
     "vue": "^3.5.13"

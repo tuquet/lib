@@ -31,8 +31,12 @@ for (const [id, entry] of entries) {
     continue;
   }
 
-  // Ensure title conforms to Table/ or Introduction
-  if (!entry.title.startsWith('Table') && entry.title !== 'Introduction') {
+  // Ensure title conforms to Vue UI/, Forms/, or Introduction
+  if (
+    !entry.title.startsWith('Vue UI') &&
+    !entry.title.startsWith('Forms') &&
+    entry.title !== 'Introduction'
+  ) {
     console.warn(`⚠️ Non-standard category: ${entry.title}`);
   }
 
