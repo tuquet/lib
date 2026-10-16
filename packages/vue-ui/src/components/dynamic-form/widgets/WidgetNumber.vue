@@ -54,7 +54,7 @@ function handleInput(e: Event) {
   <div class="relative flex items-center w-full">
     <span
       v-if="prefix"
-      class="absolute left-3 text-sm text-muted-foreground select-none pointer-events-none font-mono font-medium"
+      class="absolute left-3 text-sm text-muted-foreground select-none pointer-events-none font-medium"
     >
       {{ prefix }}
     </span>
@@ -68,14 +68,14 @@ function handleInput(e: Event) {
       :step="step"
       :placeholder="placeholder"
       :disabled="disabled || readOnly"
-      class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base sm:text-sm font-mono ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] transition-colors"
+      class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] transition-colors"
       :class="[prefix ? 'pl-8' : 'pl-3', suffix ? 'pr-8' : 'pr-3']"
       @input="handleInput"
     />
 
     <span
       v-if="suffix"
-      class="absolute right-3 text-sm text-muted-foreground select-none pointer-events-none font-mono font-medium"
+      class="absolute right-3 text-sm text-muted-foreground select-none pointer-events-none font-medium"
     >
       {{ suffix }}
     </span>

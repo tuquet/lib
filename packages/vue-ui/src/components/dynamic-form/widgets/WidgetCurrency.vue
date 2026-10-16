@@ -77,7 +77,7 @@ const formattedPreview = computed(() => {
         :max="max"
         :placeholder="placeholder"
         :disabled="disabled || readOnly"
-        class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base sm:text-sm font-mono font-medium ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] transition-colors"
+        class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base sm:text-sm font-medium ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] transition-colors"
         :class="prefix ? 'pl-8' : 'pl-3'"
         @input="handleInput"
       />
@@ -86,7 +86,7 @@ const formattedPreview = computed(() => {
     <!-- Live formatted preview hint -->
     <div v-if="formattedPreview" class="flex items-center justify-between px-1 text-[11px] text-muted-foreground">
       <span>Định dạng:</span>
-      <span class="font-mono font-semibold text-foreground">{{ formattedPreview }}</span>
+      <span class="font-semibold text-foreground">{{ formattedPreview }}</span>
     </div>
   </div>
 </template>

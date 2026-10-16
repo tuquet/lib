@@ -54,7 +54,7 @@ function stepUp() {
   <div class="flex flex-col gap-2 w-full select-none py-1">
     <div class="flex items-center justify-between text-xs">
       <span class="text-muted-foreground font-mono">{{ min }}{{ suffix }}</span>
-      <span class="font-mono font-bold text-sm text-foreground px-2 py-0.5 rounded bg-muted/60">
+      <span class="font-bold text-sm text-foreground px-2 py-0.5 rounded bg-muted/60">
         {{ current }}{{ suffix }}
       </span>
       <span class="text-muted-foreground font-mono">{{ max }}{{ suffix }}</span>
@@ -65,7 +65,7 @@ function stepUp() {
       <button
         type="button"
         :disabled="disabled || readOnly || current <= min"
-        class="h-9 w-9 shrink-0 inline-flex items-center justify-center rounded-md border border-input bg-background font-mono text-base font-semibold hover:bg-muted active:scale-95 disabled:opacity-40 transition-all"
+        class="h-9 w-9 shrink-0 inline-flex items-center justify-center rounded-md border border-input bg-background text-base font-semibold hover:bg-muted active:scale-95 disabled:opacity-40 transition-all"
         title="Giảm"
         @click="stepDown"
       >
@@ -88,7 +88,7 @@ function stepUp() {
       <button
         type="button"
         :disabled="disabled || readOnly || current >= max"
-        class="h-9 w-9 shrink-0 inline-flex items-center justify-center rounded-md border border-input bg-background font-mono text-base font-semibold hover:bg-muted active:scale-95 disabled:opacity-40 transition-all"
+        class="h-9 w-9 shrink-0 inline-flex items-center justify-center rounded-md border border-input bg-background text-base font-semibold hover:bg-muted active:scale-95 disabled:opacity-40 transition-all"
         title="Tăng"
         @click="stepUp"
       >

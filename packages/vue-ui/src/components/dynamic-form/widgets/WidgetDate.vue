@@ -53,7 +53,7 @@ function handleInput(e: Event) {
       :type="includeTime ? 'datetime-local' : 'date'"
       :value="formattedValue"
       :disabled="disabled || readOnly"
-      class="flex w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-base sm:text-sm font-mono ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] transition-colors"
+      class="flex w-full rounded-md border border-input bg-background pl-10 pr-3 py-2 text-base sm:text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] transition-colors"
       @input="handleInput"
     />
   </div>
