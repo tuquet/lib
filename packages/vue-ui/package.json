@@ -59,7 +59,10 @@
     "build": "vite build && node -e \"fs.copyFileSync('dist/index.d.ts', 'dist/index.d.cts')\"",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
-    "check:exports": "publint"
+    "check:exports": "publint",
+    "sync:ui": "node --use-system-ca -e \"(async () => { const fs = require('node:fs'); const { execFileSync } = require('node:child_process'); const m = await import('./node_modules/shadcn-vue/dist/registry-BIOMgIDT.js'); const dirs = fs.readdirSync('src/components/ui').filter(f => fs.statSync('src/components/ui/' + f).isDirectory()); const args = process.argv.slice(1); const targets = args.length ? args : dirs; const cfg = await m.lt(process.cwd()); const tree = await m.I(targets, m.tt(cfg)); await m.K(tree.files, cfg, { overwrite: true, silent: false }); execFileSync('pnpm', ['--dir', '../..', 'exec', 'prettier', '--write', ...targets.map(t => 'packages/vue-ui/src/components/ui/' + t + '/**/*.{ts,tsx,js,jsx}')], { stdio: 'inherit', shell: true }); for (const t of targets) { const d = 'src/components/ui/' + t; if (fs.existsSync(d)) for (const f of fs.readdirSync(d)) { const p = d + '/' + f; if (fs.statSync(p).isFile()) fs.writeFileSync(p, fs.readFileSync(p, 'utf8').replace(/\\r?\\n/g, '\\r\\n'), 'utf8'); } } })()\"",
+    "add:ui": "node --use-system-ca ./node_modules/shadcn-vue/dist/index.js add -y -o",
+    "diff:ui": "node --use-system-ca ./node_modules/shadcn-vue/dist/index.js diff"
   },
   "dependencies": {
     "@internationalized/date": "^3.12.4",
