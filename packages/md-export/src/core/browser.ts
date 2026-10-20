@@ -35,7 +35,10 @@ export function findBrowserExecutable(customPath?: string): string {
     const userProfile = process.env.USERPROFILE || os.homedir();
 
     const tuquetHome =
-      process.env.TUQUET_HOME || process.env.SPECTER_HOME || path.join(userProfile, '.tuquet');
+      process.env.TQ_HOME ||
+      process.env.TUQUET_HOME ||
+      process.env.SPECTER_HOME ||
+      path.join(userProfile, '.tq');
 
     candidates.push(
       // Google Chrome
@@ -52,16 +55,19 @@ export function findBrowserExecutable(customPath?: string): string {
       path.join(tuquetHome, 'browser', 'runtimes', 'chromium-win64', 'chrome.exe'),
       path.join(tuquetHome, 'browser', 'runtimes', 'chrome-win64', 'chrome.exe'),
       path.join(tuquetHome, 'runtimes', 'chrome-win64', 'chrome.exe'),
-      path.join(userProfile, '.tuquet', 'browser', 'runtimes', 'chromium-win64', 'chrome.exe'),
-      path.join(userProfile, '.tuquet', 'browser', 'runtimes', 'chrome-win64', 'chrome.exe'),
-      path.join(userProfile, '.tuquet', 'runtimes', 'chrome-win64', 'chrome.exe'),
+      path.join(userProfile, '.tq', 'browser', 'runtimes', 'chromium-win64', 'chrome.exe'),
+      path.join(userProfile, '.tq', 'browser', 'runtimes', 'chrome-win64', 'chrome.exe'),
+      path.join(userProfile, '.tq', 'runtimes', 'chrome-win64', 'chrome.exe'),
       // Brave / Vivaldi as fallbacks
       path.join(programFiles, 'BraveSoftware', 'Brave-Browser', 'Application', 'brave.exe'),
       path.join(localAppData, 'BraveSoftware', 'Brave-Browser', 'Application', 'brave.exe')
     );
   } else if (platform === 'darwin') {
     const tuquetHome =
-      process.env.TUQUET_HOME || process.env.SPECTER_HOME || path.join(os.homedir(), '.tuquet');
+      process.env.TQ_HOME ||
+      process.env.TUQUET_HOME ||
+      process.env.SPECTER_HOME ||
+      path.join(os.homedir(), '.tq');
     candidates.push(
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
@@ -118,7 +124,10 @@ export function findBrowserExecutable(customPath?: string): string {
   } else {
     // Linux / BSD
     const tuquetHome =
-      process.env.TUQUET_HOME || process.env.SPECTER_HOME || path.join(os.homedir(), '.tuquet');
+      process.env.TQ_HOME ||
+      process.env.TUQUET_HOME ||
+      process.env.SPECTER_HOME ||
+      path.join(os.homedir(), '.tq');
     candidates.push(
       '/usr/bin/google-chrome-stable',
       '/usr/bin/google-chrome',
@@ -131,10 +140,10 @@ export function findBrowserExecutable(customPath?: string): string {
       path.join(tuquetHome, 'browser', 'runtimes', 'chromium-linux64', 'chrome'),
       path.join(tuquetHome, 'runtimes', 'chrome-linux64', 'chrome'),
       path.join(tuquetHome, 'runtimes', 'chromium-linux64', 'chrome'),
-      path.join(os.homedir(), '.tuquet', 'browser', 'runtimes', 'chrome-linux64', 'chrome'),
-      path.join(os.homedir(), '.tuquet', 'browser', 'runtimes', 'chromium-linux64', 'chrome'),
-      path.join(os.homedir(), '.tuquet', 'runtimes', 'chrome-linux64', 'chrome'),
-      path.join(os.homedir(), '.tuquet', 'runtimes', 'chromium-linux64', 'chrome')
+      path.join(os.homedir(), '.tq', 'browser', 'runtimes', 'chrome-linux64', 'chrome'),
+      path.join(os.homedir(), '.tq', 'browser', 'runtimes', 'chromium-linux64', 'chrome'),
+      path.join(os.homedir(), '.tq', 'runtimes', 'chrome-linux64', 'chrome'),
+      path.join(os.homedir(), '.tq', 'runtimes', 'chromium-linux64', 'chrome')
     );
   }
 
