@@ -52,9 +52,9 @@ export function findBrowserExecutable(customPath?: string): string {
       path.join(tuquetHome, 'browser', 'runtimes', 'chromium-win64', 'chrome.exe'),
       path.join(tuquetHome, 'browser', 'runtimes', 'chrome-win64', 'chrome.exe'),
       path.join(tuquetHome, 'runtimes', 'chrome-win64', 'chrome.exe'),
-      path.join(userProfile, '.specter', 'browser', 'runtimes', 'chromium-win64', 'chrome.exe'),
-      path.join(userProfile, '.specter', 'browser', 'runtimes', 'chrome-win64', 'chrome.exe'),
-      path.join(userProfile, '.specter', 'runtimes', 'chrome-win64', 'chrome.exe'),
+      path.join(userProfile, '.tuquet', 'browser', 'runtimes', 'chromium-win64', 'chrome.exe'),
+      path.join(userProfile, '.tuquet', 'browser', 'runtimes', 'chrome-win64', 'chrome.exe'),
+      path.join(userProfile, '.tuquet', 'runtimes', 'chrome-win64', 'chrome.exe'),
       // Brave / Vivaldi as fallbacks
       path.join(programFiles, 'BraveSoftware', 'Brave-Browser', 'Application', 'brave.exe'),
       path.join(localAppData, 'BraveSoftware', 'Brave-Browser', 'Application', 'brave.exe')
@@ -95,7 +95,7 @@ export function findBrowserExecutable(customPath?: string): string {
       ),
       path.join(
         os.homedir(),
-        '.specter',
+        '.tuquet',
         'browser',
         'runtimes',
         'chrome-mac-arm64',
@@ -106,7 +106,7 @@ export function findBrowserExecutable(customPath?: string): string {
       ),
       path.join(
         os.homedir(),
-        '.specter',
+        '.tuquet',
         'runtimes',
         'chrome-mac-arm64',
         'Google Chrome for Testing.app',
@@ -131,10 +131,10 @@ export function findBrowserExecutable(customPath?: string): string {
       path.join(tuquetHome, 'browser', 'runtimes', 'chromium-linux64', 'chrome'),
       path.join(tuquetHome, 'runtimes', 'chrome-linux64', 'chrome'),
       path.join(tuquetHome, 'runtimes', 'chromium-linux64', 'chrome'),
-      path.join(os.homedir(), '.specter', 'browser', 'runtimes', 'chrome-linux64', 'chrome'),
-      path.join(os.homedir(), '.specter', 'browser', 'runtimes', 'chromium-linux64', 'chrome'),
-      path.join(os.homedir(), '.specter', 'runtimes', 'chrome-linux64', 'chrome'),
-      path.join(os.homedir(), '.specter', 'runtimes', 'chromium-linux64', 'chrome')
+      path.join(os.homedir(), '.tuquet', 'browser', 'runtimes', 'chrome-linux64', 'chrome'),
+      path.join(os.homedir(), '.tuquet', 'browser', 'runtimes', 'chromium-linux64', 'chrome'),
+      path.join(os.homedir(), '.tuquet', 'runtimes', 'chrome-linux64', 'chrome'),
+      path.join(os.homedir(), '.tuquet', 'runtimes', 'chromium-linux64', 'chrome')
     );
   }
 
