@@ -2,7 +2,32 @@
   "name": "@tuquet/lunar",
   "version": "0.1.0",
   "description": "Astronomical Vietnamese Lunar-Solar calendar converter, recurrence engine, and Can Chi calculator",
+  "keywords": [
+    "tuquet",
+    "lunar",
+    "amlich",
+    "calendar",
+    "vietnam",
+    "canchi",
+    "astronomy",
+    "recurrence"
+  ],
+  "homepage": "https://github.com/tuquet/lib/tree/main/packages/lunar#readme",
+  "bugs": {
+    "url": "https://github.com/tuquet/lib/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/lib.git",
+    "directory": "packages/lunar"
+  },
+  "license": "MIT",
+  "author": "Tuquet Team <dev@tuquet.com>",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -20,31 +45,6 @@
   },
   "files": [
     "dist"
-  ],
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "sideEffects": false,
-  "license": "MIT",
-  "author": "Tuquet <dev@tuquet.io>",
-  "homepage": "https://github.com/tuquet/lib/tree/main/packages/lunar#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tuquet/lib.git",
-    "directory": "packages/lunar"
-  },
-  "bugs": {
-    "url": "https://github.com/tuquet/lib/issues"
-  },
-  "keywords": [
-    "tuquet",
-    "lunar",
-    "amlich",
-    "calendar",
-    "vietnam",
-    "canchi",
-    "astronomy",
-    "recurrence"
   ],
   "publishConfig": {
     "access": "public"

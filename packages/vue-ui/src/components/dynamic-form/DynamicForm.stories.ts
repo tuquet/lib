@@ -327,7 +327,7 @@ export const SchemaInheritanceAllOf: Story = {
         createdAt: '2026-01-01',
         email: 'info@tuquet.io',
         phone: '0988776655',
-        companyName: 'Tuquet Enterprise Solutions Inc.',
+        companyName: 'Enterprise Solutions Inc.',
         taxId: '0108928374',
         creditTier: 'Diamond',
         creditLimit: 500000000,

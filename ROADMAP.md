@@ -1,6 +1,6 @@
 # 🗺️ Ecosystem Master Roadmap
 
-> **Ecosystem:** Tuquet / Omni Creator  
+> **Ecosystem:** / Omni Creator  
 > **Core Repositories:** `lib` | `automa` | `cloud` | `scoop-bucket`  
 > **Mission:** Build a high-performance browser automation platform (Automation Engine), a shared UI/Core component library (Design System), and a central multi-tenant cloud orchestration hub (Cloud Multi-Tenant SaaS BaaS Hub).
 

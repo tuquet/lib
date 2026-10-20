@@ -2,7 +2,7 @@
   "files": [],
   "references": [
     { "path": "./packages/lunar" },
-    { "path": "./packages/ui" },
-    { "path": "./packages/vue-table" }
+    { "path": "./packages/md-export" },
+    { "path": "./packages/vue-ui" }
   ]
 }

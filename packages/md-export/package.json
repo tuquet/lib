@@ -2,14 +2,30 @@
   "name": "@tuquet/md-export",
   "version": "0.1.1",
   "description": "Folder-aware Markdown to PDF, HTML, PNG, and JPEG multi-format exporter using headless Chromium",
+  "keywords": [
+    "tuquet",
+    "markdown",
+    "pdf",
+    "compiler",
+    "puppeteer",
+    "markdown-pdf",
+    "folder-aware"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuquet/lib.git",
+    "directory": "packages/md-export"
+  },
+  "license": "MIT",
+  "author": "Tuquet Team <dev@tuquet.com>",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "bin": {
-    "tuquet-md-export": "./dist/cli.cjs",
-    "tuquet-md-pdf": "./dist/cli.cjs"
-  },
   "exports": {
     ".": {
       "import": {
@@ -22,29 +38,13 @@
       }
     }
   },
+  "bin": {
+    "md-export": "./dist/cli.cjs",
+    "md-pdf": "./dist/cli.cjs"
+  },
   "files": [
     "dist",
     "README.md"
-  ],
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "sideEffects": false,
-  "license": "MIT",
-  "author": "Tuquet <dev@tuquet.io>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tuquet/lib.git",
-    "directory": "packages/md-export"
-  },
-  "keywords": [
-    "tuquet",
-    "markdown",
-    "pdf",
-    "compiler",
-    "puppeteer",
-    "markdown-pdf",
-    "folder-aware"
   ],
   "publishConfig": {
     "access": "public"

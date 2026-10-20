@@ -48,7 +48,7 @@ export function findBrowserExecutable(customPath?: string): string {
       // Scoop installs
       path.join(userProfile, 'scoop', 'apps', 'googlechrome', 'current', 'chrome.exe'),
       path.join(userProfile, 'scoop', 'apps', 'chromium', 'current', 'chrome.exe'),
-      // Local Tuquet runtimes
+      // Local runtimes
       path.join(tuquetHome, 'browser', 'runtimes', 'chromium-win64', 'chrome.exe'),
       path.join(tuquetHome, 'browser', 'runtimes', 'chrome-win64', 'chrome.exe'),
       path.join(tuquetHome, 'runtimes', 'chrome-win64', 'chrome.exe'),

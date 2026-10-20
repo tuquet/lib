@@ -1,6 +1,6 @@
 <div align="center">
   <img src="https://tuquet.com/icons/lib.svg" width="76" height="76" alt="Lib Logo" />
-  <h1>Tuquet UI &amp; Utilities Library Monorepo</h1>
+  <h1>UI &amp; Utilities Library Monorepo</h1>
   <p><strong>Enterprise Shadcn-Vue Component Library &amp; Modular Developer Utilities</strong></p>
 
   <p>
@@ -22,7 +22,7 @@
 ## 📂 Repository Structure
 
 ```text
-tuquet-lib/
+lib/
 ├── apps/
 │   └── storybook/            # @tuquet/storybook (Interactive Storybook showcase)
 ├── packages/                 # Publishable libraries (@tuquet/*)
@@ -150,7 +150,7 @@ High-performance, directory-aware Markdown to PDF, HTML, PNG, and JPEG multi-for
 
 ```bash
 # Compile root README and all locale subfolders (vi/README.md, etc.)
-tuquet-md-export --dir . --format all --styles style/pdf-export.css
+md-export --dir . --format all --styles style/pdf-export.css
 ```
 
 ```typescript

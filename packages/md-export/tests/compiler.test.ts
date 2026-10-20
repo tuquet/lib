@@ -9,12 +9,12 @@ describe('@tuquet/md-export', () => {
   let tempDir: string;
 
   beforeAll(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tuquet-md-export-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'md-export-test-'));
 
     // Create root README.md
     fs.writeFileSync(
       path.join(tempDir, 'README.md'),
-      '# English Documentation\n\nWelcome to Tuquet test documentation.\n\n| Param | Type |\n|---|---|\n| id | string |\n',
+      '# English Documentation\n\nWelcome to test documentation.\n\n| Param | Type |\n|---|---|\n| id | string |\n',
       'utf-8'
     );
 

@@ -2,6 +2,8 @@
   "name": "@tuquet/storybook",
   "version": "0.1.3",
   "private": true,
+  "license": "MIT",
+  "author": "Tuquet Team <dev@tuquet.com>",
   "type": "module",
   "scripts": {
     "dev": "storybook dev --host 0.0.0.0 -p 6007 --disable-telemetry --ci",

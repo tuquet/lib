@@ -1,16 +1,20 @@
 {
-  "name": "@tuquet/monorepo",
+  "name": "@tuquet/lib",
   "version": "0.0.0",
   "private": true,
   "description": "Monorepo for @tuquet Node.js libraries",
-  "packageManager": "pnpm@9.15.9",
-  "license": "MIT",
-  "author": "Tuquet <dev@tuquet.io>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tuquet/lib.git"
   },
+  "license": "MIT",
+  "author": "Tuquet Team <dev@tuquet.com>",
   "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=20.18.0",
+    "pnpm": ">=9.0.0"
+  },
   "scripts": {
     "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536\" turbo run build --filter=\"./packages/*\" --concurrency=2",
     "build:packages": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536\" turbo run build --filter=\"./packages/*\" --concurrency=2",
@@ -36,15 +40,6 @@
     "release": "pnpm build:packages && changeset publish",
     "prepare": "husky"
   },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,yml,yaml}": [
-      "prettier --write"
-    ]
-  },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
     "@types/node": "^22.20.3",
@@ -56,5 +51,14 @@
     "turbo": "^2.4.4",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }

@@ -6,7 +6,7 @@ import './preview.css';
 
 const urlParams =
   typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('tuquet-theme') : null;
+const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
 const isInitialDark = urlParams?.get('globals')?.includes('theme:dark') || savedTheme === 'dark';
 
 function applyTheme(theme: string) {

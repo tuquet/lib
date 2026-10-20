@@ -23,7 +23,7 @@
 - **Zero-Config Browser Auto-Detection:** Automatically discovers system installations of **Google Chrome** and **Microsoft Edge** across Windows, macOS, and Linux without downloading 300MB Chromium bundles.
 - **Fast Batch Compilation:** Reuses a single headless browser instance across multiple documents and formats, speeding up batch exports by up to 5x.
 - **Syntax Highlighting & Responsive Tables:** Integrated with `highlight.js` and responsive table wrappers.
-- **Programmatic & CLI Ready:** Use directly from your scripts or via CLI (`tuquet-md-export` / `npx @tuquet/md-export`).
+- **Programmatic & CLI Ready:** Use directly from your scripts or via CLI (`md-export` / `npx @tuquet/md-export`).
 
 ---
 
@@ -45,13 +45,13 @@ npm install --save-dev @tuquet/md-export
 Compiles all `**/README.md` files in the current directory tree into both `.pdf` and `.html`:
 
 ```bash
-npx tuquet-md-export
+npx md-export
 ```
 
 ### Export All Formats (PDF, HTML, PNG, JPEG)
 
 ```bash
-npx tuquet-md-export --dir . --format all --styles style/pdf-export.css
+npx md-export --dir . --format all --styles style/pdf-export.css
 ```
 
 ### Options
