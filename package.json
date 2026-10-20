@@ -40,6 +40,12 @@
     "release": "pnpm build:packages && changeset publish",
     "prepare": "husky"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "vue-demi"
+    ]
+  },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
     "@types/node": "^22.20.3",
