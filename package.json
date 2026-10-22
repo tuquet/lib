@@ -30,21 +30,11 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
     "check:exports": "turbo run check:exports",
     "check:docs": "node tooling/scripts/check-docs.mjs",
-    "storybook": "turbo run dev --filter=@tuquet/storybook",
-    "build:storybook": "cross-env NODE_OPTIONS=\"--max-old-space-size=1536\" turbo run build --filter=@tuquet/storybook --concurrency=2",
-    "verify:storybook": "node tooling/scripts/verify-storybook.mjs",
-    "preview:storybook": "pnpm --filter=@tuquet/storybook preview",
     "clean": "turbo run clean && rm -rf node_modules",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "pnpm build:packages && changeset publish",
     "prepare": "husky"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "vue-demi"
-    ]
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
