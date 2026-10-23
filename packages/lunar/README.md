@@ -103,7 +103,7 @@ console.log(
 
 Part of the **Automation & Agent Ecosystem**:
 
-- [Automa](https://github.com/tuquet/automa) — Native Chrome/Edge Desktop UI Automation Browser.
+- [Automa](https://github.com/tuquet/automation) — Native Chrome/Edge Desktop UI Automation Browser.
 - [Runner](https://github.com/tuquet/runner) — High-Performance Distributed Process Supervision Engine in Rust.
 - [Browser](https://github.com/tuquet/browser) — High-Performance Headless Web Scraping & Stealth Automation Core.
 - [Cloud](https://github.com/tuquet/cloud) — Enterprise Orchestration & Real-time Task Control Plane.
@@ -122,7 +122,7 @@ Distributed under the [MIT License](LICENSE).
   <samp>
     <a href="https://tuquet.com">Portfolio</a> •
     <a href="https://tuquet.com/cv">CV &amp; Resume</a> •
-    <a href="https://docs.tuquet.com/en/automa/">Automa Studio</a> •
+    <a href="https://docs.tuquet.com/en/automation/">Automa Studio</a> •
     <a href="https://storybook.tuquet.com/">Component Lab</a> •
     <a href="https://docs.tuquet.com">Documentation Hub</a>
   </samp>

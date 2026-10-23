@@ -1,7 +1,7 @@
 # 🗺️ Ecosystem Master Roadmap
 
 > **Ecosystem:** / Omni Creator  
-> **Core Repositories:** `lib` | `automa` | `cloud` | `scoop-bucket`  
+> **Core Repositories:** `lib` | `automation` | `cloud` | `scoop-bucket`
 > **Mission:** Build a high-performance browser automation platform (Automation Engine), a shared UI/Core component library (Design System), and a central multi-tenant cloud orchestration hub (Cloud Multi-Tenant SaaS BaaS Hub).
 
 ---
@@ -42,7 +42,7 @@ flowchart TD
 | Phase       | Phase Name                                   | Focus                                                                                                             |        Status         |
 | :---------- | :------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :-------------------: |
 | **Phase 1** | **Core Base & Foundation Hardening**         | Standardize foundation: UI Primitives, Remote Table, Rust Engine Core, RBAC Schema on Supabase, Dev Tooling.      | ✅ **100% COMPLETED** |
-| **Phase 2** | **Cloud Integration & SaaS Sync**            | Connect `automa` to `cloud` via Supabase Adapter; launch Web Admin SaaS Dashboard; expand components.             |  🔥 **IN PROGRESS**   |
+| **Phase 2** | **Cloud Integration & SaaS Sync**            | Connect `automation` to `cloud` via Supabase Adapter; launch Web Admin SaaS Dashboard; expand components.         |  🔥 **IN PROGRESS**   |
 | **Phase 3** | **AI Agentic Automation & Distributed Grid** | AI Vision Autonomous Agent, self-healing CDP Selectors; distributed bot fleet orchestration; usage-based billing. |      🔮 Planned       |
 
 ---
@@ -72,7 +72,7 @@ _Ownership: Ensure absolute reliability, zero styling technical debt, and maximu
 
 ---
 
-### ⚡ Workstream 1.2: `automa` (Local Execution Engine & Studio)
+### ⚡ Workstream 1.2: `automation` (Local Execution Engine & Studio)
 
 _Ownership: High-performance workstation automation engine with complete browser process isolation._
 
@@ -84,7 +84,7 @@ _Ownership: High-performance workstation automation engine with complete browser
   - [x] Cryptographic vault: `HMAC-SHA256 + AES-256-CBC`, RAM-only decryption during microsecond execution, zero leak to disk/logs.
 - [x] **Browser Process Isolation (Chromium Isolation):**
   - [x] Download and manage isolated Chromium binary per Playwright architecture model (never scanning or commandeering personal host browsers).
-- [x] **Distribution:** Packaged Scoop bucket manifest (`automa.json`) and pre-built binaries via GitHub Releases.
+- [x] **Distribution:** Packaged Scoop bucket manifest (`automation.json`) and pre-built binaries via GitHub Releases.
 - [x] **Rust Core Toolchain:** Configured and activated GNU toolchain (`stable-x86_64-pc-windows-gnu`) with Scoop MinGW GCC; `cargo check` compiles 100% of `apps/core` with zero errors.
 - [ ] **[Next Tasks - Core Base Focus]**:
   - [ ] **Local Daemon End-to-End Test:** Run integration tests verifying Axum Daemon (`127.0.0.1:8765`), Scalar API Server (`:8767`), and Web Studio Canvas (`apps/webe`).
@@ -128,7 +128,7 @@ _Ownership: Consistent, standardized development environment and developer ergon
 
 ## 🚀 4. Phase 2 Plan (Cloud Integration & SaaS Sync)
 
-1. **Supabase Remote Adapter in `automa`:**
+1. **Supabase Remote Adapter in `automation`:**
    - Establish cloud synchronization layer running in parallel with local SQLite.
    - Enable users to sync workflows, campaign templates, and run logs to their Cloud Creator account.
 2. **SaaS Admin Web Dashboard:**
@@ -140,11 +140,11 @@ _Ownership: Consistent, standardized development environment and developer ergon
 
 ## 🔮 5. Phase 3 Plan (AI Agent & Distributed Grid)
 
-1. **AI Vision & Self-Healing Automation (`automa`):**
+1. **AI Vision & Self-Healing Automation (`automation`):**
    - Integrate multi-modal AI models for self-healing element selectors when target DOM trees change.
    - Solve complex interaction barriers autonomously (CAPTCHAs, dynamic multi-step verification flows).
 2. **Distributed Runner Grid (`cloud`):**
-   - Orchestrate fleets of distributed `automa` bot runners globally via WebSocket and Supabase Realtime.
+   - Orchestrate fleets of distributed `automation` bot runners globally via WebSocket and Supabase Realtime.
    - Integrate payment gateways and usage-based billing (Pay-as-you-go).
 3. **Headless Cross-Platform UI (`lib`):**
    - Package Desktop (Tauri) and multi-browser Web Extension distributions with $\ge 90\%$ test coverage.
