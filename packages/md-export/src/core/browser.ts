@@ -35,9 +35,7 @@ export function findBrowserExecutable(customPath?: string): string {
     const userProfile = process.env.USERPROFILE || os.homedir();
 
     const tuquetHome =
-      process.env.TQ_HOME ||
-      process.env.TUQUET_HOME ||
-      process.env.SPECTER_HOME ||
+      process.env.DATA_DIR ||
       path.join(userProfile, '.tq');
 
     candidates.push(
@@ -64,9 +62,7 @@ export function findBrowserExecutable(customPath?: string): string {
     );
   } else if (platform === 'darwin') {
     const tuquetHome =
-      process.env.TQ_HOME ||
-      process.env.TUQUET_HOME ||
-      process.env.SPECTER_HOME ||
+      process.env.DATA_DIR ||
       path.join(os.homedir(), '.tq');
     candidates.push(
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -124,9 +120,7 @@ export function findBrowserExecutable(customPath?: string): string {
   } else {
     // Linux / BSD
     const tuquetHome =
-      process.env.TQ_HOME ||
-      process.env.TUQUET_HOME ||
-      process.env.SPECTER_HOME ||
+      process.env.DATA_DIR ||
       path.join(os.homedir(), '.tq');
     candidates.push(
       '/usr/bin/google-chrome-stable',
