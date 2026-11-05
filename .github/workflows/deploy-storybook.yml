@@ -1,4 +1,4 @@
-name: Storybook CI/CD & GitHub Pages
+name: "Deploy: storybook pages"
 
 on:
   push:
